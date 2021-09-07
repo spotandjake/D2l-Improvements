@@ -1,0 +1,13 @@
+<a class="SideBarItem" id="SideBarClassesBtn"><span class="material-icons">home</span><span class="SideBarItemText">Classes</span></a>
+<a class="SideBarItem" id="SideBarCalenderBtn"><span class="material-icons">calendar_today</span><span class="SideBarItemText">Calender</span></a>
+<div class="SideBarSeperator"></div>
+<div class="SideBarSection" id="SideBarClasses">
+  <div class="SideBarHeader">Enrolled</div>
+  <% locals.classes.forEach((_class) => { %>
+    <% if (!_class.disabled) { %>
+      <a class="SideBarItem" id="SideBarCalenderBtn" href="<%= _class.href %>"><span class="material-icons">class</span><span class="SideBarItemText"><%= _class.name %></span></a>
+    <% } %>
+  <% }); %>
+</div>
+<div class="SideBarSeperator"></div>
+<a class="SideBarItem" id="SideBarSettingsBtn"><span class="material-icons">settings</span><span class="SideBarItemText">Settings</span></a>
