@@ -249,6 +249,11 @@ main.Loader {
   border-radius: .5rem;
   position: relative;
   z-index: 0;
+  h2 {
+    height: 100%;
+    line-height: 3rem;
+    padding-left: 1rem;
+  }
 }
 .Class > div {
   height: 100%;
@@ -260,11 +265,6 @@ main.Loader {
 }
 .Class div div {
   display: flex;
-}
-.Class h2 {
-  height: 100%;
-  line-height: 3rem;
-  padding-left: 1rem;
 }
 .Class > picture {
   z-index: -1;
@@ -305,14 +305,14 @@ main.Loader {
   left: 0;
   width: 100%;
   height: 100%;
-}
-.ClassPictureContent h1, .ClassPictureContent h2 {
-  margin: 0;
-}
-.ClassPictureContent h4 {
-  margin-top: .4rem;
-  font-weight: 500;
-  font-style: normal;
+  h1, h2 {
+    margin: 0;
+  }
+  h4 {
+    margin-top: .4rem;
+    font-weight: 500;
+    font-style: normal;
+  }
 }
 .ChipFilter {
   display: inline-flex;
@@ -360,29 +360,32 @@ main.Loader {
   padding: .5rem;
   grid-gap: .5rem;
   margin: 1rem 0;
+  h1, h3 {
+    margin: 0;
+  }
+  h3 {
+    font-size: .75rem;
+  }
 }
 .StreamCardTitle {
   grid-area: Title;
 }
-.StreamCard h1, .StreamCard h3 {
-  margin: 0;
-}
-.StreamCard h3 {
-  font-size: .75rem;
-}
 .StreamCardIcon {
   grid-area: Icon;
-  background: var(--Background);
+  background-color: var(--Background);
   width: 3rem;
   height: 3rem;
   border-radius: 2rem;
   display: flex;
   align-content: center;
   &.OnSubmission {
-    background: #3367d6;
+    background-color: #3367d6;
   }
   &.DueDate {
-    background: #e91e63;
+    background-color: #e91e63;
+  }
+  &.Unread {
+    background-color: #FB8C00;
   }
   span {
     margin: auto;
