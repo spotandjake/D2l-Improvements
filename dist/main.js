@@ -21,8 +21,9 @@
     c('">\n  <div class="StreamCardIcon '), c(e.CompletionType), c('">\n    <span class="material-icons">\n      '), 
     'Info' == e.type ? c('\n        account_circle\n      ') : 'Content' == e.type ? c('\n        class\n      ') : 'Assignment' == e.type ? c('\n        assignment\n      ') : c('\n        article\n      '), 
     c('\n    </span>\n  </div>\n  <div class="StreamCardTitle">\n    <h1>'), c(n(e.Title)), 
-    c('</h1>\n    <h3>'), c(n(e.StartDate)), c('</h3>\n  </div>\n  <div class="StreamCardBody">'), 
-    c(e.Body.Html), c('</div>\n</div>'), o;
+    c('</h1>\n    <h3>'), c(n(e.StartDate)), c('</h3>\n  </div>\n  <div class="StreamCardBody">\n    '), 
+    'Assignment' == e.type ? c('\n      <div class="FileSubmit">\n        <div class="UploadedFiles">\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n          <div class="UploadedFile">\n\n          </div>\n        </div>\n        <div class="FileForm">\n          <textarea></textarea>\n          <button>Add or create</button>\n          <button>Submit</button>\n        </div>\n      </div>\n    ') : (c('\n      '), 
+    c(e.Body.Html), c('\n    ')), c('\n  </div>\n</div>'), o;
   }
   const n = 'HOME', t = 'STREAM', i = new class {
     constructor() {
@@ -214,7 +215,7 @@
             e.classList.contains('Active') ? e.classList.remove('Active') : e.classList.add('Active');
           };
           [ ...t.querySelector('section.StreamCards').children ].forEach((e => {
-            e.addEventListener('click', (() => l(e)));
+            e.addEventListener('click', (() => l(e))), e.querySelector('.StreamCardBody').addEventListener('click', (e => e.stopPropagation()));
           }));
           const d = document.getElementById('ChipFilters'), h = document.querySelector('.Filter'), u = e => {
             e.classList.toggle('Active', !e.classList.contains('Active'));
@@ -267,12 +268,12 @@
     return null == e ? void 0 === e ? '[object Undefined]' : '[object Null]' : Object.prototype.toString.call(e);
   }
   const u = Object.prototype.hasOwnProperty;
-  class g {
+  class p {
     constructor(e) {
       this._keys = [], this._keyMap = {};
       let n = 0;
       e.forEach((e => {
-        let t = m(e);
+        let t = g(e);
         n += t.weight, this._keys.push(t), this._keyMap[t.id] = t, n += t.weight;
       })), this._keys.forEach((e => {
         e.weight /= n;
@@ -288,13 +289,13 @@
       return JSON.stringify(this._keys);
     }
   }
-  function m(e) {
+  function g(e) {
     let n = null, t = null, i = null, s = 1;
-    if (a(e) || r(e)) i = e, n = p(e), t = f(e); else {
+    if (a(e) || r(e)) i = e, n = m(e), t = f(e); else {
       if (!u.call(e, 'name')) throw new Error('Missing name property in key');
       const r = e.name;
       if (i = r, u.call(e, 'weight') && (s = e.weight, s <= 0)) throw new Error((e => `Property 'weight' in key '${e}' must be a positive integer`)(r));
-      n = p(r), t = f(r);
+      n = m(r), t = f(r);
     }
     return {
       path: n,
@@ -303,7 +304,7 @@
       src: i
     };
   }
-  function p(e) {
+  function m(e) {
     return r(e) ? e : e.split('.');
   }
   function f(e) {
@@ -346,7 +347,7 @@
     ignoreFieldNorm: !1
   };
   const y = /[^ ]+/g;
-  class x {
+  class b {
     constructor({getFn: e = v.getFn} = {}) {
       this.norm = function(e = 3) {
         const n = new Map, t = Math.pow(10, e);
@@ -451,78 +452,78 @@
     }
   }
   function w(e, n, {getFn: t = v.getFn} = {}) {
-    const i = new x({
+    const i = new b({
       getFn: t
     });
-    return i.setKeys(e.map(m)), i.setSources(n), i.create(), i;
+    return i.setKeys(e.map(g)), i.setSources(n), i.create(), i;
   }
-  function b(e, {errors: n = 0, currentLocation: t = 0, expectedLocation: i = 0, distance: r = v.distance, ignoreLocation: a = v.ignoreLocation} = {}) {
+  function x(e, {errors: n = 0, currentLocation: t = 0, expectedLocation: i = 0, distance: r = v.distance, ignoreLocation: a = v.ignoreLocation} = {}) {
     const s = n / e.length;
     if (a) return s;
     const o = Math.abs(i - t);
     return r ? s + o / r : o ? 1 : s;
   }
-  function S(e, n, t, {location: i = v.location, distance: r = v.distance, threshold: a = v.threshold, findAllMatches: s = v.findAllMatches, minMatchCharLength: o = v.minMatchCharLength, includeMatches: c = v.includeMatches, ignoreLocation: l = v.ignoreLocation} = {}) {
+  function k(e, n, t, {location: i = v.location, distance: r = v.distance, threshold: a = v.threshold, findAllMatches: s = v.findAllMatches, minMatchCharLength: o = v.minMatchCharLength, includeMatches: c = v.includeMatches, ignoreLocation: l = v.ignoreLocation} = {}) {
     if (n.length > 32) throw new Error('Pattern length exceeds max of 32.');
     const d = n.length, h = e.length, u = Math.max(0, Math.min(i, h));
-    let g = a, m = u;
-    const p = o > 1 || c, f = p ? Array(h) : [];
+    let p = a, g = u;
+    const m = o > 1 || c, f = m ? Array(h) : [];
     let y;
-    for (;(y = e.indexOf(n, m)) > -1; ) {
-      let e = b(n, {
+    for (;(y = e.indexOf(n, g)) > -1; ) {
+      let e = x(n, {
         currentLocation: y,
         expectedLocation: u,
         distance: r,
         ignoreLocation: l
       });
-      if (g = Math.min(e, g), m = y + d, p) {
+      if (p = Math.min(e, p), g = y + d, m) {
         let e = 0;
         for (;e < d; ) f[y + e] = 1, e += 1;
       }
     }
-    m = -1;
-    let x = [], w = 1, S = d + h;
-    const k = 1 << d - 1;
+    g = -1;
+    let b = [], w = 1, k = d + h;
+    const S = 1 << d - 1;
     for (let i = 0; i < d; i += 1) {
-      let a = 0, o = S;
-      for (;a < o; ) b(n, {
+      let a = 0, o = k;
+      for (;a < o; ) x(n, {
         errors: i,
         currentLocation: u + o,
         expectedLocation: u,
         distance: r,
         ignoreLocation: l
-      }) <= g ? a = o : S = o, o = Math.floor((S - a) / 2 + a);
-      S = o;
+      }) <= p ? a = o : k = o, o = Math.floor((k - a) / 2 + a);
+      k = o;
       let c = Math.max(1, u - o + 1), v = s ? h : Math.min(u + o, h) + d, y = Array(v + 2);
       y[v + 1] = (1 << i) - 1;
       for (let a = v; a >= c; a -= 1) {
         let s = a - 1, o = t[e.charAt(s)];
-        if (p && (f[s] = +!!o), y[a] = (y[a + 1] << 1 | 1) & o, i && (y[a] |= (x[a + 1] | x[a]) << 1 | 1 | x[a + 1]), 
-        y[a] & k && (w = b(n, {
+        if (m && (f[s] = +!!o), y[a] = (y[a + 1] << 1 | 1) & o, i && (y[a] |= (b[a + 1] | b[a]) << 1 | 1 | b[a + 1]), 
+        y[a] & S && (w = x(n, {
           errors: i,
           currentLocation: s,
           expectedLocation: u,
           distance: r,
           ignoreLocation: l
-        }), w <= g)) {
-          if (g = w, m = s, m <= u) break;
-          c = Math.max(1, 2 * u - m);
+        }), w <= p)) {
+          if (p = w, g = s, g <= u) break;
+          c = Math.max(1, 2 * u - g);
         }
       }
-      if (b(n, {
+      if (x(n, {
         errors: i + 1,
         currentLocation: u,
         expectedLocation: u,
         distance: r,
         ignoreLocation: l
-      }) > g) break;
-      x = y;
+      }) > p) break;
+      b = y;
     }
     const C = {
-      isMatch: m >= 0,
+      isMatch: g >= 0,
       score: Math.max(.001, w)
     };
-    if (p) {
+    if (m) {
       const e = function(e = [], n = v.minMatchCharLength) {
         let t = [], i = -1, r = -1, a = 0;
         for (let s = e.length; a < s; a += 1) {
@@ -536,7 +537,7 @@
     }
     return C;
   }
-  function k(e) {
+  function S(e) {
     let n = {};
     for (let t = 0, i = e.length; t < i; t += 1) {
       const r = e.charAt(t);
@@ -559,7 +560,7 @@
       const l = (e, n) => {
         this.chunks.push({
           pattern: e,
-          alphabet: k(e),
+          alphabet: S(e),
           startIndex: n
         });
       }, d = this.pattern.length;
@@ -584,9 +585,9 @@
       }
       const {location: i, distance: r, threshold: a, findAllMatches: s, minMatchCharLength: o, ignoreLocation: c} = this.options;
       let l = [], d = 0, h = !1;
-      this.chunks.forEach((({pattern: n, alphabet: u, startIndex: g}) => {
-        const {isMatch: m, score: p, indices: f} = S(e, n, u, {
-          location: i + g,
+      this.chunks.forEach((({pattern: n, alphabet: u, startIndex: p}) => {
+        const {isMatch: g, score: m, indices: f} = k(e, n, u, {
+          location: i + p,
           distance: r,
           threshold: a,
           findAllMatches: s,
@@ -594,7 +595,7 @@
           includeMatches: t,
           ignoreLocation: c
         });
-        m && (h = !0), d += p, m && f && (l = [ ...l, ...f ]);
+        g && (h = !0), d += m, g && f && (l = [ ...l, ...f ]);
       }));
       let u = {
         isMatch: h,
@@ -603,23 +604,23 @@
       return h && t && (u.indices = l), u;
     }
   }
-  class M {
+  class B {
     constructor(e) {
       this.pattern = e;
     }
     static isMultiMatch(e) {
-      return B(e, this.multiRegex);
+      return M(e, this.multiRegex);
     }
     static isSingleMatch(e) {
-      return B(e, this.singleRegex);
+      return M(e, this.singleRegex);
     }
     search() {}
   }
-  function B(e, n) {
+  function M(e, n) {
     const t = e.match(n);
     return t ? t[1] : null;
   }
-  class L extends M {
+  class A extends B {
     constructor(e, {location: n = v.location, threshold: t = v.threshold, distance: i = v.distance, includeMatches: r = v.includeMatches, findAllMatches: a = v.findAllMatches, minMatchCharLength: s = v.minMatchCharLength, isCaseSensitive: o = v.isCaseSensitive, ignoreLocation: c = v.ignoreLocation} = {}) {
       super(e), this._bitapSearch = new C(e, {
         location: n,
@@ -645,7 +646,7 @@
       return this._bitapSearch.searchIn(e);
     }
   }
-  class I extends M {
+  class I extends B {
     constructor(e) {
       super(e);
     }
@@ -670,7 +671,7 @@
       };
     }
   }
-  const A = [ class extends M {
+  const L = [ class extends B {
     constructor(e) {
       super(e);
     }
@@ -691,7 +692,7 @@
         indices: [ 0, this.pattern.length - 1 ]
       };
     }
-  }, I, class extends M {
+  }, I, class extends B {
     constructor(e) {
       super(e);
     }
@@ -712,7 +713,7 @@
         indices: [ 0, this.pattern.length - 1 ]
       };
     }
-  }, class extends M {
+  }, class extends B {
     constructor(e) {
       super(e);
     }
@@ -733,7 +734,7 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, class extends M {
+  }, class extends B {
     constructor(e) {
       super(e);
     }
@@ -754,7 +755,7 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, class extends M {
+  }, class extends B {
     constructor(e) {
       super(e);
     }
@@ -775,7 +776,7 @@
         indices: [ e.length - this.pattern.length, e.length - 1 ]
       };
     }
-  }, class extends M {
+  }, class extends B {
     constructor(e) {
       super(e);
     }
@@ -796,32 +797,32 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, L ], E = A.length, F = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, _ = new Set([ L.type, I.type ]), T = [];
-  function $(e, n) {
-    for (let t = 0, i = T.length; t < i; t += 1) {
-      let i = T[t];
+  }, A ], F = L.length, E = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, T = new Set([ A.type, I.type ]), D = [];
+  function _(e, n) {
+    for (let t = 0, i = D.length; t < i; t += 1) {
+      let i = D[t];
       if (i.condition(e, n)) return new i(e, n);
     }
     return new C(e, n);
   }
-  const D = '$and', z = '$path', P = e => !(!e[D] && !e.$or), N = e => ({
-    [D]: Object.keys(e).map((n => ({
+  const P = '$and', $ = '$path', z = e => !(!e[P] && !e.$or), N = e => ({
+    [P]: Object.keys(e).map((n => ({
       [n]: e[n]
     })))
   });
-  function O(e, n, {auto: t = !0} = {}) {
+  function R(e, n, {auto: t = !0} = {}) {
     const i = e => {
       let s = Object.keys(e);
-      const o = (e => !!e[z])(e);
-      if (!o && s.length > 1 && !P(e)) return i(N(e));
-      if ((e => !r(e) && c(e) && !P(e))(e)) {
-        const i = o ? e[z] : s[0], r = o ? e.$val : e[i];
+      const o = (e => !!e[$])(e);
+      if (!o && s.length > 1 && !z(e)) return i(N(e));
+      if ((e => !r(e) && c(e) && !z(e))(e)) {
+        const i = o ? e[$] : s[0], r = o ? e.$val : e[i];
         if (!a(r)) throw new Error((e => 'Invalid value for key ' + e)(i));
         const c = {
           keyId: f(i),
           pattern: r
         };
-        return t && (c.searcher = $(r, n)), c;
+        return t && (c.searcher = _(r, n)), c;
       }
       let l = {
         children: [],
@@ -834,9 +835,9 @@
         }));
       })), l;
     };
-    return P(e) || (e = N(e)), i(e);
+    return z(e) || (e = N(e)), i(e);
   }
-  function R(e, n) {
+  function j(e, n) {
     const t = e.matches;
     n.matches = [], l(t) && t.forEach((e => {
       if (!l(e.indices) || !e.indices.length) return;
@@ -848,7 +849,7 @@
       e.key && (r.key = e.key.src), e.idx > -1 && (r.refIndex = e.idx), n.matches.push(r);
     }));
   }
-  function j(e, n) {
+  function O(e, n) {
     n.score = e.score;
   }
   class H {
@@ -856,10 +857,10 @@
       this.options = {
         ...v,
         ...n
-      }, this.options.useExtendedSearch, this._keyStore = new g(this.options.keys), this.setCollection(e, t);
+      }, this.options.useExtendedSearch, this._keyStore = new p(this.options.keys), this.setCollection(e, t);
     }
     setCollection(e, n) {
-      if (this._docs = e, n && !(n instanceof x)) throw new Error('Incorrect \'index\' type');
+      if (this._docs = e, n && !(n instanceof b)) throw new Error('Incorrect \'index\' type');
       this._myIndex = n || w(this.options.keys, this._docs, {
         getFn: this.options.getFn
       });
@@ -896,7 +897,7 @@
         ignoreFieldNorm: c
       }), r && l.sort(o), s(n) && n > -1 && (l = l.slice(0, n)), function(e, n, {includeMatches: t = v.includeMatches, includeScore: i = v.includeScore} = {}) {
         const r = [];
-        return t && r.push(R), i && r.push(j), e.map((e => {
+        return t && r.push(j), i && r.push(O), e.map((e => {
           const {idx: t} = e, i = {
             item: n[t],
             refIndex: t
@@ -911,7 +912,7 @@
       });
     }
     _searchStringList(e) {
-      const n = $(e, this.options), {records: t} = this._myIndex, i = [];
+      const n = _(e, this.options), {records: t} = this._myIndex, i = [];
       return t.forEach((({v: e, i: t, n: r}) => {
         if (!l(e)) return;
         const {isMatch: a, score: s, indices: o} = n.searchIn(e);
@@ -928,7 +929,7 @@
       })), i;
     }
     _searchLogical(e) {
-      const n = O(e, this.options), t = (e, n, i) => {
+      const n = R(e, this.options), t = (e, n, i) => {
         if (!e.children) {
           const {keyId: t, searcher: r} = e, a = this._findMatches({
             key: this._keyStore.get(t),
@@ -942,7 +943,7 @@
           } ] : [];
         }
         switch (e.operator) {
-         case D:
+         case P:
           {
             const r = [];
             for (let a = 0, s = e.children.length; a < s; a += 1) {
@@ -981,7 +982,7 @@
       })), a;
     }
     _searchObjectList(e) {
-      const n = $(e, this.options), {keys: t, records: i} = this._myIndex, r = [];
+      const n = _(e, this.options), {keys: t, records: i} = this._myIndex, r = [];
       return i.forEach((({$: e, i: i}) => {
         if (!l(e)) return;
         let a = [];
@@ -1026,12 +1027,12 @@
     }
   }
   H.version = '6.4.6', H.createIndex = w, H.parseIndex = function(e, {getFn: n = v.getFn} = {}) {
-    const {keys: t, records: i} = e, r = new x({
+    const {keys: t, records: i} = e, r = new b({
       getFn: n
     });
     return r.setKeys(t), r.setIndexRecords(i), r;
   }, H.config = v, function(...e) {
-    T.push(...e);
+    D.push(...e);
   }(class {
     constructor(e, {isCaseSensitive: n = v.isCaseSensitive, includeMatches: t = v.includeMatches, minMatchCharLength: i = v.minMatchCharLength, ignoreLocation: r = v.ignoreLocation, findAllMatches: a = v.findAllMatches, location: s = v.location, threshold: o = v.threshold, distance: c = v.distance} = {}) {
       this.query = null, this.options = {
@@ -1045,17 +1046,17 @@
         distance: c
       }, this.pattern = n ? e : e.toLowerCase(), this.query = function(e, n = {}) {
         return e.split('|').map((e => {
-          let t = e.trim().split(F).filter((e => e && !!e.trim())), i = [];
+          let t = e.trim().split(E).filter((e => e && !!e.trim())), i = [];
           for (let e = 0, r = t.length; e < r; e += 1) {
             const r = t[e];
             let a = !1, s = -1;
-            for (;!a && ++s < E; ) {
-              const e = A[s];
+            for (;!a && ++s < F; ) {
+              const e = L[s];
               let t = e.isMultiMatch(r);
               t && (i.push(new e(t, n)), a = !0);
             }
-            if (!a) for (s = -1; ++s < E; ) {
-              const e = A[s];
+            if (!a) for (s = -1; ++s < F; ) {
+              const e = L[s];
               let t = e.isSingleMatch(r);
               if (t) {
                 i.push(new e(t, n));
@@ -1090,7 +1091,7 @@
           }
           if (r += 1, s += d, t) {
             const e = i.constructor.type;
-            _.has(e) ? a = [ ...a, ...l ] : a.push(l);
+            T.has(e) ? a = [ ...a, ...l ] : a.push(l);
           }
         }
         if (r) {
@@ -1107,7 +1108,7 @@
       };
     }
   });
-  const q = async e => JSON.parse((await e.text()).trim().substr(9));
+  const U = async e => JSON.parse((await e.text()).trim().substr(9));
   document.head.innerHTML = `<title>${document.title}</title>`, document.body.innerHTML = '', 
   (async () => {
     const e = JSON.parse(document.documentElement.getAttribute('data-he-context'));
@@ -1131,7 +1132,7 @@
         null != e && (o += e);
       }
       return c('<meta charset="utf-8">\n<link rel="icon" href="https://s.brightspace.com/lib/favicon/2.0.0/favicon.ico">\n<title>'), 
-      c(n(e.title)), c('</title>\n<meta name="description" content="D2l Overhaul">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\x3c!-- FONT --\x3e\n<style>/* fallback */\r\n@font-face {\r\n  font-family: \'Material Icons\';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\r\n}\r\n\r\n.material-icons {\r\n  font-family: \'Material Icons\';\r\n  font-weight: normal;\r\n  font-style: normal;\r\n  font-size: 24px;  /* Preferred icon size */\r\n  display: inline-block;\r\n  line-height: 1;\r\n  text-transform: none;\r\n  letter-spacing: normal;\r\n  word-wrap: normal;\r\n  white-space: nowrap;\r\n  direction: ltr;\r\n  user-select: none;\r\n\r\n  /* Support for all WebKit browsers. */\r\n  -webkit-font-smoothing: antialiased;\r\n  /* Support for Safari and Chrome. */\r\n  text-rendering: optimizeLegibility;\r\n\r\n  /* Support for Firefox. */\r\n  -moz-osx-font-smoothing: grayscale;\r\n\r\n  /* Support for IE. */\r\n  font-feature-settings: \'liga\';\r\n}\r\n/* Rules for sizing the icon. */\r\n.material-icons.md-18 { font-size: 18px; }\r\n.material-icons.md-24 { font-size: 24px; }\r\n.material-icons.md-36 { font-size: 36px; }\r\n.material-icons.md-48 { font-size: 48px; }\r\n\r\n/* Rules for using icons as black on a light background. */\r\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\r\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\r\n\r\n/* Rules for using icons as white on a dark background. */\r\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\r\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\r\n\r\n/* Rules for using icons as orange on a dark background. */\r\n.material-icons.orange600 { color: #FB8C00; }</style>\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\n\x3c!-- CSS --\x3e\n<style>:root {\n  --Background: #2C2C2C;\n  --Foreground: #3C3C3C;\n  --Border: #4A4A4A;\n  --Text-Main: #fff;\n}</style>\n<style>/* General Page Stuff */\nhtml, body {\n  height: 100%;\n  width: 100%;\n  font-family: \'Roboto\',Helvetica,Arial,sans-serif;\n  color: var(--Text-Main); }\n\nbody {\n  margin: 0;\n  background-color: var(--Background);\n  position: relative; }\n\n* {\n  box-sizing: border-box; }\n\npicture, picture img {\n  display: block;\n  height: 100%;\n  width: 100%; }\n\n*::-webkit-scrollbar {\n  width: 16px; }\n\n*::-webkit-scrollbar-thumb {\n  background: #dadce0;\n  background-clip: padding-box;\n  border: 4px solid transparent;\n  border-radius: 8px;\n  box-shadow: none;\n  min-height: 50px; }\n\n*::-webkit-scrollbar-track {\n  background: none;\n  border: none; }\n\n/* Text */\nh1 {\n  color: var(--Text-Main);\n  font-size: 1.375rem;\n  font-weight: 500;\n  line-height: 1.75rem;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif; }\n\nh2 {\n  color: var(--Text-Main);\n  font-size: 1rem;\n  font-weight: 400;\n  line-height: 1.25rem;\n  margin: 0; }\n\n/* Aside */\n.SideBar {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n  width: 19rem;\n  padding: .5rem 0;\n  z-index: 990;\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  background-color: var(--Foreground);\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  overflow-y: scroll;\n  max-width: 0;\n  transition: max-width .5s; }\n  .SideBar.Active {\n    max-width: 100%; }\n\n.SideBarSeperator {\n  border-top: 0.0625rem solid var(--Border);\n  margin: .5rem 0; }\n\n.SideBarSection {\n  flex-grow: 1;\n  min-height: max-content; }\n\n.SideBarHeader {\n  padding: 0 1rem;\n  letter-spacing: .01785714em;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  line-height: 1.25rem; }\n\n.SideBarItem {\n  display: flex;\n  align-content: center;\n  border-radius: 0 2rem 2rem 0;\n  height: 3.5rem;\n  padding-left: 1.5rem;\n  margin-right: 1rem;\n  cursor: pointer;\n  text-decoration: none;\n  color: #fff; }\n  .SideBarItem .SideBarItemText {\n    margin-left: 1rem;\n    font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n    letter-spacing: .01785714em;\n    font-size: 0.875rem;\n    font-weight: 500;\n    overflow: hidden;\n    white-space: nowrap;\n    margin-right: 4rem;\n    text-overflow: ellipsis; }\n  .SideBarItem span {\n    line-height: 3.5rem; }\n  .SideBarItem:hover {\n    background-color: #343434; }\n\n/* Content */\n#Content {\n  min-height: 100%;\n  height: min-content;\n  width: 100%;\n  display: flex;\n  flex-direction: column; }\n\n#Content > * {\n  padding: 1rem; }\n\nmain {\n  height: 100%;\n  width: 100%; }\n\n/* Home Page */\n.Home > main {\n  max-width: 70rem;\n  margin: auto;\n  display: grid; }\n\n/* Loader Page */\nmain.Loader {\n  display: flex;\n  align-content: center;\n  flex-direction: column; }\n\n.lds-grid {\n  margin: auto;\n  display: grid;\n  grid-template-columns: repeat(3, 16px);\n  grid-template-rows: repeat(3, 16px);\n  grid-gap: 8px; }\n\n.lds-grid div {\n  border-radius: 50%;\n  background: #fff;\n  animation: lds-grid 1.2s linear infinite; }\n\n.lds-grid div:nth-child(1) {\n  animation-delay: 0s; }\n\n.lds-grid div:nth-child(2), .lds-grid div:nth-child(4) {\n  animation-delay: -0.4s; }\n\n.lds-grid div:nth-child(3), .lds-grid div:nth-child(5), .lds-grid div:nth-child(7) {\n  animation-delay: -0.8s; }\n\n.lds-grid div:nth-child(6), .lds-grid div:nth-child(8) {\n  animation-delay: -1.2s; }\n\n.lds-grid div:nth-child(9) {\n  animation-delay: -1.6s; }\n\n@keyframes lds-grid {\n  0%, 100% {\n    opacity: 1; }\n  50% {\n    opacity: 0.5; } }\n\n/* General */\n.Hidden, .Filtered {\n  display: none !important; }\n\n/* Hovers */\n.Class, .StreamCard {\n  cursor: pointer; }\n\n.Class:hover, .StreamCard:hover {\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  border-radius: .75rem; }\n\n/* Components */\n.NavBar {\n  padding: .75rem 1rem !important;\n  height: 4rem;\n  width: 100%;\n  background: var(--Foreground);\n  display: grid;\n  grid-template-columns: 2.5rem auto max-content;\n  position: relative; }\n  .NavBar .AsideButton {\n    display: flex;\n    align-content: center;\n    border-radius: 50%; }\n    .NavBar .AsideButton:hover {\n      background: var(--Background); }\n    .NavBar .AsideButton svg {\n      margin: auto;\n      width: 2rem;\n      height: 2rem; }\n  .NavBar input {\n    height: 2.5rem;\n    width: 50%;\n    margin: auto;\n    display: block;\n    background-color: #212121;\n    outline: none;\n    border: none;\n    border-radius: .5rem;\n    padding: .5rem;\n    color: #fff; }\n  .NavBar .Account {\n    display: grid;\n    grid-template-columns: repeat(4, 2.5rem);\n    grid-gap: .25rem; }\n    .NavBar .Account span {\n      width: 2.5rem;\n      height: 2.5rem;\n      text-align: center;\n      line-height: 2.5rem; }\n      .NavBar .Account span.Active {\n        color: #FB8C00; }\n    .NavBar .Account .Profile picture {\n      padding: .25rem; }\n    .NavBar .Account span, .NavBar .Account div {\n      cursor: pointer;\n      border-radius: .5rem; }\n    .NavBar .Account span:hover, .NavBar .Account div:hover {\n      background-color: #2F3033; }\n\n.ClassContainer {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-template-rows: repeat(auto-fit, min-content);\n  grid-gap: 2rem; }\n\n.Class {\n  height: 15rem;\n  width: 100%;\n  overflow: hidden;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  position: relative;\n  z-index: 0; }\n\n.Class > div {\n  height: 100%;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.25);\n  padding: 1rem;\n  display: grid;\n  grid-template-rows: auto 3rem; }\n\n.Class div div {\n  display: flex; }\n\n.Class h2 {\n  height: 100%;\n  line-height: 3rem;\n  padding-left: 1rem; }\n\n.Class > picture {\n  z-index: -1;\n  position: absolute; }\n\n.Class[disabled] > picture {\n  filter: grayscale(100%); }\n\n.Profile {\n  height: 100%;\n  aspect-ratio: 1 / 1;\n  border-radius: 50%; }\n\n/* Stream */\n.Stream > main {\n  flex-grow: 1;\n  min-height: max-content;\n  width: calc(100% - 2*1.5rem);\n  max-width: 62.5rem;\n  margin: 0 auto;\n  padding: 0 !important; }\n\n.ClassPicture {\n  margin: 1.5rem 0;\n  overflow: hidden;\n  border-radius: 1rem;\n  position: relative; }\n\n.ClassPictureContent {\n  display: flex;\n  flex-direction: column;\n  padding: 1.5rem;\n  margin: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%; }\n\n.ClassPictureContent h1, .ClassPictureContent h2 {\n  margin: 0; }\n\n.ClassPictureContent h4 {\n  margin-top: .4rem;\n  font-weight: 500;\n  font-style: normal; }\n\n.ChipFilter {\n  display: inline-flex;\n  height: max-content;\n  width: max-content;\n  padding: .25rem .5rem;\n  border: 0.0625rem solid var(--Border);\n  border-radius: 2rem;\n  font-size: .75rem;\n  cursor: pointer;\n  user-select: none;\n  background-color: var(--Foreground); }\n  .ChipFilter .chipIcon {\n    border-radius: 50%;\n    padding: .25rem;\n    font-size: .75rem;\n    margin-right: .25rem;\n    background-color: #3367D6; }\n  .ChipFilter p {\n    margin: auto;\n    display: inline-block; }\n  .ChipFilter:hover {\n    background-color: #343434; }\n  .ChipFilter.Active {\n    background-color: #181818; }\n\n/* Stream Cards */\n.StreamCard {\n  width: 100%;\n  height: 4rem;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  grid-template-rows: 3rem max-content;\n  grid-template-areas: \'Icon Title\'\r \'Content Content\';\n  padding: .5rem;\n  grid-gap: .5rem;\n  margin: 1rem 0; }\n\n.StreamCardTitle {\n  grid-area: Title; }\n\n.StreamCard h1, .StreamCard h3 {\n  margin: 0; }\n\n.StreamCard h3 {\n  font-size: .75rem; }\n\n.StreamCardIcon {\n  grid-area: Icon;\n  background: var(--Background);\n  width: 3rem;\n  height: 3rem;\n  border-radius: 2rem;\n  display: flex;\n  align-content: center; }\n  .StreamCardIcon.OnSubmission {\n    background: #3367d6; }\n  .StreamCardIcon.DueDate {\n    background: #e91e63; }\n  .StreamCardIcon span {\n    margin: auto; }\n\n.StreamCardBody {\n  grid-area: Content;\n  overflow: hidden;\n  width: 100%;\n  height: 0; }\n\n.StreamCard.Active, .StreamCard.Active > .StreamCardBody {\n  height: max-content; }\n\n.DropDown {\n  min-height: 30rem;\n  width: 20rem;\n  border-radius: .5rem;\n  border: 0.0625rem solid var(--Border);\n  background-color: var(--Foreground);\n  position: absolute;\n  top: 100%;\n  right: 0;\n  z-index: 2;\n  padding: 1rem;\n  margin: -.25rem .5rem;\n  overflow-y: scroll; }\n</style>'), 
+      c(n(e.title)), c('</title>\n<meta name="description" content="D2l Overhaul">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\x3c!-- FONT --\x3e\n<style>/* fallback */\r\n@font-face {\r\n  font-family: \'Material Icons\';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\r\n}\r\n\r\n.material-icons {\r\n  font-family: \'Material Icons\';\r\n  font-weight: normal;\r\n  font-style: normal;\r\n  font-size: 24px;  /* Preferred icon size */\r\n  display: inline-block;\r\n  line-height: 1;\r\n  text-transform: none;\r\n  letter-spacing: normal;\r\n  word-wrap: normal;\r\n  white-space: nowrap;\r\n  direction: ltr;\r\n  user-select: none;\r\n\r\n  /* Support for all WebKit browsers. */\r\n  -webkit-font-smoothing: antialiased;\r\n  /* Support for Safari and Chrome. */\r\n  text-rendering: optimizeLegibility;\r\n\r\n  /* Support for Firefox. */\r\n  -moz-osx-font-smoothing: grayscale;\r\n\r\n  /* Support for IE. */\r\n  font-feature-settings: \'liga\';\r\n}\r\n/* Rules for sizing the icon. */\r\n.material-icons.md-18 { font-size: 18px; }\r\n.material-icons.md-24 { font-size: 24px; }\r\n.material-icons.md-36 { font-size: 36px; }\r\n.material-icons.md-48 { font-size: 48px; }\r\n\r\n/* Rules for using icons as black on a light background. */\r\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\r\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\r\n\r\n/* Rules for using icons as white on a dark background. */\r\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\r\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\r\n\r\n/* Rules for using icons as orange on a dark background. */\r\n.material-icons.orange600 { color: #FB8C00; }</style>\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\n\x3c!-- CSS --\x3e\n<style>:root {\n  --Background: #2C2C2C;\n  --Foreground: #3C3C3C;\n  --Border: #4A4A4A;\n  --Text-Main: #fff;\n}</style>\n<style>/* General Page Stuff */\nhtml, body {\n  height: 100%;\n  width: 100%;\n  font-family: \'Roboto\',Helvetica,Arial,sans-serif;\n  color: var(--Text-Main); }\n\nbody {\n  margin: 0;\n  background-color: var(--Background);\n  position: relative; }\n\n* {\n  box-sizing: border-box; }\n\npicture, picture img {\n  display: block;\n  height: 100%;\n  width: 100%; }\n\n*::-webkit-scrollbar {\n  width: 16px; }\n\n*::-webkit-scrollbar-thumb {\n  background: #dadce0;\n  background-clip: padding-box;\n  border: 4px solid transparent;\n  border-radius: 8px;\n  box-shadow: none;\n  min-height: 50px; }\n\n*::-webkit-scrollbar-track {\n  background: none;\n  border: none; }\n\n/* Text */\nh1 {\n  color: var(--Text-Main);\n  font-size: 1.375rem;\n  font-weight: 500;\n  line-height: 1.75rem;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif; }\n\nh2 {\n  color: var(--Text-Main);\n  font-size: 1rem;\n  font-weight: 400;\n  line-height: 1.25rem;\n  margin: 0; }\n\n/* Aside */\n.SideBar {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n  width: 19rem;\n  padding: .5rem 0;\n  z-index: 990;\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  background-color: var(--Foreground);\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  overflow-y: scroll;\n  max-width: 0;\n  transition: max-width .5s; }\n  .SideBar.Active {\n    max-width: 100%; }\n\n.SideBarSeperator {\n  border-top: 0.0625rem solid var(--Border);\n  margin: .5rem 0; }\n\n.SideBarSection {\n  flex-grow: 1;\n  min-height: max-content; }\n\n.SideBarHeader {\n  padding: 0 1rem;\n  letter-spacing: .01785714em;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  line-height: 1.25rem; }\n\n.SideBarItem {\n  display: flex;\n  align-content: center;\n  border-radius: 0 2rem 2rem 0;\n  height: 3.5rem;\n  padding-left: 1.5rem;\n  margin-right: 1rem;\n  cursor: pointer;\n  text-decoration: none;\n  color: #fff; }\n  .SideBarItem .SideBarItemText {\n    margin-left: 1rem;\n    font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n    letter-spacing: .01785714em;\n    font-size: 0.875rem;\n    font-weight: 500;\n    overflow: hidden;\n    white-space: nowrap;\n    margin-right: 4rem;\n    text-overflow: ellipsis; }\n  .SideBarItem span {\n    line-height: 3.5rem; }\n  .SideBarItem:hover {\n    background-color: #343434; }\n\n/* Content */\n#Content {\n  min-height: 100%;\n  height: min-content;\n  width: 100%;\n  display: flex;\n  flex-direction: column; }\n\n#Content > * {\n  padding: 1rem; }\n\nmain {\n  height: 100%;\n  width: 100%; }\n\n/* Home Page */\n.Home > main {\n  max-width: 70rem;\n  margin: auto;\n  display: grid; }\n\n/* Loader Page */\nmain.Loader {\n  display: flex;\n  align-content: center;\n  flex-direction: column; }\n\n.lds-grid {\n  margin: auto;\n  display: grid;\n  grid-template-columns: repeat(3, 16px);\n  grid-template-rows: repeat(3, 16px);\n  grid-gap: 8px; }\n\n.lds-grid div {\n  border-radius: 50%;\n  background: #fff;\n  animation: lds-grid 1.2s linear infinite; }\n\n.lds-grid div:nth-child(1) {\n  animation-delay: 0s; }\n\n.lds-grid div:nth-child(2), .lds-grid div:nth-child(4) {\n  animation-delay: -0.4s; }\n\n.lds-grid div:nth-child(3), .lds-grid div:nth-child(5), .lds-grid div:nth-child(7) {\n  animation-delay: -0.8s; }\n\n.lds-grid div:nth-child(6), .lds-grid div:nth-child(8) {\n  animation-delay: -1.2s; }\n\n.lds-grid div:nth-child(9) {\n  animation-delay: -1.6s; }\n\n@keyframes lds-grid {\n  0%, 100% {\n    opacity: 1; }\n  50% {\n    opacity: 0.5; } }\n\n/* General */\n.Hidden, .Filtered {\n  display: none !important; }\n\n/* Hovers */\n.Class, .StreamCard {\n  cursor: pointer; }\n\n.Class:hover, .StreamCard:hover {\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  border-radius: .75rem; }\n\n/* Components */\n.NavBar {\n  padding: .75rem 1rem !important;\n  height: 4rem;\n  width: 100%;\n  background: var(--Foreground);\n  display: grid;\n  grid-template-columns: 2.5rem auto max-content;\n  position: relative; }\n  .NavBar .AsideButton {\n    display: flex;\n    align-content: center;\n    border-radius: 50%; }\n    .NavBar .AsideButton:hover {\n      background: var(--Background); }\n    .NavBar .AsideButton svg {\n      margin: auto;\n      width: 2rem;\n      height: 2rem; }\n  .NavBar input {\n    height: 2.5rem;\n    width: 50%;\n    margin: auto;\n    display: block;\n    background-color: #212121;\n    outline: none;\n    border: none;\n    border-radius: .5rem;\n    padding: .5rem;\n    color: #fff; }\n  .NavBar .Account {\n    display: grid;\n    grid-template-columns: repeat(4, 2.5rem);\n    grid-gap: .25rem; }\n    .NavBar .Account span {\n      width: 2.5rem;\n      height: 2.5rem;\n      text-align: center;\n      line-height: 2.5rem; }\n      .NavBar .Account span.Active {\n        color: #FB8C00; }\n    .NavBar .Account .Profile picture {\n      padding: .25rem; }\n    .NavBar .Account span, .NavBar .Account div {\n      cursor: pointer;\n      border-radius: .5rem; }\n    .NavBar .Account span:hover, .NavBar .Account div:hover {\n      background-color: #2F3033; }\n\n.ClassContainer {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-template-rows: repeat(auto-fit, min-content);\n  grid-gap: 2rem; }\n\n.Class {\n  height: 15rem;\n  width: 100%;\n  overflow: hidden;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  position: relative;\n  z-index: 0; }\n\n.Class > div {\n  height: 100%;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.25);\n  padding: 1rem;\n  display: grid;\n  grid-template-rows: auto 3rem; }\n\n.Class div div {\n  display: flex; }\n\n.Class h2 {\n  height: 100%;\n  line-height: 3rem;\n  padding-left: 1rem; }\n\n.Class > picture {\n  z-index: -1;\n  position: absolute; }\n\n.Class[disabled] > picture {\n  filter: grayscale(100%); }\n\n.Profile {\n  height: 100%;\n  aspect-ratio: 1 / 1;\n  border-radius: 50%; }\n\n/* Stream */\n.Stream > main {\n  flex-grow: 1;\n  min-height: max-content;\n  width: calc(100% - 2*1.5rem);\n  max-width: 62.5rem;\n  margin: 0 auto;\n  padding: 0 !important; }\n\n.ClassPicture {\n  margin: 1.5rem 0;\n  overflow: hidden;\n  border-radius: 1rem;\n  position: relative; }\n\n.ClassPictureContent {\n  display: flex;\n  flex-direction: column;\n  padding: 1.5rem;\n  margin: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%; }\n\n.ClassPictureContent h1, .ClassPictureContent h2 {\n  margin: 0; }\n\n.ClassPictureContent h4 {\n  margin-top: .4rem;\n  font-weight: 500;\n  font-style: normal; }\n\n.ChipFilter {\n  display: inline-flex;\n  height: max-content;\n  width: max-content;\n  padding: .25rem .5rem;\n  border: 0.0625rem solid var(--Border);\n  border-radius: 2rem;\n  font-size: .75rem;\n  cursor: pointer;\n  user-select: none;\n  background-color: var(--Foreground); }\n  .ChipFilter .chipIcon {\n    border-radius: 50%;\n    padding: .25rem;\n    font-size: .75rem;\n    margin-right: .25rem;\n    background-color: #3367D6; }\n  .ChipFilter p {\n    margin: auto;\n    display: inline-block; }\n  .ChipFilter:hover {\n    background-color: #343434; }\n  .ChipFilter.Active {\n    background-color: #181818; }\n\n/* Stream Cards */\n.StreamCard {\n  width: 100%;\n  height: 4rem;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  grid-template-rows: 3rem max-content;\n  grid-template-areas: \'Icon Title\'\r \'Content Content\';\n  padding: .5rem;\n  grid-gap: .5rem;\n  margin: 1rem 0; }\n\n.StreamCardTitle {\n  grid-area: Title; }\n\n.StreamCard h1, .StreamCard h3 {\n  margin: 0; }\n\n.StreamCard h3 {\n  font-size: .75rem; }\n\n.StreamCardIcon {\n  grid-area: Icon;\n  background: var(--Background);\n  width: 3rem;\n  height: 3rem;\n  border-radius: 2rem;\n  display: flex;\n  align-content: center; }\n  .StreamCardIcon.OnSubmission {\n    background: #3367d6; }\n  .StreamCardIcon.DueDate {\n    background: #e91e63; }\n  .StreamCardIcon span {\n    margin: auto; }\n\n.StreamCardBody {\n  grid-area: Content;\n  overflow: hidden;\n  width: 100%;\n  height: 0;\n  cursor: auto; }\n\n.StreamCard.Active, .StreamCard.Active > .StreamCardBody {\n  height: max-content; }\n\n.FileSubmit {\n  height: 12.5rem;\n  display: grid;\n  grid-template-columns: 75% 1fr; }\n  .FileSubmit .UploadedFiles {\n    display: flex;\n    flex-wrap: wrap;\n    overflow-y: auto; }\n    .FileSubmit .UploadedFiles .UploadedFile {\n      width: 8rem;\n      height: 4.5rem;\n      background: var(--Background);\n      border-radius: .5rem;\n      margin: .25rem; }\n  .FileSubmit .FileForm {\n    display: flex;\n    flex-direction: column; }\n    .FileSubmit .FileForm textarea {\n      background-color: #222222;\n      border: 0.0625rem solid var(--Border);\n      flex-grow: 1;\n      border-radius: .5rem;\n      resize: none;\n      outline: none;\n      color: #fff; }\n    .FileSubmit .FileForm button {\n      background-color: #3367D6;\n      margin-top: 1rem;\n      height: 2rem;\n      border-radius: .5rem;\n      border: none;\n      outline: none;\n      cursor: pointer; }\n      .FileSubmit .FileForm button:hover {\n        opacity: .75; }\n\n.DropDown {\n  min-height: 30rem;\n  width: 20rem;\n  border-radius: .5rem;\n  border: 0.0625rem solid var(--Border);\n  background-color: var(--Foreground);\n  position: absolute;\n  top: 100%;\n  right: 0;\n  z-index: 2;\n  padding: 1rem;\n  margin: -.25rem .5rem;\n  overflow-y: scroll; }\n</style>\n\x3c!-- Google Picker Setup --\x3e\n<script type="text/javascript">\n\n  // The Browser API key obtained from the Google API Console.\n  // Replace with your own Browser API key, or your own key.\n  const developerKey = \'AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw\';\n  // The Client ID obtained from the Google API Console. Replace with your own Client ID.\n  const clientId = "624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com"\n  // Replace with your own project number from console.developers.google.com.\n  // See "Project number" under "IAM & Admin" > "Settings"\n  const appId = "united-rope-234818";\n  // Scope to use to access user\'s Drive items.\n  const scope = [\'https://www.googleapis.com/auth/drive.file\'];\n  const pickerApiLoaded = false;\n  const oauthToken;\n  // Use the Google API Loader script to load the google.picker script.\n  function loadPicker() {\n    gapi.load(\'auth\', {\'callback\': onAuthApiLoad});\n    gapi.load(\'picker\', {\'callback\': onPickerApiLoad});\n  }\n\n  function onAuthApiLoad() {\n    window.gapi.auth.authorize(\n        {\n          \'client_id\': clientId,\n          \'scope\': scope,\n          \'immediate\': false\n        },\n        handleAuthResult);\n  }\n\n  function onPickerApiLoad() {\n    pickerApiLoaded = true;\n    createPicker();\n  }\n\n  function handleAuthResult(authResult) {\n    if (authResult && !authResult.error) {\n      oauthToken = authResult.access_token;\n      createPicker();\n    }\n  }\n\n  // Create and render a Picker object for searching images.\n  function createPicker() {\n    if (pickerApiLoaded && oauthToken) {\n      var view = new google.picker.View(google.picker.ViewId.DOCS);\n      view.setMimeTypes("image/png,image/jpeg,image/jpg");\n      var picker = new google.picker.PickerBuilder()\n          .enableFeature(google.picker.Feature.NAV_HIDDEN)\n          .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)\n          .setAppId(appId)\n          .setOAuthToken(oauthToken)\n          .addView(view)\n          .addView(new google.picker.DocsUploadView())\n          .setDeveloperKey(developerKey)\n          .setCallback(pickerCallback)\n          .build();\n       picker.setVisible(true);\n    }\n  }\n\n  // A simple callback implementation.\n  function pickerCallback(data) {\n    if (data.action == google.picker.Action.PICKED) {\n      var fileId = data.docs[0].id;\n      alert(\'The user selected: \' + fileId);\n    }\n  }\n  <\/script>'), 
       o;
     }({
       title: document.title
@@ -1141,7 +1142,7 @@
         null != e && (r += e);
       }
       return a('<aside class="SideBar" id="SideBar"></aside>\n<section id="Content">\n  \x3c!-- NavBar --\x3e\n  '), 
-      a(e.navBar), a('\n  \x3c!-- Main Body --\x3e\n  <main id="main" class="Loader">\n    <div class="lds-grid">\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n    </div>\n  </main>\n</section>'), 
+      a(e.navBar), a('\n  \x3c!-- Main Body --\x3e\n  <main id="main" class="Loader">\n    <div class="lds-grid">\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n      <div></div>\n    </div>\n  </main>\n</section>\n\n\x3c!-- The Google API Loader script. --\x3e\n<script type="text/javascript" src="https://apis.google.com/js/api.js?onload=loadPicker"><\/script>'), 
       r;
     }({
       content: null,
@@ -1173,7 +1174,7 @@
         }));
       }));
       const l = async () => {
-        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), n = await q(e);
+        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), n = await U(e);
         n.Payload && [ 'Messages', 'Grades' ].forEach((e => {
           const t = n.Payload.includes(e);
           switch (e) {
@@ -1216,7 +1217,7 @@
           {
             const e = await fetch(`/d2l/MiniBar/${n.cid}/ActivityFeed/GetAlertsDaylight?Category=1&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
               method: 'GET'
-            }), t = await q(e);
+            }), t = await U(e);
             console.log(t);
             break;
           }

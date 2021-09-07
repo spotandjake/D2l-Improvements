@@ -1,2 +1,2 @@
 # D2l-Improvements
-Chrome Extension That Adds Imporvements to d2l
+Chrome Extension That Adds Improvements to d2l

@@ -5,6 +5,7 @@
   + Assignments
     + Add in feedback
     + Add in hand in spot
+      + Using Google Picker API
     + Add in viewing for older hand in files
     + try to get handout date not just hand in date
     + Rubric holder
@@ -44,6 +45,7 @@
     + Do Design Up in figma
     + rewrite css
   + consider moving to react or an alternative
+    + maybe use jsx and tsx without react
   + move to typescript
   + reorganize project layout
   + add an updateStream using github

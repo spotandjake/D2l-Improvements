@@ -16,5 +16,40 @@
     <h1><%= locals.Title %></h1>
     <h3><%= locals.StartDate %></h3>
   </div>
-  <div class="StreamCardBody"><%- locals.Body.Html %></div>
+  <div class="StreamCardBody">
+    <% if (locals.type == 'Assignment') { %>
+      <div class="FileSubmit">
+        <div class="UploadedFiles">
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+          <div class="UploadedFile">
+
+          </div>
+        </div>
+        <div class="FileForm">
+          <textarea></textarea>
+          <button>Add or create</button>
+          <button>Submit</button>
+        </div>
+      </div>
+    <% } else { %>
+      <%- locals.Body.Html %>
+    <% } %>
+  </div>
 </div>

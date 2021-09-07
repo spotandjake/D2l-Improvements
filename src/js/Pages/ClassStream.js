@@ -78,6 +78,7 @@ export default async (app) => {
   // Add Our Listeners
   [...main.querySelector('section.StreamCards').children].forEach((elm) => {
     elm.addEventListener('click', () => clickFunction(elm));
+    elm.querySelector('.StreamCardBody').addEventListener('click', (e) => e.stopPropagation());
   });
   // Handle Our Filters
   const filterParent = document.getElementById('ChipFilters');
