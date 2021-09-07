@@ -1,5 +1,16 @@
-+ Add in notifications, Alerts, Email
 + Add in the other stream sections
+  + Make the stream content update
+  + Content
+  + Discussions
+  + Assignments
+    + Add in feedback
+    + Add in hand in spot
+    + Add in viewing for older hand in files
+    + try to get handout date not just hand in date
+    + Rubric holder
+    + Any Related Materials Viewer
+  + Quizzes
++ Add in notifications, Alerts, Email
 + Add Aside
   + Make Aside Buttons Work
 + Add Support for more pages
@@ -30,11 +41,11 @@
   + Add Schedule View for Stream
 + Improve CodeBase
   + reevaluate design
-  + rewrite css
-  + move to typescript
+    + Do Design Up in figma
+    + rewrite css
   + consider moving to react or an alternative
+  + move to typescript
   + reorganize project layout
-  + fix github configuration
   + add an updateStream using github
 + Try to get some users
 + Add widgets

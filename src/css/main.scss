@@ -372,16 +372,23 @@ main.Loader {
 }
 .StreamCardIcon {
   grid-area: Icon;
-  background: #3367d6;
+  background: var(--Background);
   width: 3rem;
   height: 3rem;
   border-radius: 2rem;
   display: flex;
   align-content: center;
+  &.OnSubmission {
+    background: #3367d6;
+  }
+  &.DueDate {
+    background: #e91e63;
+  }
+  span {
+    margin: auto;
+  }
 }
-.StreamCardIcon > svg {
-  margin: auto;
-}
+
 .StreamCardBody {
   grid-area: Content;
   overflow: hidden;

@@ -1,12 +1,3 @@
-// Blocking
-// chrome.webRequest.onBeforeRequest.addListener(
-//   (details) => {
-//     const condition = details.type == 'script' || details.type == 'stylesheet';
-//     return {cancel: condition};
-//   },
-//   {urls: ["<all_urls>"]},
-//   ["blocking"]
-// );
 // eslint-disable-next-line no-undef
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {

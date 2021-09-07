@@ -3,14 +3,43 @@ import pageTemplate from '../../templates/Pages/ClassStream.ejs';
 import cardTemplate from '../../templates/Stream-Card.ejs';
 // Fetch Announcement Helper
 const fetchStream = async (app) => {
-  const response = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/news/`);
-  const res = await response.json();
-  const items = res.map((elm) => {
+  const items = []; // Convert from a list of html strings to a list of html strings with dates
+  // Map Main News Content
+  const _stream = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/news/`);
+  const stream = await _stream.json();
+  stream.forEach((elm) => {
     elm.StartDate = new Date(elm.StartDate).toDateString();
     elm.Category = 'ChipFilterHome';
-    return cardTemplate(elm);
+    elm.type = 'Info';
+    items.push({
+      date: new Date(elm.StartDate).valueOf(),
+      element: cardTemplate({ ...elm, CompletionType: 'OnSubmission' })
+    });
   });
-  return items.join('\n');
+  // Fetch Content
+  // Fetch discussions
+  // Fetch Assignments
+  const _assignments = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`);
+  const assignments = await _assignments.json();
+  assignments.forEach((elm) => {
+    items.push({
+      date: new Date(elm.DueDate).valueOf(),
+      element: cardTemplate({
+        Id: elm.Id,
+        Category: 'ChipFilterAssignments',
+        type: 'Assignment',
+        Title: elm.Name,
+        CompletionType: [ 'OnSubmission', 'DueDate', 'OnSubmission', 'OnSubmission'][elm.CompletionType],
+        StartDate: new Date(elm.DueDate).toDateString(),
+        Body: { Html: '' }
+      })
+    });
+  });
+  console.log(assignments);
+  // Fetch Quizzes
+  // Sort All Items by date
+  // Return All Items
+  return items.sort((a, b) => b.date - a.date).map((e) => e.element).join('\n');
 };
 // Data
 export default async (app) => {
@@ -56,9 +85,7 @@ export default async (app) => {
   const filterCards = (elm) => {
     elm.classList.toggle('Active', !elm.classList.contains('Active'));
     const chips = [...filterParent.querySelectorAll('.ChipFilter')];
-    const anyFilters = chips.some((chip) => chip.classList.contains('Active'));
-    if (anyFilters) [...filteredRegion.children].forEach((elm) => elm.classList.toggle('Filtered', !chips.some((chip) => chip.classList.contains('Active') && chip.id == elm.getAttribute('Category'))));
-    else [...filteredRegion.children].forEach((elm) => elm.classList.remove('Filtered'));
+    [...filteredRegion.children].forEach((elm) => elm.classList.toggle('Filtered', !chips.some((chip) => chip.classList.contains('Active') && chip.id == elm.getAttribute('Category'))));
   };
   [...filterParent.children].forEach((elm) => {
     elm.addEventListener('click', () => filterCards(elm));
