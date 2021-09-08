@@ -1,7 +1,12 @@
 // Inject Script
-const script = document.createElement('script');
-script.src = 'https://apis.google.com/js/api.js?key=AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw';
-document.body.appendChild(script);
+const scripts = [
+  'https://apis.google.com/js/api.js?key=AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw'
+];
+scripts.forEach((src) => {
+  const script = document.createElement('script');
+  script.src = src;
+  document.body.appendChild(script);
+});
 // Setup
 let pickerApiLoaded = false;
 let oauthToken;

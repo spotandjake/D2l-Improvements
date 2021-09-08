@@ -19,6 +19,53 @@ const fetchStream = async (app) => {
     });
   });
   // Fetch Content
+  const _readModules = await fetch(`/d2l/api/le/unstable/${app.cid}/content/userprogress/?pageSize=99999`);
+  const readModules = await _readModules.json();
+  const parseContent = async (content) => {
+    const _contentItems = [];
+    await Promise.all(content.map(async (contentElement) => {
+      switch (contentElement.Type) {
+        case 1: // Topic
+          _contentItems.push({
+            ...contentElement,
+            isRead: readModules.Objects.some((elm) => elm.ObjectId == contentElement.Id && elm.IsRead)
+          });
+          break;
+        case 0: { // Module
+          const _moduleContent = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/modules/${contentElement.Id}/structure/`);
+          const moduleContent = await _moduleContent.json();
+          _contentItems.push(...(await parseContent(moduleContent)));
+          break;
+        }
+      }
+    }));
+    return _contentItems;
+  };
+  const _rootContent = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/root/`);
+  const rootContent = await _rootContent.json();
+  const contentStream = await parseContent(rootContent);
+  console.log(contentStream);
+  contentStream.forEach((elm) => {
+    const _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
+    items.push({
+      date: new Date(elm.LastModifiedDate).valueOf(), // TODO: Preferably get the date it was shown
+      element: cardTemplate({
+        Id: elm.Id,
+        Category: 'ChipFilterContent',
+        type: 'Content',
+        Title: elm.Title,
+        CompletionType: elm.isRead ? 'OnSubmission' : 'Unread',
+        StartDate: new Date(elm.LastModifiedDate).toDateString(),
+        Body: {
+          Html: `
+            <iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">
+              <a href="${_url}">Download</a>
+            </iframe>
+          `
+        }
+      })
+    });
+  });
   // Fetch discussions
   // Fetch Assignments
   const _assignments = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`);
@@ -42,7 +89,8 @@ const fetchStream = async (app) => {
   // Return All Items
   return {
     html: items.sort((a, b) => b.date - a.date).map((e) => e.element).join('\n'), 
-    assignments: assignments
+    assignments: assignments,
+    content: contentStream
   };
 };
 // Data
@@ -75,9 +123,25 @@ export default async (app) => {
   // Call Are Calender Widget
   main.innerHTML = pageTemplate({ announcements: html, classData: classData });
   // Click Function
-  const clickFunction = (elm) => {
+  const clickFunction = async (elm) => {
     if (elm.classList.contains('Active')) elm.classList.remove('Active');
-    else elm.classList.add('Active');
+    else {
+      elm.classList.add('Active');
+      // Add Our Content Read Update
+      if (elm.getAttribute('Category') == 'ChipFilterContent') {
+        if (elm.querySelector('.StreamCardIcon').classList.contains('Unread')) {
+          await fetch(`/d2l/api/le/unstable/${app.cid}/content/topics/${elm.id}/view`, {
+            headers: {
+              authorization: `Bearer ${await app.getToken()}`
+            },
+            method: 'POST'
+          });
+          elm.querySelector('.StreamCardIcon').classList.remove('Unread');
+          elm.querySelector('.StreamCardIcon').classList.add('OnSubmission');
+        }
+        elm.classList.add('Active');
+      }
+    }
   };
   // Add Our Listeners
   const picker = new Picker(

@@ -1,6 +1,7 @@
 + Add in the other stream sections
   + Make the stream content update
   + Content
+    + Improve Document Viewer
   + Discussions
   + Assignments
     + Add in feedback
@@ -54,3 +55,4 @@
   + Add calendar widget to stream
 + Stop D2l Scripts
 + Try To Use Api Routes That Give Raw JSON data instead of interacting with any routes returning HTML, try to move away from needing to be an extension.
++ Fix everything marked with TODO:

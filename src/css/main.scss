@@ -391,6 +391,13 @@ main.Loader {
     margin: auto;
   }
 }
+.StreamIframe {
+  border:none;
+  overflow:hidden;
+  height: calc(100vh - 64px);
+  width:100%;
+  background: #fff;
+}
 
 .StreamCardBody {
   grid-area: Content;
