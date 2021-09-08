@@ -96,30 +96,47 @@ export default async (app) => {
     elm.querySelector('.StreamCardBody').addEventListener('click', (e) => e.stopPropagation());
     // Add Our Listeners For Our Assignments Buttons
     if (elm.getAttribute('Category') == 'ChipFilterAssignments') {
+      // TODO: Mark View
+      // TODO: View Old Submissions
+      // TODO: allow viewing of related work and rubric
       elm.querySelector('.FileFormAdd').addEventListener('click', (e) => {
         const assignment = assignments.find((project) => project.Id == elm.id);
+        console.log(assignment);
         picker.show((data) => {
           if (data.action == 'picked') {
             const uploadedFiles = elm.querySelector('.UploadedFiles');
-            data.docs.forEach((doc) => {
-              // TODO: get file thumbnail
-              // TODO: get file blob or at least enough info to get blob on submit
-              // TODO: delete file button
-              // TODO: Submit
-              // TODO: Feedback
-              // TODO: Mark View
-              // TODO: View Old Submissions
+            data.docs.forEach(async (doc) => {
               uploadedFiles.insertAdjacentHTML(
                 'beforeend',
                 uploadedFileTemplate({
-                  name: doc.name
+                  name: doc.name,
+                  href: doc.url,
+                  thumbnail: doc.thumbnail,
+                  documentId: doc.id
                 })
               );
             });
-            console.log(assignment);
-            console.log(data);
           }
         });
+      });
+      elm.querySelector('.FileFormSubmit').addEventListener('click', async (e) => {
+        // Loop Over All Submitted Files
+        const uploadedFiles = await Promise.all(
+          [...elm.querySelector('.UploadedFiles').children].map(async (_file) => {
+            const fileId = _file.getAttribute('documentid');
+            return await picker.export(fileId);
+          })
+        );
+        const Description = elm.querySelector('.FileFormDescription').value;
+        elm.querySelector('.UploadedFiles').innerHTML = '';
+        elm.querySelector('.FileFormDescription').value = '';
+        // TODO: Submit files, convert file to correct format
+        const submissionBody = {
+          files: uploadedFiles,
+          description: Description
+        };
+        console.log(submissionBody);
+        alert('Submitted');
       });
     }
   });

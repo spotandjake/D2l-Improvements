@@ -28,6 +28,7 @@ class Picker {
       if (event.source != window) return;
       if (event.data.type && (event.data.type == 'FROM_PAGE')) {
         switch (event.data.action) {
+          case 'EXPORT':
           case 'CALLBACK': {
             if (this.Handler.has(event.data.id)) {
               const callback = this.Handler.get(event.data.id);
@@ -40,15 +41,31 @@ class Picker {
       }
     }, false);
   }
+  _genId() {
+    return Math.floor(Math.random() * Date.now());
+  }
   // Routes
   show(onClick, config={}) {
     // Generate A Request ID
-    const id = Math.floor(Math.random() * Date.now());
+    const id = this._genId();
     // Add The Request And ID into storage to be handled
     this.Handler.set(id, onClick);
     // Make Request
     window.postMessage({ type: 'FROM_EXTENSION', action: ACTIONS.SHOW, id: id, config: config }, '*');
   }
-  // Handle onClick
+  export(fileId) {
+    const id = this._genId();
+    // Listen For Response
+    return new Promise((resolve) => {
+      this.Handler.set(id, (event) => resolve(event));
+      // post Original Message
+      window.postMessage({
+        type: 'FROM_EXTENSION',
+        action: 'EXPORT',
+        id: id,
+        fileId: fileId
+      }, '*');
+    });
+  }
 }
 export default Picker;

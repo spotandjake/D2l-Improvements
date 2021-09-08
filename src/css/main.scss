@@ -419,7 +419,7 @@ main.Loader {
       margin: .25rem;
       position: relative;
       overflow: hidden;
-      span {
+      .FileTitle {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -430,6 +430,16 @@ main.Loader {
         white-space: nowrap;
         text-overflow: ellipsis;
         padding: 0 .5rem;
+      }
+      .FileRemove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, .75);
+        color: #fff;
+        font-size: 0.75rem;
+        padding: .25rem;
+        border-radius: 0 0 0 .5rem;
       }
     }
   }

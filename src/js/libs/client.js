@@ -16,7 +16,6 @@ function onAuthApiLoad(config) {
     (authResult) => handleAuthResult(authResult, config)
   );
 }
-
 function onPickerApiLoad(config) {
   pickerApiLoaded = true;
   createPicker(config);
@@ -48,22 +47,57 @@ function createPicker({ developerKey, appId, mimeTypes, pickerId }) {
     this.picker = picker;
   }
 }
-function pickerCallback(data, pickerId) {
+async function pickerCallback(data, pickerId) {
   if (
     data.action == google.picker.Action.PICKED ||
     data.action == google.picker.Action.CANCEL
   ) {
+    // Add Data for the files if the user picked something
+    if (data.action == google.picker.Action.PICKED) {
+      const getFile = async () => {
+        if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) { // Make sure the user is signed in
+          // Loop Over Each File
+          data.docs = await Promise.all(data.docs.map(async (doc) => {
+            // Get File Info
+            const file = gapi.client.drive.files.get({
+              fileId: doc.id,
+              fields: 'id, name, thumbnailLink'
+            });
+            const fileData = await new Promise((resolve) => {
+              file.execute((_fileData) => resolve(_fileData));
+            });
+            return {
+              ...doc,
+              thumbnail: fileData?.thumbnailLink || ''
+            }
+          }));
+        } else { // Handle When User Is Not Signed In
+          await gapi.auth2.getAuthInstance().signIn().catch(() => {});
+          await getFile();
+        }
+      }
+      await getFile();
+    }
     window.postMessage({ type: 'FROM_PAGE', action: 'CALLBACK', id: pickerId, data: data }, '*');
   }
 }
 // Bridge Code
 let config = {};
-window.addEventListener('message', (event) => {
+window.addEventListener('message', async (event) => {
   if (event.source != window) return;
   if (event.data.type && (event.data.type == 'FROM_EXTENSION')) {
     switch (event.data.action) {
       case 'LOAD':
         config = event.data.config;
+        // Load Google Drive API
+        window.gapi.load('client:auth2', async () => {
+          await window.gapi.client.init({
+            apiKey: config.developerKey,
+            clientId: config.clientId,
+            discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"], //TODO: figure out what this is
+            scope: 'https://www.googleapis.com/auth/drive' // TODO: make this more specific
+          });
+        });
         break;
       case 'SHOW': {
         const currentPickerConfig = {
@@ -74,6 +108,19 @@ window.addEventListener('message', (event) => {
         // Send Messages
         window.gapi.load('auth', {'callback': () => onAuthApiLoad(currentPickerConfig)});
         window.gapi.load('picker', {'callback': () => onPickerApiLoad(currentPickerConfig)});
+        break;
+      }
+      case 'EXPORT': {
+        const data = await gapi.client.drive.files.export({
+          fileId: event.data.fileId,
+          mimeType: 'application/pdf'
+        })
+        window.postMessage({
+          type: 'FROM_PAGE',
+          action: 'EXPORT',
+          id: event.data.id,
+          data: data
+        }, '*');
         break;
       }
     }

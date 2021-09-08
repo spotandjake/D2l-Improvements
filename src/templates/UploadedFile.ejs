@@ -1,6 +1,7 @@
-<div class="UploadedFile">
+<div class="UploadedFile" onClick="window.open('<%- locals.href %>');" documentId="<%- locals.documentId %>">
   <picture>
-    <img src="https://lh3.google.com/u/1/d/14vDWxhiT2jOn16kbBHPYzr11y0MAR3SDcGjuV6EUQOM=w250-h188-p-k-nu" />
+    <img src="<%- locals.thumbnail %>" />
   </picture>
-  <span><%= locals.name %></span>
+  <span class="FileTitle"><%= locals.name %></span>
+  <span class="FileRemove material-icons" onClick="this.parentNode.remove();event.stopPropagation();">close</span>
 </div>

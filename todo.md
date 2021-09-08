@@ -5,11 +5,7 @@
   + Assignments
     + Add in feedback
     + Add in hand in spot
-      + Comments
       + Submit
-      + Thumbnail
-      + Remove Files
-      + Open files
     + Add in viewing for older hand in files
     + try to get handout date not just hand in date
     + Rubric holder
