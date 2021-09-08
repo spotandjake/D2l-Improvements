@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-undef
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
+    if (details.url.startsWith('chrome-extension:')) return;
     switch (details.type) {
       case 'script':
         return { redirectUrl: 'data:text/javascript;charset=utf-8;base64,Ly8gcnVu' };

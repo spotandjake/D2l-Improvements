@@ -5,7 +5,11 @@
   + Assignments
     + Add in feedback
     + Add in hand in spot
-      + Using Google Picker API
+      + Comments
+      + Submit
+      + Thumbnail
+      + Remove Files
+      + Open files
     + Add in viewing for older hand in files
     + try to get handout date not just hand in date
     + Rubric holder

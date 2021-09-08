@@ -21,6 +21,10 @@ const start = async () => {
     title: document.title
   });
   document.body.innerHTML = body({ content: null, navBar: NavTemplate() });
+  const script = document.createElement('script');
+  // eslint-disable-next-line no-undef
+  script.src = chrome.runtime.getURL('./client.js');
+  document.body.appendChild(script);
   // NavBar
   NavBar(document.getElementById('NavBar'), app);
   // Aside

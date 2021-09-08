@@ -1,5 +1,5 @@
 chrome.webRequest.onBeforeRequest.addListener((e => {
-  switch (e.type) {
+  if (!e.url.startsWith('chrome-extension:')) switch (e.type) {
    case 'script':
     return {
       redirectUrl: 'data:text/javascript;charset=utf-8;base64,Ly8gcnVu'

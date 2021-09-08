@@ -1,10 +1,9 @@
-import gulp from "gulp";
+import gulp from 'gulp';
 import eslint from 'gulp-eslint';
-import * as rollup from "rollup";
+import * as rollup from 'rollup';
 import { terser } from 'rollup-plugin-terser';
-import ejs from "./rollup-plugins/rollup-ejs.js";
-import fs from "fs";
-import path from "path";
+import ejs from './rollup-plugins/rollup-ejs.js';
+import fs from 'fs';
 // Options
 const terserOptions = {
   compress: {
@@ -19,9 +18,9 @@ const terserOptions = {
   }
 };
 // Generate
-gulp.task("build", async () => {
+gulp.task('build', async () => {
   const bundle = await rollup.rollup({
-    input: "src/js/main.js",
+    input: 'src/js/main.js',
     plugins: [
       ejs({
         include: [/[^\\]*\.ejs$/],
@@ -32,50 +31,27 @@ gulp.task("build", async () => {
     ],
   });
   // Get All Assets For Build
-  const { code } = (
-    await bundle.generate({
-      file: "dist/main.js",
-      format: "iife",
-    })
-  ).output[0];
-  const matches = code.match(/chrome\.runtime\.getURL\((?<param>[^)]*)\)/g);
-  const assets = matches ? matches
-    .map((m) => {
-      const match = m.match(/chrome\.runtime\.getURL\((?<param>[^)]*)\)/);
-      if (match) {
-        const fileName = match.groups.param.replace(/['"]/g, "");
-        const folder = path.dirname(`./dist/${fileName}`);
-        if (!fs.existsSync(folder)) {
-          fs.mkdirSync(folder, { recursive: true });
-        }
-        fs.copyFileSync(
-          path.resolve(`./src/${fileName}`),
-          path.resolve(`./dist/${fileName}`)
-        );
-        return fileName.replace(/^\.\//, '');
-      } else return null;
-    })
-    .filter((n) => n) : [];
   const manifest = JSON.parse(
-    await fs.promises.readFile("./src/manifest.json", "utf8")
+    await fs.promises.readFile('./src/manifest.json', 'utf8')
   );
-  manifest.web_accessible_resources = assets;
-  await fs.promises.writeFile("./dist/manifest.json", JSON.stringify(manifest, 2, 2));
+  await fs.promises.writeFile('./dist/manifest.json', JSON.stringify(manifest, 2, 2));
   // Bundle Blocker
   const bundleBlocker = await rollup.rollup({
-    input: "src/js/blocker.js",
+    input: 'src/js/blocker.js',
     plugins: [
       terser(terserOptions),
     ],
   });
   bundleBlocker.write({
-    file: "dist/blocker.js",
-    format: "iife",
+    file: 'dist/blocker.js',
+    format: 'iife',
   });
+  // Bundle Google Picker Library
+  await fs.promises.copyFile('./src/js/libs/client.js', './dist/client.js');
   // Output
   return bundle.write({
-    file: "dist/main.js",
-    format: "iife",
+    file: 'dist/main.js',
+    format: 'iife',
   });
 });
 

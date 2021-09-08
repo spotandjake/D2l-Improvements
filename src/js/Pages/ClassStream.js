@@ -1,6 +1,8 @@
 // Imports
 import pageTemplate from '../../templates/Pages/ClassStream.ejs';
 import cardTemplate from '../../templates/Stream-Card.ejs';
+import uploadedFileTemplate from '../../templates/UploadedFile.ejs';
+import Picker from '../libs/googlePicker.js';
 // Fetch Announcement Helper
 const fetchStream = async (app) => {
   const items = []; // Convert from a list of html strings to a list of html strings with dates
@@ -35,11 +37,13 @@ const fetchStream = async (app) => {
       })
     });
   });
-  console.log(assignments);
   // Fetch Quizzes
   // Sort All Items by date
   // Return All Items
-  return items.sort((a, b) => b.date - a.date).map((e) => e.element).join('\n');
+  return {
+    html: items.sort((a, b) => b.date - a.date).map((e) => e.element).join('\n'), 
+    assignments: assignments
+  };
 };
 // Data
 export default async (app) => {
@@ -67,7 +71,7 @@ export default async (app) => {
     }
   };
   // Fetch Stream Data
-  const html = await fetchStream(app);
+  const { html, assignments } = await fetchStream(app);
   // Call Are Calender Widget
   main.innerHTML = pageTemplate({ announcements: html, classData: classData });
   // Click Function
@@ -76,9 +80,48 @@ export default async (app) => {
     else elm.classList.add('Active');
   };
   // Add Our Listeners
+  const picker = new Picker(
+    'AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw',
+    '624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com',
+    'united-rope-234818',
+    [
+      'https://www.googleapis.com/auth/drive', //TODO be more specific here
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive.readonly'
+    ],
+    ''
+  );
   [...main.querySelector('section.StreamCards').children].forEach((elm) => {
     elm.addEventListener('click', () => clickFunction(elm));
     elm.querySelector('.StreamCardBody').addEventListener('click', (e) => e.stopPropagation());
+    // Add Our Listeners For Our Assignments Buttons
+    if (elm.getAttribute('Category') == 'ChipFilterAssignments') {
+      elm.querySelector('.FileFormAdd').addEventListener('click', (e) => {
+        const assignment = assignments.find((project) => project.Id == elm.id);
+        picker.show((data) => {
+          if (data.action == 'picked') {
+            const uploadedFiles = elm.querySelector('.UploadedFiles');
+            data.docs.forEach((doc) => {
+              // TODO: get file thumbnail
+              // TODO: get file blob or at least enough info to get blob on submit
+              // TODO: delete file button
+              // TODO: Submit
+              // TODO: Feedback
+              // TODO: Mark View
+              // TODO: View Old Submissions
+              uploadedFiles.insertAdjacentHTML(
+                'beforeend',
+                uploadedFileTemplate({
+                  name: doc.name
+                })
+              );
+            });
+            console.log(assignment);
+            console.log(data);
+          }
+        });
+      });
+    }
   });
   // Handle Our Filters
   const filterParent = document.getElementById('ChipFilters');

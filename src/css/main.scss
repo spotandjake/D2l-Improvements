@@ -417,6 +417,20 @@ main.Loader {
       background: var(--Background);
       border-radius: .5rem;
       margin: .25rem;
+      position: relative;
+      overflow: hidden;
+      span {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, .75);
+        color: #fff;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0 .5rem;
+      }
     }
   }
   .FileForm {
@@ -430,6 +444,7 @@ main.Loader {
       resize: none;
       outline: none;
       color: #fff;
+      padding: .5rem;
     }
     button {
       background-color: #3367D6;
