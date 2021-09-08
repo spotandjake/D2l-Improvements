@@ -32,7 +32,7 @@
   + Etc.
 + Improve Current Features
   + Fetch Teacher Info For Each Class On Class page
-  + Fetch Teacher Name for each classes page
+  + Find Latest Google Meet Info For Each Page
   + Fix Fetching of classroom image it errors sometimes
   + Make Notification Alert UI use a json route
   + Allow drag and drop sorting of class order
@@ -41,18 +41,27 @@
     + make use of history.pushState() for seamless single page navigation and reload recovery.
   + Add better interaction between google products like google meet and d2l.
   + Add Schedule View for Stream
-+ Improve CodeBase
-  + reevaluate design
-    + Do Design Up in figma
-    + rewrite css
-  + consider moving to react or an alternative
-    + maybe use jsx and tsx without react
-  + move to typescript
-  + reorganize project layout
-  + add an updateStream using github
 + Try to get some users
 + Add widgets
   + Add calendar widget to stream
-+ Stop D2l Scripts
 + Try To Use Api Routes That Give Raw JSON data instead of interacting with any routes returning HTML, try to move away from needing to be an extension.
 + Fix everything marked with TODO:
+
+# Version 2.0 ideas
++ FrameWorks
+  + Use Blocker Script to block all d2l requests that do not start with ?extension_view=0
+    + This will allow us to use normal nextjs and avoid need for blocking d2l scripts
+    + The extension_view=0 is there so we can fetch data from the page such as the xref auth token, and stuff from the data attribute in the body, this will hopefully be something we can grow out of with further development.
+  + We will make use of typescript
+    + this will allow us to make an api for interacting with the d2l system that is well typed making development easier
+  + We will make use of scss because it is better than css and can reduce codesize
++ Design
+  + We will design each component as components in figma and then move each component individually to nextjs
+  + Components
+  + Pages
+    + Classes
+    + Stream
+    + Portfolio
+    + Settings
+    + Grades
+    + Calender
