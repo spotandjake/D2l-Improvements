@@ -68,19 +68,16 @@
     + Grades
     + Calender
 # Version 2 Checklist
-+ [ ] Get Nextjs setup
-  + [ ] scss
++ [x] Get Nextjs setup
+  + [x] scss
   + [x] typescript
 + [ ] Get gulp setup
   + [x] Copy Manifest
-  + [ ] Modify Manifest web assets so hey include the assets from our Nextjs app
+  + [x] Modify Manifest web assets so hey include the assets from our Nextjs app
   + [ ] Get nextjs working from gulp
   + [x] Gulp typescript compile Background
   + [x] Gulp lint
 + [ ] Get nextjs routing going
 + [ ] Start Building
-+ [ ] Stop chrome from closing my tabs when i refresh the extension
-+ [ ] Fix our output html file links to account for the fact this is a chrome extension
-  + [ ] Possibly bundle with rollup
-  + [ ] Possibly see if nextjs will let us use a custom function for this
-  + [ ] Possibly see if nextjs will let us bundle further
++ [x] Stop chrome from closing my tabs when i refresh the extension
++ [x] Fix our output html file links to account for the fact this is a chrome extension
