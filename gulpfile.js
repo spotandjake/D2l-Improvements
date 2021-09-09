@@ -1,58 +1,39 @@
-import gulp from 'gulp';
-import eslint from 'gulp-eslint';
-import * as rollup from 'rollup';
-import { terser } from 'rollup-plugin-terser';
-import ejs from './rollup-plugins/rollup-ejs.js';
-import fs from 'fs';
-// Options
-const terserOptions = {
-  compress: {
-    passes: 3,
-    module: true
-  },
-  format: {
-    beautify: true,
-    // max_line_len: 500,
-    quote_style: 1, //Always Single
-    indent_level: 2
-  }
-};
-// Generate
-gulp.task('build', async () => {
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const gulp = require('gulp');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const eslint = require('gulp-eslint');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const rollup = require('rollup');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const rollupTypescript = require('@rollup/plugin-typescript');
+
+gulp.task('build', async (done) => {
+  // Copy Manifest
+  await fs.promises.copyFile('./src/manifest.json', './dist/manifest.json');
+  // TODO: Modify Manifest Add All Code For WebPage
+  // TODO: Look into bundling web page with rollup
+  // generate our Background Script
   const bundle = await rollup.rollup({
-    input: 'src/js/main.js',
+    input: './src/Background/Background.ts',
     plugins: [
-      ejs({
-        include: [/[^\\]*\.ejs$/],
-        compilerOptions: { client: true },
-        loadStyles: true
-      }),
-      terser(terserOptions),
-    ],
+      rollupTypescript({
+        cacheDir: './dist/cache/'
+      })
+    ]
   });
-  // Get All Assets For Build
-  const manifest = JSON.parse(
-    await fs.promises.readFile('./src/manifest.json', 'utf8')
-  );
-  await fs.promises.writeFile('./dist/manifest.json', JSON.stringify(manifest, 2, 2));
-  // Bundle Blocker
-  const bundleBlocker = await rollup.rollup({
-    input: 'src/js/blocker.js',
-    plugins: [
-      terser(terserOptions),
-    ],
-  });
-  bundleBlocker.write({
-    file: 'dist/blocker.js',
+  await bundle.write({
+    file: './dist/Background/Background.js',
+    name: 'Background',
     format: 'iife',
+    compact: true,
+    indent: '  ',
+    preferConst: true
   });
-  // Bundle Google Picker Library
-  await fs.promises.copyFile('./src/js/libs/client.js', './dist/client.js');
-  // Output
-  return bundle.write({
-    file: 'dist/main.js',
-    format: 'iife',
-  });
+  done();
+  // eslint-disable-next-line no-undef
+  process.exit(0);
 });
 
 gulp.task('lint', () => {

@@ -48,6 +48,8 @@
 + Fix everything marked with TODO:
 
 # Version 2.0 ideas
++ Move To Using Gulp Completely
++ Figure Out Why Gulp Refuses to Close
 + FrameWorks
   + Use Blocker Script to block all d2l requests that do not start with ?extension_view=0
     + This will allow us to use normal nextjs and avoid need for blocking d2l scripts
@@ -65,3 +67,15 @@
     + Settings
     + Grades
     + Calender
+# Version 2 Checklist
++ [ ] Get Nextjs setup
+  + [ ] scss
+  + [x] typescript
++ [ ] Get gulp setup
+  + [x] Copy Manifest
+  + [ ] Modify Manifest web assets so hey include the assets from our Nextjs app
+  + [ ] Get nextjs working from gulp
+  + [x] Gulp typescript compile Background
+  + [x] Gulp lint
++ [ ] Get nextjs routing going
++ [ ] Start Building

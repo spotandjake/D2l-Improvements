@@ -1,25 +1,26 @@
 {
-  "name": "d2lEnchance",
+  "name": "d2lEnhance",
   "version": "0.2.0",
   "description": "Enhance D2l",
-  "main": "./dist/bundle.js",
-  "type": "module",
   "scripts": {
-    "start": "gulp build",
+    "start": "next build ./src/Foreground/ && next export -o ./dist/Foreground/ ./src/Foreground/ && gulp build",
     "lint": "gulp lint"
   },
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@types/chrome": "^0.0.157",
+    "@types/node": "^16.9.0",
+    "@types/react": "^17.0.20",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
-    "ejs": "^3.1.6",
     "eslint": "^7.32.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
-    "html-minifier": "^4.0.0",
-    "node-sass": "^6.0.1",
-    "prettier": "^2.3.2",
     "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2"
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "next": "^11.1.2"
   }
 }
