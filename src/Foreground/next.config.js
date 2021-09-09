@@ -1,4 +1,5 @@
 // next.config.js
 module.exports = {
-  modern: true,
+  webpack5: true,
+  modern: true
 };

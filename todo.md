@@ -79,3 +79,8 @@
   + [x] Gulp lint
 + [ ] Get nextjs routing going
 + [ ] Start Building
++ [ ] Stop chrome from closing my tabs when i refresh the extension
++ [ ] Fix our output html file links to account for the fact this is a chrome extension
+  + [ ] Possibly bundle with rollup
+  + [ ] Possibly see if nextjs will let us use a custom function for this
+  + [ ] Possibly see if nextjs will let us bundle further
