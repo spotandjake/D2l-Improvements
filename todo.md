@@ -79,5 +79,47 @@
   + [x] Gulp lint
 + [ ] Get nextjs routing going
 + [ ] Start Building
+  + [ ] Plan A Content Graph
+    + [ ] Routes
+    + [ ] Information Per Page
+  + [ ] Design in figma
+    + [ ] Color Pallette
+    + [ ] Components
+      + [ ] Global
+        + [ ] Aside
+        + [ ] NavBar
+          + [ ] Search Bar
+          + [ ] Notification Area
+      + [ ] Classes Page
+        + [ ] Classes
+      + [ ] Stream
+        + [ ] General Stream Card
+          + [ ] File Picker
+            + [ ] Google Picker
+          + [ ] File Preview
+          + [ ] Text Boxes
+          + [ ] Rubrics
+          + [ ] General Markdown
+    + [ ] Styles
+      + [ ] Typography
+      + [ ] Theme's
+      + [ ] Common Effects
+      + [ ] Common css
+      + [ ] convert common styles to mixins
+      + [ ] Create an scss mixin file for common styles
+  + [ ] Build D2L API class
+    + [ ] Routes
+    + [ ] Auth
+    + [ ] Types
+  + [ ] Build figma Components in tsx along with scss
+  + [ ] Handle Routing So it reflects actual d2l routing allowing state to be kept between when the extension is enabled and disabled.
+  + [ ] Bring it all together to make the application.
+  + [ ] Add Better integration with google products like doc's
+  + [ ] Testing Time
+  + [ ] Add a github push update
+  + [ ] Optimizations To Extension
+    + [ ] nextJS Optimizations
+    + [ ] switch from webRequest API to the declarativeNetRequest API, allowing for much faster request handling
+    + [ ] Find a way to load the main page faster and prevent the errors from the original d2l content
 + [x] Stop chrome from closing my tabs when i refresh the extension
 + [x] Fix our output html file links to account for the fact this is a chrome extension
