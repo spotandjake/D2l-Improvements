@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "extensionPath": "/Foreground/index.html"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://durham\\.elearningontario\\.ca/"
+    }
+  }
+]

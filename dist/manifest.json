@@ -6,13 +6,38 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://durham.elearningontario.ca/*",
-    "https://s.brightspace.com/*"
+    "https://durham.elearningontario.ca/*"
+  ],
+  "content_scripts": [
+    {
+      "js": [
+        "./Background/Content.js"
+      ],
+      "matches": [
+        "*://durham.elearningontario.ca/d2l/*"
+      ]
+    }
   ],
   "background": {
-    "scripts": ["./Background/Background.js"]
+    "scripts": [
+      "./Background/Background.js"
+    ]
   },
   "web_accessible_resources": [
-    "./Foreground/index.html"
+    "Foreground/404.html",
+    "Foreground/index.html",
+    "Foreground/static/css/Global.scss",
+    "Foreground/static/css/Material.scss",
+    "Foreground/static/css/Theme/Dark.scss",
+    "Foreground/_next/static/chunks/framework-8bf2f3068d84606055a6.js",
+    "Foreground/_next/static/chunks/main-7b566838a9654053a759.js",
+    "Foreground/_next/static/chunks/pages/index-2c59775d3b549a0d19da.js",
+    "Foreground/_next/static/chunks/pages/_app-4dce9fcf3b9765789ed4.js",
+    "Foreground/_next/static/chunks/pages/_error-82574734f9384a4c368b.js",
+    "Foreground/_next/static/chunks/polyfills-a40ef1678bae11e696dba45124eadd70.js",
+    "Foreground/_next/static/chunks/webpack-cd490b43dc8f3ab50ffd.js",
+    "Foreground/_next/static/css/e605cd698216d78667f0.css",
+    "Foreground/_next/static/gwDNVSKLyECGe9MbBAQJ3/_buildManifest.js",
+    "Foreground/_next/static/gwDNVSKLyECGe9MbBAQJ3/_ssgManifest.js"
   ]
 }
