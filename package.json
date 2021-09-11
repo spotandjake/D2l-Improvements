@@ -7,6 +7,7 @@
     "build": "next build ./src/Foreground/",
     "export": "next export -o ./dist/Foreground/ ./src/Foreground/",
     "package": "gulp build",
+    "dev": "next dev ./src/Foreground/",
     "lint": "gulp lint"
   },
   "license": "MIT",

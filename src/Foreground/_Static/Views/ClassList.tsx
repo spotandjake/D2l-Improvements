@@ -3,8 +3,8 @@ import styles from '../css/Views/ClassList.module.scss';
 const ClassList = () => {
   return (
     <section className={styles.container}>
-      {/* NavBar */}
-      {/* ClassList */}
+      {/* TODO: NavBar */}
+      {/* TODO: ClassList */}
     </section>
   );
 };
