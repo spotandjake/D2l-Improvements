@@ -107,6 +107,7 @@
       + [ ] convert common styles to mixins
       + [ ] Create an scss mixin file for common styles
   + [ ] Build D2L API class
+    + [ ] Look into https://swr.vercel.app/ for faster requests
     + [ ] Routes
     + [ ] Auth
     + [ ] Types
