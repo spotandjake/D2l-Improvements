@@ -1,0 +1,28 @@
+@use 'sass:math';
+.container {
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  height: 100%;
+}
+.loader {
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1rem);
+  grid-template-rows: repeat(3, 1rem);
+  grid-gap: .5rem;
+  div {
+    border-radius: 50%;
+    background: #fff;
+    animation: loader 1.2s linear infinite;
+  }
+  @for $i from 1 to 9 {
+    div:nth-child(#{$i}) {
+      animation-delay: (math.random(1) + math.random()) * -1s;
+    }
+  }
+}
+@keyframes loader {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
