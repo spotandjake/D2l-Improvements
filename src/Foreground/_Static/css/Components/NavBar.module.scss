@@ -1,0 +1,40 @@
+.container {
+  $searchSize: calc(100% - 60rem);
+  background-color: var(--Foreground);
+  height: 3.5rem;
+  width: 100%;
+  display: flex;
+  .side, .center {
+    flex: 1 1 0;
+    display: flex;
+    align-content: center;
+    margin: auto 0;
+  }
+  .center {
+    flex-basis: $searchSize;
+  }
+  .rightSide {
+    justify-content: end;
+  }
+}
+// Search Bar
+.SearchBar {
+  height: 2.5rem;
+  width: 100%;
+  display: block;
+  background-color: #212121;
+  outline: none;
+  border: none;
+  border-radius: .5rem;
+  padding: .5rem;
+  color: #fff;
+}
+// Icons
+.Icon {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  color: #fff;
+}
+.IconButton {
+  margin: 0 .5rem !important;
+}

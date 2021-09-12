@@ -14,17 +14,4 @@
                 return { redirectUrl: 'data:text/css;charset=utf-8;base64,LyogcnVuICov' };
         }
     }
-}, { urls: ['<all_urls>'] }, ['blocking']);
-// chrome.webRequest.onBeforeRequest.addListener(
-//   (details) => {
-//     const url = new URL(details.url);
-//     if (details.url.startsWith('https://durham.elearningontario.ca')) {
-//       return {
-//         redirectUrl: chrome.runtime.getURL('./Foreground/index.html')
-//       };
-//     }
-//   },
-//   {urls: ['<all_urls>']},
-//   ['blocking']
-// );
-}());
+}, { urls: ['<all_urls>'] }, ['blocking']);}());

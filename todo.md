@@ -109,7 +109,7 @@
   + [ ] Build D2L API class
     + [ ] Look into https://swr.vercel.app/ for faster requests
     + [ ] Routes
-    + [ ] Auth
+    + [x] Auth
     + [ ] Types
   + [ ] Build figma Components in tsx along with scss
   + [ ] Handle Routing So it reflects actual d2l routing allowing state to be kept between when the extension is enabled and disabled.
