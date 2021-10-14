@@ -89,14 +89,15 @@ const NavBar = (navBar, app) => {
     if (_dropDown) _dropDown.remove();
     // Spawn Dropdown
     navBar.insertAdjacentHTML('beforeend', DropDown({}));
+    let html = '';
     // Deal with the dropdown types
     switch (type) {
       case 'MailButton': {
-        const response = await fetch(`https://durham.elearningontario.ca/d2l/api/lp/${app.apiVersion.lp}/alerts/user/${app.uid}`, {
-          headers: {authorization: `Bearer ${await app.getToken()}`},
-          method:'GET',
+        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=2&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
+          method: 'GET',
         });
-        console.log(await response.text());
+        const res = await parseResponse(response);
+        html = res.Payload.Html;
         break;
       }
       case 'MessageButton':
@@ -106,11 +107,14 @@ const NavBar = (navBar, app) => {
           method: 'GET',
         });
         const res = await parseResponse(response);
-        console.log(res);
+        html = res.Payload.Html;
         break;
       }
     }
     const dropDown = document.getElementById('DropDown');
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(html, 'text/html');
+    dropDown.querySelector('.NotificationShade').innerHTML = htmlDoc.querySelector('.vui-list').innerHTML;
     dropDown.addEventListener('click', (e) => e.stopPropagation());
   };
   mailButton.addEventListener('click', (e) => alertDropDown(e, 'MailButton'));

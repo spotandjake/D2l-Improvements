@@ -1,4 +1,4 @@
-<div class="StreamCard" id="<%- locals.Id %>" Category="<%- locals.Category %>">
+<div class="StreamCard" id="<%- locals.Id %>" Category="<%- locals.Category %>" _url="<%- locals._url %>">
   <div class="StreamCardIcon <%- locals.CompletionType %>">
     <span class="material-icons">
       <% if (locals.type == 'Info') { %>
@@ -24,6 +24,15 @@
           <textarea class="FileFormDescription"></textarea>
           <button class="FileFormAdd">Add or create</button>
           <button class="FileFormSubmit">Submit</button>
+        </div>
+      </div>
+    <% } else if (locals.type == 'Quiz') { %>
+      <div>
+        <div>
+          <%- locals.Body.Html %>
+        </div>
+        <div>
+          <a class="btn" href="<%- locals._url %>">Start Quiz</a>
         </div>
       </div>
     <% } else { %>
