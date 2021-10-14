@@ -9,7 +9,9 @@
       "js": [
         "./main.js"
       ],
-      "exclude_matches": [],
+      "exclude_matches": [
+        "*://durham.elearningontario.ca/d2l/lms/quizzing/user/*"
+      ],
       "matches": [
         "*://durham.elearningontario.ca/d2l/*",
         "https://s.brightspace.com/*"
