@@ -44,9 +44,8 @@ const fetchStream = async (app) => {
   const _rootContent = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/root/`);
   const rootContent = await _rootContent.json();
   const contentStream = await parseContent(rootContent);
-  console.log(contentStream);
-  contentStream.forEach((elm) => {
-    const _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
+  for (const elm of contentStream) {
+    let _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
     items.push({
       date: new Date(elm.LastModifiedDate).valueOf(), // TODO: Preferably get the date it was shown
       element: cardTemplate({
@@ -57,15 +56,12 @@ const fetchStream = async (app) => {
         CompletionType: elm.isRead ? 'OnSubmission' : 'Unread',
         StartDate: new Date(elm.LastModifiedDate).toDateString(),
         Body: {
-          Html: `
-            <iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">
-              <a href="${_url}">Download</a>
-            </iframe>
-          `
-        }
+          Html: `<a href="${_url}">Download</a>`
+        },
+        _url: _url
       })
     });
-  });
+  }
   // Fetch discussions
   // Fetch Assignments
   const _assignments = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`);
@@ -85,6 +81,25 @@ const fetchStream = async (app) => {
     });
   });
   // Fetch Quizzes
+  const _quizzes = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/quizzes/`);
+  const quizzes = await _quizzes.json();
+  for (const quiz of quizzes.Objects) {
+    items.push({
+      date: new Date(quiz.DueDate).valueOf(),
+      element: cardTemplate({
+        Id: quiz.QuizId,
+        Category: 'ChipFilterQuizzes',
+        type: 'Quiz',
+        Title: quiz.Name,
+        CompletionType: 'OnSubmission',
+        StartDate: new Date(quiz.DueDate).toDateString(),
+        Body: {
+          Html: quiz.Description.Text.Html
+        },
+        _url: `/d2l/lms/quizzing/user/quiz_summary.d2l?qi=${quiz.QuizId}&ou=${app.cid}`
+      })
+    });
+  }
   // Sort All Items by date
   // Return All Items
   return {
@@ -128,7 +143,8 @@ export default async (app) => {
     else {
       elm.classList.add('Active');
       // Add Our Content Read Update
-      if (elm.getAttribute('Category') == 'ChipFilterContent') {
+      const catagory = elm.getAttribute('Category');
+      if (catagory == 'ChipFilterContent') {
         if (elm.querySelector('.StreamCardIcon').classList.contains('Unread')) {
           await fetch(`/d2l/api/le/unstable/${app.cid}/content/topics/${elm.id}/view`, {
             headers: {
@@ -140,6 +156,24 @@ export default async (app) => {
           elm.querySelector('.StreamCardIcon').classList.add('OnSubmission');
         }
         elm.classList.add('Active');
+        // Content
+        let _url = elm.getAttribute('_url');
+        let html = `<a href="${_url}">Download</a>`;
+        if (/\.(docx|jpg|mp4|pdf|png|gif|doc)$/.test(_url) || /docs\.google\.com/.test(_url)) {
+          if (/\.(jpg)/.test(_url)) {
+            html = `<img width="100%" src="/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/topics/${elm.id}/file?stream=true">`;
+          } else if (/\.(mp4)/.test(_url)) {
+            html = `
+            <video width="100%" height="auto" controls="">
+              <source src="${_url}">
+              Your browser does not support the video tag.
+            </video>`;
+          } else {
+            const _fileData = await fetch(`/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`)
+            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await _fileData.blob())}">${html}</iframe>`;
+          }
+        }
+        elm.querySelector('.StreamCardBody').innerHTML = html;
       }
     }
   };
