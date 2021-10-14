@@ -12,7 +12,11 @@ class BrightSpace {
     lr: '1.0.0'
   }
   public token = '';
+  public uid = '';
   constructor() {
+    // Set Props
+    this.uid = localStorage.getItem('Session.UserId');
+    // Call Start
     this._start();
   }
   async _start() {
@@ -61,6 +65,5 @@ class BrightSpace {
   }
 }
 // TODO: Sub Api's
-
 // Exports
 export default BrightSpace;
