@@ -409,6 +409,23 @@ main.Loader {
 .StreamCard.Active, .StreamCard.Active > .StreamCardBody {
   height: max-content;
 }
+// Card Body Stuff
+.StreamCardBody img, .StreamCardBody video  {
+  border-radius: .5rem;
+}
+.StreamCardBody .btn {
+  display: block;
+  background-color: #3367d6;
+  padding: .75rem 1rem;
+  color: #fff;
+  border-radius: .5rem;
+  height: max-content;
+  width: max-content;
+  text-decoration: none;
+}
+.StreamCardBody .btn:hover {
+  background-color: #FB8C00;
+}
 // File Upload
 .FileSubmit {
   height: 12.5rem;
@@ -480,7 +497,7 @@ main.Loader {
 
 .DropDown {
   min-height: 30rem;
-  width: 20rem;
+  width: 25rem;
   border-radius: .5rem;
   border: 0.0625rem solid var(--Border);
   background-color: var(--Foreground);
@@ -491,4 +508,24 @@ main.Loader {
   padding: 1rem;
   margin: -.25rem .5rem;
   overflow-y: scroll;
+}
+.NotificationShade {
+  list-style: none;
+  padding-inline-start: 0;
+  li {
+    border-bottom: 1px solid white;
+    padding-top: 1rem;
+    a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    img {
+      display: none;
+    }
+  }
 }
