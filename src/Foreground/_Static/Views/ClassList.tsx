@@ -29,10 +29,11 @@ const ClassList = ({ brightSpace }: props) => {
           authorization: `Bearer ${await brightSpace._getToken()}`
         }
       });
-      const imageInfo = await brightSpace._fetch(classInfo.entities[2].href)
+      const imageInfo = await window.fetch(classInfo.entities[2].href).then((res) => res.json())
         .catch(() => '/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'); // TODO: fix
       // TODO: Get Teacher Info
-      const {endDate, name} = classInfo.properties;
+      const { endDate, name } = classInfo.properties;
+      console.log('Loop For Some Reason');
       return (
         <ClassCard
           Name={name}
