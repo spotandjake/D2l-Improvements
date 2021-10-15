@@ -136,7 +136,7 @@ main {
   display: grid;
 }
 /* Loader Page */
-main.Loader {
+.Loader {
   display: flex;
   align-content: center;
   flex-direction: column;
@@ -425,6 +425,12 @@ main.Loader {
 }
 .StreamCardBody .btn:hover {
   background-color: #FB8C00;
+}
+.StreamCardBody object {
+  aspect-ratio: 16 /9;
+}
+.StreamCardBody .Loader {
+  min-height: 20rem;
 }
 // File Upload
 .FileSubmit {

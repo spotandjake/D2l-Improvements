@@ -45,7 +45,7 @@ const fetchStream = async (app) => {
   const rootContent = await _rootContent.json();
   const contentStream = await parseContent(rootContent);
   for (const elm of contentStream) {
-    let _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
+    const _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
     items.push({
       date: new Date(elm.LastModifiedDate).valueOf(), // TODO: Preferably get the date it was shown
       element: cardTemplate({
@@ -55,9 +55,6 @@ const fetchStream = async (app) => {
         Title: elm.Title,
         CompletionType: elm.isRead ? 'OnSubmission' : 'Unread',
         StartDate: new Date(elm.LastModifiedDate).toDateString(),
-        Body: {
-          Html: `<a href="${_url}">Download</a>`
-        },
         _url: _url
       })
     });
@@ -157,20 +154,50 @@ export default async (app) => {
         }
         elm.classList.add('Active');
         // Content
-        let _url = elm.getAttribute('_url');
-        let html = `<a href="${_url}">Download</a>`;
-        if (/\.(docx|jpg|mp4|pdf|png|gif|doc)$/.test(_url) || /docs\.google\.com/.test(_url)) {
-          if (/\.(jpg)/.test(_url)) {
+        const _url = elm.getAttribute('_url');
+        let html = `<a class="btn" href="${_url}">View Content</a>`;
+        if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt)$/i.test(_url) || /docs\.google\.com/.test(_url)) {
+          if (/\.(jpg)/i.test(_url)) {
             html = `<img width="100%" src="/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/topics/${elm.id}/file?stream=true">`;
-          } else if (/\.(mp4)/.test(_url)) {
+          } else if (/\.(mp4)/i.test(_url)) {
             html = `
             <video width="100%" height="auto" controls="">
               <source src="${_url}">
               Your browser does not support the video tag.
             </video>`;
+          } else if (/\.(xlsm|xlsx|xls)/i.test(_url) || /docs\.google\.com/.test(_url)) {
+            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">${html}</iframe>`;
           } else {
-            const _fileData = await fetch(`/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`)
+            const _fileData = await fetch(`/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`);
             html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await _fileData.blob())}">${html}</iframe>`;
+          }
+        } 
+        else {
+          try {
+            const _fileType = await fetch(_url);
+            const fileType = await _fileType.blob();
+            switch (fileType.type) {
+              case 'text/html':
+                html = `<object data="${_url}" width="100%" height="auto">
+                  <embed src="${_url}" width="100%" height="auto"> </embed>
+                  Error: Embedded data could not be displayed.
+                </object>`;
+                break;
+              // Download These
+              case 'application/octet-stream':
+              case 'application/x-msaccess':
+                html = `<a class="btn" href="${_url}">Dowload Content</a>`
+                break;
+              // Not Implemented Yet
+              default:
+                console.log(fileType);
+                alert(`${fileType.type}: is able to be viewed customizably`);
+                break;
+            }
+            // TODO: add some ui.
+          } catch (err) {
+            console.log('There was an error opening this');
+            // TODO: add some ui indicating this and allowing the user to view the file anyways.
           }
         }
         elm.querySelector('.StreamCardBody').innerHTML = html;
@@ -197,7 +224,7 @@ export default async (app) => {
       // TODO: Mark View
       // TODO: View Old Submissions
       // TODO: allow viewing of related work and rubric
-      elm.querySelector('.FileFormAdd').addEventListener('click', (e) => {
+      elm.querySelector('.FileFormAdd').addEventListener('click', () => {
         const assignment = assignments.find((project) => project.Id == elm.id);
         console.log(assignment);
         picker.show((data) => {
@@ -217,7 +244,7 @@ export default async (app) => {
           }
         });
       });
-      elm.querySelector('.FileFormSubmit').addEventListener('click', async (e) => {
+      elm.querySelector('.FileFormSubmit').addEventListener('click', async () => {
         // Loop Over All Submitted Files
         const uploadedFiles = await Promise.all(
           [...elm.querySelector('.UploadedFiles').children].map(async (_file) => {
