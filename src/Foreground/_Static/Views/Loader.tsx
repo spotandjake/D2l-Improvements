@@ -4,9 +4,7 @@ const Loader = () => {
   return (
     <section className={styles.container}>
       <div className={styles.loader}>
-        <div></div><div></div><div></div>
-        <div></div><div></div><div></div>
-        <div></div><div></div><div></div>
+        {new Array(9).map((_, i) => <div key={i}></div>)}
       </div>
     </section>
   );
