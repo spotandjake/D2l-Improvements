@@ -2,7 +2,10 @@ env:
   browser: true
   es6: true
 extends:
-  - 'eslint:recommended'
+  - "eslint:recommended"
+  - "plugin:prettier/recommended"
+plugins:
+  - "prettier"
 parserOptions:
   ecmaVersion: 10
   sourceType: module
@@ -12,7 +15,7 @@ rules:
   no-unreachable: warn
   no-eval: warn
   vars-on-top: warn
-  indent: 
+  indent:
     - warn
     - 2
     - SwitchCase: 1

@@ -24,7 +24,7 @@
     c(t(e.Title)), c('</h1>\r\n    <h3>'), c(t(e.StartDate)), c('</h3>\r\n  </div>\r\n  <div class="StreamCardBody">\r\n    '), 
     'Assignment' == e.type ? c('\r\n      <div class="FileSubmit">\r\n        <div class="UploadedFiles"></div>\r\n        <div class="FileForm">\r\n          <textarea class="FileFormDescription"></textarea>\r\n          <button class="FileFormAdd">Add or create</button>\r\n          <button class="FileFormSubmit">Submit</button>\r\n        </div>\r\n      </div>\r\n    ') : 'Quiz' == e.type ? (c('\r\n      <div>\r\n        <div>\r\n          '), 
     c(e.Body.Html), c('\r\n        </div>\r\n        <div>\r\n          <a class="btn" href="'), 
-    c(e._url), c('">Start Quiz</a>\r\n        </div>\r\n      </div>\r\n    ')) : (c('\r\n      '), 
+    c(e._url), c('">Start Quiz</a>\r\n        </div>\r\n      </div>\r\n    ')) : 'Content' == e.type ? c('\r\n      <div class="Loader">\r\n        <div class="lds-grid">\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n        </div>\r\n      </div>\r\n    ') : (c('\r\n      '), 
     c(e.Body.Html), c('\r\n    ')), c('\r\n  </div>\r\n</div>'), o;
   }
   class t {
@@ -328,9 +328,12 @@
               e.classList.add('Active');
               const t = e.getAttribute('_url');
               let r = `<a class="btn" href="${t}">View Content</a>`;
-              if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt)$/i.test(t) || /docs\.google\.com/.test(t)) if (/\.(jpg)/i.test(t)) r = `<img width="100%" src="/d2l/api/le/${n.apiVersion.le}/${n.cid}/content/topics/${e.id}/file?stream=true">`; else if (/\.(mp4)/i.test(t)) r = `\n            <video width="100%" height="auto" controls="">\n              <source src="${t}">\n              Your browser does not support the video tag.\n            </video>`; else if (/\.(xlsm|xlsx|xls)/i.test(t) || /docs\.google\.com/.test(t)) r = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${t}">${r}</iframe>`; else {
+              if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(t) || /docs\.google\.com/.test(t)) if (/\.(jpg)/i.test(t)) r = `<img width="100%" src="/d2l/api/le/${n.apiVersion.le}/${n.cid}/content/topics/${e.id}/file?stream=true">`; else if (/\.(mp4)/i.test(t)) r = `\n            <video width="100%" height="auto" controls="">\n              <source src="${t}">\n              Your browser does not support the video tag.\n            </video>`; else if (/\.(xlsm|xlsx|xls|pptx|xlw)/i.test(t) || /docs\.google\.com/.test(t)) r = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${t}">${r}</iframe>`; else {
                 const t = await fetch(`/d2l/le/content/${n.cid}/topics/files/download/${e.id}/DirectFileTopicDownload`);
                 r = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await t.blob())}">${r}</iframe>`;
+              } else if (t.includes('www.youtube.com')) {
+                const e = new URL(t).searchParams.get('v');
+                r = `<object data="https://www.youtube.com/embed/${e}" width="100%" height="auto">\n            <embed src="https://www.youtube.com/embed/${e}" width="100%" height="auto"> </embed>\n            Error: Embedded data could not be displayed.\n          </object>`;
               } else try {
                 const e = await fetch(t), n = await e.blob();
                 switch (n.type) {
@@ -344,7 +347,7 @@
                   break;
 
                  default:
-                  console.log(n), alert(`${n.type}: is able to be viewed customizably`);
+                  console.log(n), console.log(t), console.log('================================================================');
                 }
               } catch (e) {
                 console.log('There was an error opening this');
@@ -638,13 +641,13 @@
       };
     }
   }
-  function S(e, t, {getFn: n = y.getFn} = {}) {
+  function x(e, t, {getFn: n = y.getFn} = {}) {
     const r = new b({
       getFn: n
     });
     return r.setKeys(e.map(g)), r.setSources(t), r.create(), r;
   }
-  function x(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: r = 0, distance: i = y.distance, ignoreLocation: a = y.ignoreLocation} = {}) {
+  function S(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: r = 0, distance: i = y.distance, ignoreLocation: a = y.ignoreLocation} = {}) {
     const s = t / e.length;
     if (a) return s;
     const o = Math.abs(r - n);
@@ -657,7 +660,7 @@
     const g = o > 1 || c, f = g ? Array(h) : [];
     let v;
     for (;(v = e.indexOf(t, p)) > -1; ) {
-      let e = x(t, {
+      let e = S(t, {
         currentLocation: v,
         expectedLocation: u,
         distance: i,
@@ -669,24 +672,24 @@
       }
     }
     p = -1;
-    let w = [], b = 1, S = d + h;
+    let w = [], b = 1, x = d + h;
     const C = 1 << d - 1;
     for (let r = 0; r < d; r += 1) {
-      let a = 0, o = S;
-      for (;a < o; ) x(t, {
+      let a = 0, o = x;
+      for (;a < o; ) S(t, {
         errors: r,
         currentLocation: u + o,
         expectedLocation: u,
         distance: i,
         ignoreLocation: l
-      }) <= m ? a = o : S = o, o = Math.floor((S - a) / 2 + a);
-      S = o;
+      }) <= m ? a = o : x = o, o = Math.floor((x - a) / 2 + a);
+      x = o;
       let c = Math.max(1, u - o + 1), v = s ? h : Math.min(u + o, h) + d, y = Array(v + 2);
       y[v + 1] = (1 << r) - 1;
       for (let a = v; a >= c; a -= 1) {
         let s = a - 1, o = n[e.charAt(s)];
         if (g && (f[s] = +!!o), y[a] = (y[a + 1] << 1 | 1) & o, r && (y[a] |= (w[a + 1] | w[a]) << 1 | 1 | w[a + 1]), 
-        y[a] & C && (b = x(t, {
+        y[a] & C && (b = S(t, {
           errors: r,
           currentLocation: s,
           expectedLocation: u,
@@ -697,7 +700,7 @@
           c = Math.max(1, 2 * u - p);
         }
       }
-      if (x(t, {
+      if (S(t, {
         errors: r + 1,
         currentLocation: u,
         expectedLocation: u,
@@ -1048,7 +1051,7 @@
     }
     setCollection(e, t) {
       if (this._docs = e, t && !(t instanceof b)) throw new Error('Incorrect \'index\' type');
-      this._myIndex = t || S(this.options.keys, this._docs, {
+      this._myIndex = t || x(this.options.keys, this._docs, {
         getFn: this.options.getFn
       });
     }
@@ -1213,7 +1216,7 @@
       return r;
     }
   }
-  q.version = '6.4.6', q.createIndex = S, q.parseIndex = function(e, {getFn: t = y.getFn} = {}) {
+  q.version = '6.4.6', q.createIndex = x, q.parseIndex = function(e, {getFn: t = y.getFn} = {}) {
     const {keys: n, records: r} = e, i = new b({
       getFn: t
     });

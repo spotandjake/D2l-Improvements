@@ -7,7 +7,9 @@ import Picker from '../libs/googlePicker.js';
 const fetchStream = async (app) => {
   const items = []; // Convert from a list of html strings to a list of html strings with dates
   // Map Main News Content
-  const _stream = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/news/`);
+  const _stream = await fetch(
+    `/d2l/api/le/${app.apiVersion.le}/${app.cid}/news/`
+  );
   const stream = await _stream.json();
   stream.forEach((elm) => {
     elm.StartDate = new Date(elm.StartDate).toDateString();
@@ -15,37 +17,49 @@ const fetchStream = async (app) => {
     elm.type = 'Info';
     items.push({
       date: new Date(elm.StartDate).valueOf(),
-      element: cardTemplate({ ...elm, CompletionType: 'OnSubmission' })
+      element: cardTemplate({ ...elm, CompletionType: 'OnSubmission' }),
     });
   });
   // Fetch Content
-  const _readModules = await fetch(`/d2l/api/le/unstable/${app.cid}/content/userprogress/?pageSize=99999`);
+  const _readModules = await fetch(
+    `/d2l/api/le/unstable/${app.cid}/content/userprogress/?pageSize=99999`
+  );
   const readModules = await _readModules.json();
   const parseContent = async (content) => {
     const _contentItems = [];
-    await Promise.all(content.map(async (contentElement) => {
-      switch (contentElement.Type) {
-        case 1: // Topic
-          _contentItems.push({
-            ...contentElement,
-            isRead: readModules.Objects.some((elm) => elm.ObjectId == contentElement.Id && elm.IsRead)
-          });
-          break;
-        case 0: { // Module
-          const _moduleContent = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/modules/${contentElement.Id}/structure/`);
-          const moduleContent = await _moduleContent.json();
-          _contentItems.push(...(await parseContent(moduleContent)));
-          break;
+    await Promise.all(
+      content.map(async (contentElement) => {
+        switch (contentElement.Type) {
+          case 1: // Topic
+            _contentItems.push({
+              ...contentElement,
+              isRead: readModules.Objects.some(
+                (elm) => elm.ObjectId == contentElement.Id && elm.IsRead
+              ),
+            });
+            break;
+          case 0: {
+            // Module
+            const _moduleContent = await fetch(
+              `/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/modules/${contentElement.Id}/structure/`
+            );
+            const moduleContent = await _moduleContent.json();
+            _contentItems.push(...(await parseContent(moduleContent)));
+            break;
+          }
         }
-      }
-    }));
+      })
+    );
     return _contentItems;
   };
-  const _rootContent = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/root/`);
+  const _rootContent = await fetch(
+    `/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/root/`
+  );
   const rootContent = await _rootContent.json();
   const contentStream = await parseContent(rootContent);
   for (const elm of contentStream) {
-    const _url = elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
+    const _url =
+      elm.ActivityType == 1 ? `${window.location.origin}${elm.Url}` : elm.Url; // TODO: Improve Previewer
     items.push({
       date: new Date(elm.LastModifiedDate).valueOf(), // TODO: Preferably get the date it was shown
       element: cardTemplate({
@@ -55,13 +69,15 @@ const fetchStream = async (app) => {
         Title: elm.Title,
         CompletionType: elm.isRead ? 'OnSubmission' : 'Unread',
         StartDate: new Date(elm.LastModifiedDate).toDateString(),
-        _url: _url
-      })
+        _url: _url,
+      }),
     });
   }
   // Fetch discussions
   // Fetch Assignments
-  const _assignments = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`);
+  const _assignments = await fetch(
+    `/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`
+  );
   const assignments = await _assignments.json();
   assignments.forEach((elm) => {
     items.push({
@@ -71,14 +87,21 @@ const fetchStream = async (app) => {
         Category: 'ChipFilterAssignments',
         type: 'Assignment',
         Title: elm.Name,
-        CompletionType: [ 'OnSubmission', 'DueDate', 'OnSubmission', 'OnSubmission'][elm.CompletionType],
+        CompletionType: [
+          'OnSubmission',
+          'DueDate',
+          'OnSubmission',
+          'OnSubmission',
+        ][elm.CompletionType],
         StartDate: new Date(elm.DueDate).toDateString(),
-        Body: { Html: '' }
-      })
+        Body: { Html: '' },
+      }),
     });
   });
   // Fetch Quizzes
-  const _quizzes = await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/quizzes/`);
+  const _quizzes = await fetch(
+    `/d2l/api/le/${app.apiVersion.le}/${app.cid}/quizzes/`
+  );
   const quizzes = await _quizzes.json();
   for (const quiz of quizzes.Objects) {
     items.push({
@@ -91,18 +114,21 @@ const fetchStream = async (app) => {
         CompletionType: 'OnSubmission',
         StartDate: new Date(quiz.DueDate).toDateString(),
         Body: {
-          Html: quiz.Description.Text.Html
+          Html: quiz.Description.Text.Html,
         },
-        _url: `/d2l/lms/quizzing/user/quiz_summary.d2l?qi=${quiz.QuizId}&ou=${app.cid}`
-      })
+        _url: `/d2l/lms/quizzing/user/quiz_summary.d2l?qi=${quiz.QuizId}&ou=${app.cid}`,
+      }),
     });
   }
   // Sort All Items by date
   // Return All Items
   return {
-    html: items.sort((a, b) => b.date - a.date).map((e) => e.element).join('\n'), 
+    html: items
+      .sort((a, b) => b.date - a.date)
+      .map((e) => e.element)
+      .join('\n'),
     assignments: assignments,
-    content: contentStream
+    content: contentStream,
   };
 };
 // Data
@@ -113,13 +139,18 @@ export default async (app) => {
   const _classInfo = await fetch(`${app.organizationURL}${app.cid}`, {
     headers: {
       Accept: 'application/vnd.siren+json',
-      authorization: `Bearer ${await app.getToken()}`
-    }
+      authorization: `Bearer ${await app.getToken()}`,
+    },
   });
   const classInfo = await _classInfo.json();
   // Get Image
   const _imageInfo = await fetch(classInfo.entities[2].href);
-  const imageInfo = await _imageInfo.json().catch(() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658');
+  const imageInfo = await _imageInfo
+    .json()
+    .catch(
+      () =>
+        'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'
+    );
   // TODO: Get Teacher Info
   const classData = {
     name: classInfo.properties.name,
@@ -127,8 +158,9 @@ export default async (app) => {
     picture: imageInfo.links ? imageInfo.links[2].href : imageInfo,
     teacher: {
       name: 'TODO',
-      picture: 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658',
-    }
+      picture:
+        'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658',
+    },
   };
   // Fetch Stream Data
   const { html, assignments } = await fetchStream(app);
@@ -143,12 +175,15 @@ export default async (app) => {
       const catagory = elm.getAttribute('Category');
       if (catagory == 'ChipFilterContent') {
         if (elm.querySelector('.StreamCardIcon').classList.contains('Unread')) {
-          await fetch(`/d2l/api/le/unstable/${app.cid}/content/topics/${elm.id}/view`, {
-            headers: {
-              authorization: `Bearer ${await app.getToken()}`
-            },
-            method: 'POST'
-          });
+          await fetch(
+            `/d2l/api/le/unstable/${app.cid}/content/topics/${elm.id}/view`,
+            {
+              headers: {
+                authorization: `Bearer ${await app.getToken()}`,
+              },
+              method: 'POST',
+            }
+          );
           elm.querySelector('.StreamCardIcon').classList.remove('Unread');
           elm.querySelector('.StreamCardIcon').classList.add('OnSubmission');
         }
@@ -156,7 +191,13 @@ export default async (app) => {
         // Content
         const _url = elm.getAttribute('_url');
         let html = `<a class="btn" href="${_url}">View Content</a>`;
-        if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt)$/i.test(_url) || /docs\.google\.com/.test(_url)) {
+        // TODO: Improve this, we want to support all possible file types, and this is unmaintainable
+        if (
+          /\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(
+            _url
+          ) ||
+          /docs\.google\.com/.test(_url)
+        ) {
           if (/\.(jpg)/i.test(_url)) {
             html = `<img width="100%" src="/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/topics/${elm.id}/file?stream=true">`;
           } else if (/\.(mp4)/i.test(_url)) {
@@ -165,14 +206,27 @@ export default async (app) => {
               <source src="${_url}">
               Your browser does not support the video tag.
             </video>`;
-          } else if (/\.(xlsm|xlsx|xls)/i.test(_url) || /docs\.google\.com/.test(_url)) {
+          } else if (
+            /\.(xlsm|xlsx|xls|pptx|xlw)/i.test(_url) ||
+            /docs\.google\.com/.test(_url)
+          ) {
             html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">${html}</iframe>`;
           } else {
-            const _fileData = await fetch(`/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`);
-            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await _fileData.blob())}">${html}</iframe>`;
+            const _fileData = await fetch(
+              `/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`
+            );
+            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(
+              await _fileData.blob()
+            )}">${html}</iframe>`;
           }
-        } 
-        else {
+        } else if (_url.includes('www.youtube.com')) {
+          // Youtube
+          const url = new URL(_url).searchParams.get('v');
+          html = `<object data="https://www.youtube.com/embed/${url}" width="100%" height="auto">
+            <embed src="https://www.youtube.com/embed/${url}" width="100%" height="auto"> </embed>
+            Error: Embedded data could not be displayed.
+          </object>`;
+        } else {
           try {
             const _fileType = await fetch(_url);
             const fileType = await _fileType.blob();
@@ -186,12 +240,16 @@ export default async (app) => {
               // Download These
               case 'application/octet-stream':
               case 'application/x-msaccess':
-                html = `<a class="btn" href="${_url}">Dowload Content</a>`
+                html = `<a class="btn" href="${_url}">Dowload Content</a>`;
                 break;
               // Not Implemented Yet
               default:
                 console.log(fileType);
-                alert(`${fileType.type}: is able to be viewed customizably`);
+                console.log(_url);
+                console.log(
+                  '================================================================'
+                );
+                // alert(`${fileType.type}: is able to be viewed customizably`);
                 break;
             }
             // TODO: add some ui.
@@ -212,13 +270,15 @@ export default async (app) => {
     [
       'https://www.googleapis.com/auth/drive', //TODO be more specific here
       'https://www.googleapis.com/auth/drive.file',
-      'https://www.googleapis.com/auth/drive.readonly'
+      'https://www.googleapis.com/auth/drive.readonly',
     ],
     ''
   );
   [...main.querySelector('section.StreamCards').children].forEach((elm) => {
     elm.addEventListener('click', () => clickFunction(elm));
-    elm.querySelector('.StreamCardBody').addEventListener('click', (e) => e.stopPropagation());
+    elm
+      .querySelector('.StreamCardBody')
+      .addEventListener('click', (e) => e.stopPropagation());
     // Add Our Listeners For Our Assignments Buttons
     if (elm.getAttribute('Category') == 'ChipFilterAssignments') {
       // TODO: Mark View
@@ -237,32 +297,36 @@ export default async (app) => {
                   name: doc.name,
                   href: doc.url,
                   thumbnail: doc.thumbnail,
-                  documentId: doc.id
+                  documentId: doc.id,
                 })
               );
             });
           }
         });
       });
-      elm.querySelector('.FileFormSubmit').addEventListener('click', async () => {
-        // Loop Over All Submitted Files
-        const uploadedFiles = await Promise.all(
-          [...elm.querySelector('.UploadedFiles').children].map(async (_file) => {
-            const fileId = _file.getAttribute('documentid');
-            return await picker.export(fileId);
-          })
-        );
-        const Description = elm.querySelector('.FileFormDescription').value;
-        elm.querySelector('.UploadedFiles').innerHTML = '';
-        elm.querySelector('.FileFormDescription').value = '';
-        // TODO: Submit files, convert file to correct format
-        const submissionBody = {
-          files: uploadedFiles,
-          description: Description
-        };
-        console.log(submissionBody);
-        alert('Submitted');
-      });
+      elm
+        .querySelector('.FileFormSubmit')
+        .addEventListener('click', async () => {
+          // Loop Over All Submitted Files
+          const uploadedFiles = await Promise.all(
+            [...elm.querySelector('.UploadedFiles').children].map(
+              async (_file) => {
+                const fileId = _file.getAttribute('documentid');
+                return await picker.export(fileId);
+              }
+            )
+          );
+          const Description = elm.querySelector('.FileFormDescription').value;
+          elm.querySelector('.UploadedFiles').innerHTML = '';
+          elm.querySelector('.FileFormDescription').value = '';
+          // TODO: Submit files, convert file to correct format
+          const submissionBody = {
+            files: uploadedFiles,
+            description: Description,
+          };
+          console.log(submissionBody);
+          alert('Submitted');
+        });
     }
   });
   // Handle Our Filters
@@ -271,7 +335,16 @@ export default async (app) => {
   const filterCards = (elm) => {
     elm.classList.toggle('Active', !elm.classList.contains('Active'));
     const chips = [...filterParent.querySelectorAll('.ChipFilter')];
-    [...filteredRegion.children].forEach((elm) => elm.classList.toggle('Filtered', !chips.some((chip) => chip.classList.contains('Active') && chip.id == elm.getAttribute('Category'))));
+    [...filteredRegion.children].forEach((elm) =>
+      elm.classList.toggle(
+        'Filtered',
+        !chips.some(
+          (chip) =>
+            chip.classList.contains('Active') &&
+            chip.id == elm.getAttribute('Category')
+        )
+      )
+    );
   };
   [...filterParent.children].forEach((elm) => {
     elm.addEventListener('click', () => filterCards(elm));

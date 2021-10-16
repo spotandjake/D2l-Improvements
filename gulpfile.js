@@ -8,14 +8,14 @@ import fs from 'fs';
 const terserOptions = {
   compress: {
     passes: 3,
-    module: true
+    module: true,
   },
   format: {
     beautify: true,
     // max_line_len: 500,
     quote_style: 1, //Always Single
-    indent_level: 2
-  }
+    indent_level: 2,
+  },
 };
 // Generate
 gulp.task('build', async () => {
@@ -25,7 +25,7 @@ gulp.task('build', async () => {
       ejs({
         include: [/[^\\]*\.ejs$/],
         compilerOptions: { client: true },
-        loadStyles: true
+        loadStyles: true,
       }),
       terser(terserOptions),
     ],
@@ -34,13 +34,14 @@ gulp.task('build', async () => {
   const manifest = JSON.parse(
     await fs.promises.readFile('./src/manifest.json', 'utf8')
   );
-  await fs.promises.writeFile('./dist/manifest.json', JSON.stringify(manifest, 2, 2));
+  await fs.promises.writeFile(
+    './dist/manifest.json',
+    JSON.stringify(manifest, 2, 2)
+  );
   // Bundle Blocker
   const bundleBlocker = await rollup.rollup({
     input: 'src/js/blocker.js',
-    plugins: [
-      terser(terserOptions),
-    ],
+    plugins: [terser(terserOptions)],
   });
   bundleBlocker.write({
     file: 'dist/blocker.js',
@@ -56,14 +57,17 @@ gulp.task('build', async () => {
 });
 
 gulp.task('lint', () => {
-  return gulp.src(['src/**/*.{js,ts}'])
-    // eslint() attaches the lint output to the "eslint" property
-    // of the file object so it can be used by other modules.
-    .pipe(eslint())
-    // eslint.format() outputs the lint results to the console.
-    // Alternatively use eslint.formatEach() (see Docs).
-    .pipe(eslint.format())
-    // To have the process exit with an error code (1) on
-    // lint error, return the stream and pipe to failAfterError last.
-    .pipe(eslint.failAfterError());
+  return (
+    gulp
+      .src(['src/**/*.{js,ts}'])
+      // eslint() attaches the lint output to the "eslint" property
+      // of the file object so it can be used by other modules.
+      .pipe(eslint())
+      // eslint.format() outputs the lint results to the console.
+      // Alternatively use eslint.formatEach() (see Docs).
+      .pipe(eslint.format())
+      // To have the process exit with an error code (1) on
+      // lint error, return the stream and pipe to failAfterError last.
+      .pipe(eslint.failAfterError())
+  );
 });
