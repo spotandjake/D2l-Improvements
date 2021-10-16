@@ -12,17 +12,17 @@ interface ClassCardProps {
 }
 const ClassCard = ({ Name, Active, Href, Picture, StartDate, Route }: ClassCardProps) => {
   return (
-    <section className={[styles.container, !Active ? ' '  : styles.disabled ].join(' ')}>
-    <Link Title={Name} Href={Href} Active={!Active} Route={Route}>
-      <picture>
-        <img src={Picture} />
-      </picture>
-      <div className={styles.content}>
-        <h4>{Name}</h4>
-        {!Active ? <h6>Closes | {new Date(StartDate).toDateString()}</h6> : <h6>Closed</h6>}
-      </div>
-    </Link>
-    </section>
+    <div className={[styles.container, !Active ? ' '  : styles.disabled ].join(' ')}>
+      <Link Title={Name} Href={Href} Active={!Active} Route={Route}>
+        <picture>
+          <img src={Picture} />
+        </picture>
+        <div className={styles.content}>
+          <h4>{Name}</h4>
+          {!Active ? <h6>Closes | {new Date(StartDate).toDateString()}</h6> : <h6>Closed</h6>}
+        </div>
+      </Link>
+    </div>
   );
 };
 

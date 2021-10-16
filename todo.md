@@ -89,8 +89,8 @@
         + [x] NavBar
           + [x] Search Bar
           + [ ] Notification Area
-      + [ ] Classes Page
-        + [ ] Classes
+      + [x] Classes Page
+        + [x] Classes
       + [ ] Stream
         + [ ] General Stream Card
           + [ ] File Picker

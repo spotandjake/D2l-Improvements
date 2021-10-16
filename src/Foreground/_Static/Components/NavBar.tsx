@@ -19,7 +19,7 @@ interface props {
 // TODO: make aside button work
 const NavBar = ({ brightSpace }: props) => {
   return (
-    <section className={styles.container}>
+    <nav className={styles.container}>
       <div className={`${styles.side} ${styles.leftSide}`}>
         <IconButton aria-label="aside" className={styles.IconButton}>
           <SvgIcon className={styles.Icon} component={MenuIcon} viewBox="0 0 24 24" />
@@ -42,7 +42,7 @@ const NavBar = ({ brightSpace }: props) => {
           <SvgIcon className={styles.Icon} component={AccountBoxIcon} viewBox="0 0 24 24" />
         </IconButton>
       </div>
-    </section>
+    </nav>
   );
 };
 

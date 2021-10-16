@@ -78,7 +78,7 @@ const ClassList = ({ brightSpace, Route }: props) => {
     <section className={styles.container}>
       {/* NavBar */}
       <NavBar brightSpace={brightSpace} />
-      {/* TODO: ClassList */}
+      {/* ClassList */}
       <section className={styles.list}>{_classList}</section>
     </section>
   );
