@@ -12,7 +12,7 @@ export interface VersionProductVersions {
   SupportedVersions: D2LVERSION[];
 }
 // Composite's
-interface RichText {
+export interface RichText {
   Text: string;
   Html: string | null;
 }

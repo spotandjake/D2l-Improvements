@@ -17,7 +17,11 @@ const Link = ({ Title, Href, Active, children, Route }: LinkProps) => {
     }
   };
   return (
-    <div onClick={() => { click(Title, Href, Active); }}>
+    <div
+      onClick={() => {
+        click(Title, Href, Active);
+      }}
+    >
       {children}
     </div>
   );

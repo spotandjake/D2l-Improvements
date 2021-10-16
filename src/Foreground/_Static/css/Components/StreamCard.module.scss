@@ -1,41 +1,51 @@
 .container {
-  height: 4rem;
-  padding: .5rem;
+  min-height: 4rem;
+  padding: 0.5rem;
   cursor: pointer;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--Foreground);
   border: 0.0625rem solid var(--Border);
   display: grid;
   grid-template-columns: 3rem 1fr;
   grid-template-rows: 3rem max-content;
-  grid-template-areas: 
+  grid-template-areas:
     'Icon Title'
-    'Content Content'
-  ;
-  grid-gap: .5rem;
+    'Content Content';
   margin: 1rem 0;
   border: 0.0625rem solid var(--Border);
   &:hover {
-    box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
   }
 }
 .titleIcon {
-  border-radius: 25%;
-  background-color: #084D91;
+  border-radius: 50%;
+  background-color: #084d91;
+  svg {
+    width: 100%;
+    height: 100%;
+  }
   // States
   &.DueDate {
     background-color: #e91e63;
   }
   &.Unread {
-    background-color: #FB8C00;
+    background-color: #fb8c00;
   }
 }
 .titleBlock {
-  padding-left: .5rem;
-  h2, h5 {
+  padding-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  h2,
+  h5 {
     margin: 0;
   }
   h5 {
-    opacity: .75;
+    opacity: 0.75;
   }
+}
+.cardBody {
+  grid-area: Content;
 }

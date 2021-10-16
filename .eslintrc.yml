@@ -5,6 +5,9 @@ extends:
   - 'plugin:@typescript-eslint/recommended'
   - 'plugin:@next/next/recommended'
 parser: '@typescript-eslint/parser'
+settings:
+  next:
+    rootDir: '/src/Foreground/'
 parserOptions:
   ecmaVersion: latest
   sourceType: script
@@ -14,14 +17,17 @@ rules:
   '@typescript-eslint/no-explicit-any': 0
   '@typescript-eslint/explicit-module-boundary-types': 0
   '@typescript-eslint/ban-ts-comment': 0
+  '@typescript-eslint/ban-types': 0
+  '@next/next/no-img-element': 0
+  '@next/next/no-html-link-for-pages': 0
   no-invalid-regexp: warn
   no-unreachable: warn
   no-eval: warn
   vars-on-top: warn
-  '@typescript-eslint/no-unused-vars': 
+  '@typescript-eslint/no-unused-vars':
     - warn
     - args: none
-  indent: 
+  indent:
     - warn
     - 2
     - SwitchCase: 1

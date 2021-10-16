@@ -19,5 +19,4 @@ const HeaderCard = ({ Name, Picture, StartDate }: HeaderProps) => {
     </header>
   );
 };
-
 export default HeaderCard;

@@ -1,13 +1,13 @@
-import styles from "../css/Views/ClassRoom.module.scss";
+import styles from '../css/Views/ClassRoom.module.scss';
 // Types
 import { NewsItem } from '../Classes/BrightspaceTypes';
 import { StreamType } from '../Classes/Types';
 // Components
-import React, { useState, useEffect } from "react";
-import NavBar from "../Components/NavBar";
-import ClassHeader from "../Components/ClassHeader";
-import StreamCard from "../Components/StreamCard";
-import Brightspace from "../Classes/Brightspace";
+import React, { useState, useEffect } from 'react';
+import NavBar from '../Components/NavBar';
+import ClassHeader from '../Components/ClassHeader';
+import StreamCard from '../Components/StreamCard';
+import Brightspace from '../Classes/Brightspace';
 interface props {
   brightSpace: Brightspace;
   Route: Function;
@@ -32,28 +32,32 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         .fetch(entities[2].href)
         .then((res) => res.json())
         .catch(async () => {
-            return await brightSpace._fetch(
-              entities[2].href,
-              {
-                headers: {
-                  authorization: `Bearer ${await brightSpace._getToken()}`,
-                },
-              }
-            ).catch(() => "https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png")
-          }
-        );
+          return await brightSpace
+            ._fetch(entities[2].href, {
+              headers: {
+                authorization: `Bearer ${await brightSpace._getToken()}`,
+              },
+            })
+            .catch(
+              () =>
+                'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
+            );
+        });
       // Stream
       const stream: JSX.Element[] = [];
       // TODO: fetch
-      const streamNews: NewsItem[] = await brightSpace._fetch(`/api/le/${brightSpace.version.le}/${ClassId}/news/`);
+      const streamNews: NewsItem[] = await brightSpace._fetch(
+        `/api/le/${brightSpace.version.le}/${ClassId}/news/`
+      );
       console.log(streamNews);
       streamNews.forEach((newsItem: NewsItem) => {
         stream.push(
-          <StreamCard 
+          <StreamCard
             Id={newsItem.Id}
             Title={newsItem.Title}
             Category={StreamType.News}
             StartDate={newsItem.StartDate}
+            Content={newsItem.Body}
             Route={Route}
           />
         );
@@ -71,7 +75,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
           {/* TODO: ClassStream */}
           <section className={styles.stream}>{stream}</section>
         </section>
-      )
+      );
     })();
   }, []);
   // Render the classes
