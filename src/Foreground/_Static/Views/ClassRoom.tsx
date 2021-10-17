@@ -26,11 +26,6 @@ interface props {
 const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
   const [_streamContent, setStreamContent] = useState(<></>);
   const [_headerContent, setHeaderContent] = useState(<></>);
-  const [_filterNews, setFilterNews] = useState(true);
-  const [_filterContent, setFilterContent] = useState(true);
-  const [_filterDiscussions, setFilterDiscussions] = useState(true);
-  const [_filterAssignments, setFilterAssignments] = useState(true);
-  const [_filterQuizzes, setFilterQuizzes] = useState(true);
   // Fetch the classList
   useEffect(() => {
     const fetchStreamData = async () => {
@@ -152,25 +147,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
     // const interval = setInterval(fetchStreamData, 10000);
     // return () => clearInterval(interval);
   }, []);
-  const ToggleType = (type: StreamType) => {
-    switch (type) {
-      case StreamType.News:
-        setFilterNews((prevState) => !prevState);
-        break;
-      case StreamType.Content:
-        setFilterContent((prevState) => !prevState);
-        break;
-      case StreamType.Discussions:
-        setFilterDiscussions((prevState) => !prevState);
-        break;
-      case StreamType.Assignments:
-        setFilterAssignments((prevState) => !prevState);
-        break;
-      case StreamType.Quizzes:
-        setFilterQuizzes((prevState) => !prevState);
-        break;
-    }
-  };
+  const ToggleType = (type: StreamType) => {};
   // Render the classes
   return (
     <section className={styles.container}>
@@ -184,41 +161,14 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         <section className={styles.stream}>
           {/* Class Filter Chips */}
           <div className={styles.chipContainer}>
-            <StreamChip
-              Type={StreamType.News}
-              Active={_filterNews}
-              ToggleType={ToggleType}
-            />
-            <StreamChip
-              Type={StreamType.Content}
-              Active={_filterContent}
-              ToggleType={ToggleType}
-            />
-            <StreamChip
-              Type={StreamType.Discussions}
-              Active={_filterDiscussions}
-              ToggleType={ToggleType}
-            />
-            <StreamChip
-              Type={StreamType.Assignments}
-              Active={_filterAssignments}
-              ToggleType={ToggleType}
-            />
-            <StreamChip
-              Type={StreamType.Quizzes}
-              Active={_filterQuizzes}
-              ToggleType={ToggleType}
-            />
+            <StreamChip Type={StreamType.News} ToggleType={ToggleType} />
+            <StreamChip Type={StreamType.Content} ToggleType={ToggleType} />
+            <StreamChip Type={StreamType.Discussions} ToggleType={ToggleType} />
+            <StreamChip Type={StreamType.Assignments} ToggleType={ToggleType} />
+            <StreamChip Type={StreamType.Quizzes} ToggleType={ToggleType} />
           </div>
           {/* Stream Content */}
-          {_streamContent?.props?.children?.filter((n) => {
-            switch (n.props.Category) {
-              case StreamType.News:
-                return _filterNews;
-              default:
-                return true;
-            }
-          }) || <></>}
+          {_streamContent}
         </section>
       </section>
     </section>

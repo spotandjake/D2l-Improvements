@@ -48,10 +48,6 @@
     }
   }
 }
-.cardBody {
-  padding-top: 1rem;
-  grid-area: Content;
-}
 // News Body
 .Markdown ol {
   margin-bottom: 0px;
@@ -76,16 +72,25 @@
   display: block;
   height: auto;
 }
-.cardBody iframe {
-  aspect-ratio: 16 / 9;
-  min-height: 40rem;
-}
 .cardBody {
+  padding-top: 1rem;
+  grid-area: Content;
+  display: none;
+  &.visible {
+    display: flex !important;
+  }
   object,
   embed,
   iframe,
   img,
   picture {
     border-radius: 0.5rem;
+  }
+  iframe,
+  object,
+  embed {
+    aspect-ratio: 16 / 9;
+    min-height: 40rem;
+    background: #ccc;
   }
 }

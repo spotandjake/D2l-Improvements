@@ -11,32 +11,25 @@
         - [x] Render if on a browser that supports the viewer extension
         - [ ] Styling
         - [ ] Alternative renderer
-      - [ ] Use Image Viewer
+      - [x] Use Image Viewer
         - [x] Image Detection
         - [x] Styling
-        - [ ] OnError Alternative
       - [x] Use Video Viewer
         - [x] File Type Detection
         - [x] Styling
-        - [ ] OnError Alternative
-      - [ ] Use Google Docs
+      - [x] Use Google Docs
         - [x] File Type Detection
         - [x] Styling
-        - [ ] OnError Alternative
-      - [ ] Use PDF Viewer
+      - [x] Use PDF Viewer
         - [x] File Type Detection
         - [x] Styling
-        - [ ] Use the Adobe PDF viewer SDK
-        - [ ] OnError Alternative
-      - [ ] Youtube embed detection
-        - [ ] File Type Detection
-        - [ ] Styling
-        - [ ] OnError Alternative
-      - [ ] Use Embedded
-        - [ ] File Type Detection
-        - [ ] Styling
-        - [ ] OnError Alternative
-      - [ ] Other File Types
+      - [x] Youtube embed detection
+        - [x] File Type Detection
+        - [x] Styling
+      - [x] Use Embedded
+        - [x] File Type Detection
+        - [x] Styling
+      - [ ] Unknown Download or visit page
     - [ ] Download Button
   - [ ] Discussion Card
   - [ ] Assignment Card

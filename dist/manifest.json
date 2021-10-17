@@ -26,18 +26,17 @@
   "web_accessible_resources": [
     "Foreground/404.html",
     "Foreground/index.html",
-    "Foreground/_next/static/BRaqNUX98thnKkTXd_cYG/_buildManifest.js",
-    "Foreground/_next/static/BRaqNUX98thnKkTXd_cYG/_ssgManifest.js",
-    "Foreground/_next/static/chunks/6a31c71d-36e868b9216a6fd9c449.js",
-    "Foreground/_next/static/chunks/832-4384e4ae453ee1268f32.js",
+    "Foreground/_next/static/chunks/443-336d29392f4495bf906d.js",
     "Foreground/_next/static/chunks/framework-400ee77204871533d0aa.js",
     "Foreground/_next/static/chunks/main-48a63cb856044798c195.js",
-    "Foreground/_next/static/chunks/pages/index-7689085c20e1dca1d6e2.js",
+    "Foreground/_next/static/chunks/pages/index-b4161554ed4619bb9b20.js",
     "Foreground/_next/static/chunks/pages/_app-d366409d0303a4b83378.js",
     "Foreground/_next/static/chunks/pages/_error-82574734f9384a4c368b.js",
     "Foreground/_next/static/chunks/polyfills-a40ef1678bae11e696dba45124eadd70.js",
-    "Foreground/_next/static/chunks/webpack-465d4341a81c3c330665.js",
+    "Foreground/_next/static/chunks/webpack-b6a2035a58e813b7cb8a.js",
     "Foreground/_next/static/css/111be62c73814c837caa.css",
-    "Foreground/_next/static/css/40ea0e10a5aafee4e33a.css"
+    "Foreground/_next/static/css/63db78290a164705dcb5.css",
+    "Foreground/_next/static/U9fBc9c0O752cz7GzqcLk/_buildManifest.js",
+    "Foreground/_next/static/U9fBc9c0O752cz7GzqcLk/_ssgManifest.js"
   ]
 }

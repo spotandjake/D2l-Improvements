@@ -4,13 +4,12 @@ import { StreamType } from '../Classes/Types';
 // Loader Function
 interface ChipProps {
   Type: StreamType;
-  Active: boolean;
   ToggleType: Function;
 }
-const FilterChip = ({ Type, Active, ToggleType }: ChipProps) => {
+const FilterChip = ({ Type, ToggleType }: ChipProps) => {
   return (
     <div
-      className={[styles.container, Active ? ' ' : styles.disabled].join(' ')}
+      className={[styles.container, styles[Type]].join(' ')}
       onClick={() => ToggleType(Type)}
     >
       {Type}
