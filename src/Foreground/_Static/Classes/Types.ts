@@ -5,3 +5,8 @@ export const enum StreamType {
   Assignments = 'Assignments',
   Quizzes = 'Quizzes'
 }
+export const enum CompletionType {
+  Complete = 'Complete',
+  Unread = 'Unread',
+  OverDue = 'DueDate',
+}

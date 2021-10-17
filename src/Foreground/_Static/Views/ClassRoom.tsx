@@ -1,7 +1,15 @@
 import styles from '../css/Views/ClassRoom.module.scss';
 // Types
-import { NewsItem } from '../Classes/BrightspaceTypes';
-import { StreamType } from '../Classes/Types';
+import {
+  NewsItem,
+  ContentObject,
+  ContentType,
+  ObjectListPage,
+  UserProgressData,
+  Module,
+  Topic,
+} from '../Classes/BrightspaceTypes';
+import { StreamType, CompletionType } from '../Classes/Types';
 // Components
 import React, { useState, useEffect } from 'react';
 import NavBar from '../Components/NavBar';
@@ -50,6 +58,13 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
                 'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
             );
         });
+      setHeaderContent(
+        <ClassHeader
+          Name={properties.name}
+          Picture={imageInfo.links ? imageInfo.links[2].href : imageInfo}
+          StartDate={properties.startDate}
+        />
+      );
       // Stream
       const stream: JSX.Element[] = [];
       // fetch News
@@ -61,6 +76,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
           <StreamCard
             Id={newsItem.Id}
             Title={newsItem.Title}
+            Progress={CompletionType.Complete}
             Category={StreamType.News}
             StartDate={newsItem.StartDate}
             Content={newsItem.Body}
@@ -68,23 +84,73 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
           />
         );
       });
-      // TODO: Fetch Content
+      // Fetch Content
+      // TODO: Figure out how to make this run faster
+      // TODO: We want to fetch smaller lists and make use of the next feature.
+      const readModules: ObjectListPage<UserProgressData> =
+        await brightSpace._fetch(
+          `/api/le/unstable/${ClassId}/content/userprogress/?pageSize=99999`
+        );
+      const parseContent = async (
+        content: (ContentObject | Module | Topic)[]
+      ) => {
+        const _contentItems: Topic[] = [];
+        await Promise.all(
+          content.map(async (contentElement) => {
+            switch (contentElement.Type) {
+              case ContentType.Module: {
+                // TODO: I am pretty sure that this fetch is a little useless
+                // Module
+                const moduleContent: (Module | Topic)[] =
+                  await brightSpace._fetch(
+                    `/api/le/${brightSpace.version.le}/${ClassId}/content/modules/${contentElement.Id}/structure/`
+                  );
+                _contentItems.push(...(await parseContent(moduleContent)));
+                break;
+              }
+              case ContentType.Topic: // Topic
+                _contentItems.push({
+                  ...contentElement,
+                  Read: readModules.Objects.some(
+                    (elm) => elm.ObjectId == contentElement.Id && elm.IsRead
+                  ),
+                });
+                break;
+            }
+          })
+        );
+        return _contentItems;
+      };
+      const rootContent: ContentObject[] = await brightSpace._fetch(
+        `/api/le/${brightSpace.version.le}/${ClassId}/content/root/`
+      );
+      const contentStream = await parseContent(rootContent);
+      for (const contentItem of contentStream) {
+        stream.push(
+          <StreamCard
+            Id={contentItem.Id}
+            Title={contentItem.Title}
+            Progress={
+              [CompletionType.Unread, CompletionType.Complete][
+                contentItem.Read ? 1 : 0
+              ]
+            }
+            Category={StreamType.Content}
+            StartDate={contentItem.LastModifiedDate}
+            Content={contentItem.Url}
+            Route={Route}
+          />
+        );
+      }
       // TODO: Fetch Discussions
       // TODO: Fetch Assignments
       // TODO: Fetch Quizzes
       // Set Page Content
-      setHeaderContent(
-        <ClassHeader
-          Name={properties.name}
-          Picture={imageInfo.links ? imageInfo.links[2].href : imageInfo}
-          StartDate={properties.startDate}
-        />
-      );
       setStreamContent(<>{stream}</>);
     };
     fetchStreamData();
-    const interval = setInterval(fetchStreamData, 10000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(fetchStreamData, 10000);
+    // return () => clearInterval(interval);
   }, []);
   const ToggleType = (type: StreamType) => {
     switch (type) {

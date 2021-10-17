@@ -9,7 +9,7 @@ import ClassRoom from '../_Static/Views/ClassRoom';
 const Application = () => {
   const [content, setContent] = useState(<Loader />);
   // TODO: add more routes make routing dynamic, create a custom router, try to avoid the loader.
-  const route = (brightSpace) => {
+  const route = (brightSpace: Brightspace) => {
     const pathname = window.location.pathname;
     switch (true) {
       // TODO: Add more routes, find some sort of way to route on the background page using a single routing library that way we do not load the page and destroy d2l's page if we dont have the a route for the content, make sure to consider performance in this though, alternatively use static routes with the declarative net api over the webRequest api.

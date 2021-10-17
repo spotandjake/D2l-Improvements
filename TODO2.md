@@ -6,6 +6,37 @@
   - [x] News Card
   - [ ] Content Card
     - [ ] File Viewer
+      - [ ] Use Office viewer, if it is supported. If brave then we need to find an alternative viewer
+        - [x] Detect Browser Support
+        - [x] Render if on a browser that supports the viewer extension
+        - [ ] Styling
+        - [ ] Alternative renderer
+      - [ ] Use Image Viewer
+        - [x] Image Detection
+        - [x] Styling
+        - [ ] OnError Alternative
+      - [x] Use Video Viewer
+        - [x] File Type Detection
+        - [x] Styling
+        - [ ] OnError Alternative
+      - [ ] Use Google Docs
+        - [x] File Type Detection
+        - [x] Styling
+        - [ ] OnError Alternative
+      - [ ] Use PDF Viewer
+        - [x] File Type Detection
+        - [x] Styling
+        - [ ] Use the Adobe PDF viewer SDK
+        - [ ] OnError Alternative
+      - [ ] Youtube embed detection
+        - [ ] File Type Detection
+        - [ ] Styling
+        - [ ] OnError Alternative
+      - [ ] Use Embedded
+        - [ ] File Type Detection
+        - [ ] Styling
+        - [ ] OnError Alternative
+      - [ ] Other File Types
     - [ ] Download Button
   - [ ] Discussion Card
   - [ ] Assignment Card
@@ -32,6 +63,8 @@
 - [ ] Stream Update Cycle
   - [x] Stream Update Cycle
   - [ ] Detect User Inactivity and slow refresh rate
+- [ ] Rewrite the brightspace api, client so we have types and are not just using a fetch method from it
+- [ ] Create a script to generate types from the documentation
 - [ ] Move All Colors and repeated stuff to be variables
 - [ ] Fix All TODO's
 - [ ] Go over style with a fine tooth comb

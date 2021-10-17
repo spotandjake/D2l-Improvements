@@ -49,6 +49,7 @@
   }
 }
 .cardBody {
+  padding-top: 1rem;
   grid-area: Content;
 }
 // News Body
@@ -67,4 +68,24 @@
 .Markdown a {
   color: #1282f0;
   text-decoration: none;
+}
+// Content Styling
+.contentMedia,
+.contentMedia img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+.cardBody iframe {
+  aspect-ratio: 16 / 9;
+  min-height: 40rem;
+}
+.cardBody {
+  object,
+  embed,
+  iframe,
+  img,
+  picture {
+    border-radius: 0.5rem;
+  }
 }
