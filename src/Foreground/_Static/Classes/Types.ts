@@ -1,7 +1,7 @@
 export const enum StreamType {
-  News,
-  Content,
-  Discussions,
-  Assignments,
-  Quizzes
+  News = 'News',
+  Content = 'Content',
+  Discussions = 'Discussions',
+  Assignments = 'Assignments',
+  Quizzes = 'Quizzes'
 }

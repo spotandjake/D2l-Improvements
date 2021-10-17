@@ -3,10 +3,9 @@ import styles from '../css/Components/NavBar.module.scss';
 import IconButton from '@material-ui/core/IconButton';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import MenuIcon from '@material-ui/icons/Menu';
-import MailIcon from '@material-ui/icons/Mail';
-import MessageIcon from '@material-ui/icons/Message';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import MailIcon from '@material-ui/icons/MailOutlined';
+import MessageIcon from '@material-ui/icons/CommentOutlined';
+import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import Brightspace from '../Classes/Brightspace';
 interface props {
   brightSpace: Brightspace;
@@ -14,7 +13,6 @@ interface props {
 // Loader Function
 // TODO: add watcher for notifications
 // TODO: add toggle for notification viewers
-// TODO: add fetch for account profile picture
 // TODO: add search
 // TODO: make aside button work
 const NavBar = ({ brightSpace }: props) => {
@@ -22,7 +20,11 @@ const NavBar = ({ brightSpace }: props) => {
     <nav className={styles.container}>
       <div className={`${styles.side} ${styles.leftSide}`}>
         <IconButton aria-label="aside" className={styles.IconButton}>
-          <SvgIcon className={styles.Icon} component={MenuIcon} viewBox="0 0 24 24" />
+          <SvgIcon
+            className={styles.Icon}
+            component={MenuIcon}
+            viewBox="0 0 24 24"
+          />
         </IconButton>
       </div>
       <div className={styles.center}>
@@ -30,16 +32,34 @@ const NavBar = ({ brightSpace }: props) => {
       </div>
       <div className={`${styles.side} ${styles.rightSide}`}>
         <IconButton aria-label="aside" className={styles.IconButton}>
-          <SvgIcon className={styles.Icon} component={MailIcon} viewBox="0 0 24 24" />
+          <SvgIcon
+            className={styles.Icon}
+            component={MailIcon}
+            viewBox="0 0 24 24"
+          />
         </IconButton>
         <IconButton aria-label="aside" className={styles.IconButton}>
-          <SvgIcon className={styles.Icon} component={MessageIcon} viewBox="0 0 24 24" />
+          <SvgIcon
+            className={styles.Icon}
+            component={MessageIcon}
+            viewBox="0 0 24 24"
+          />
         </IconButton>
         <IconButton aria-label="aside" className={styles.IconButton}>
-          <SvgIcon className={styles.Icon} component={NotificationsIcon} viewBox="0 0 24 24" />
+          <SvgIcon
+            className={styles.Icon}
+            component={NotificationsIcon}
+            viewBox="0 0 24 24"
+          />
         </IconButton>
         <IconButton aria-label="aside" className={styles.IconButton}>
-          <SvgIcon className={styles.Icon} component={AccountBoxIcon} viewBox="0 0 24 24" />
+          <picture className={styles.Icon}>
+            <img
+              src={
+                'https://durham.elearningontario.ca/d2l/api/lp/1.32/profile/myProfile/image'
+              }
+            />
+          </picture>
         </IconButton>
       </div>
     </nav>

@@ -20,7 +20,6 @@ async function* walk(dir) {
 }
 
 gulp.task('build', async (done) => {
-  // TODO: Modify Manifest Add All Code For WebPage
   // TODO: Look into bundling web page with rollup
   // TODO: allow require
   // Make List of all files in the output foreground folder
@@ -31,18 +30,24 @@ gulp.task('build', async (done) => {
     files.push(pathList.join('/'));
   }
   // Copy Manifest
-  const manifest = JSON.parse(await fs.promises.readFile('./src/manifest.json', 'utf8'));
-  if (manifest['web_accessible_resources']) manifest['web_accessible_resources'].push(...files);
+  const manifest = JSON.parse(
+    await fs.promises.readFile('./src/manifest.json', 'utf8')
+  );
+  if (manifest['web_accessible_resources'])
+    manifest['web_accessible_resources'].push(...files);
   else manifest['web_accessible_resources'] = files;
-  await fs.promises.writeFile('./dist/manifest.json', JSON.stringify(manifest, null, 2));
+  await fs.promises.writeFile(
+    './dist/manifest.json',
+    JSON.stringify(manifest, null, 2)
+  );
   // generate our Background Script
   const a = await rollup.rollup({
     input: './src/Background/Background.ts',
     plugins: [
       rollupTypescript({
-        cacheDir: './dist/cache/'
-      })
-    ]
+        cacheDir: './dist/cache/',
+      }),
+    ],
   });
   await a.write({
     file: './dist/Background/Background.js',
@@ -50,15 +55,15 @@ gulp.task('build', async (done) => {
     format: 'iife',
     compact: true,
     indent: '  ',
-    preferConst: true
+    preferConst: true,
   });
   const b = await rollup.rollup({
     input: './src/Background/Content.ts',
     plugins: [
       rollupTypescript({
-        cacheDir: './dist/cache/'
-      })
-    ]
+        cacheDir: './dist/cache/',
+      }),
+    ],
   });
   await b.write({
     file: './dist/Background/Content.js',
@@ -66,7 +71,7 @@ gulp.task('build', async (done) => {
     format: 'iife',
     compact: true,
     indent: '  ',
-    preferConst: true
+    preferConst: true,
   });
   done();
   // eslint-disable-next-line no-undef
@@ -74,14 +79,17 @@ gulp.task('build', async (done) => {
 });
 
 gulp.task('lint', () => {
-  return gulp.src(['src/**/*.{js,ts,tsx}'])
-    // eslint() attaches the lint output to the "eslint" property
-    // of the file object so it can be used by other modules.
-    .pipe(eslint())
-    // eslint.format() outputs the lint results to the console.
-    // Alternatively use eslint.formatEach() (see Docs).
-    .pipe(eslint.format())
-    // To have the process exit with an error code (1) on
-    // lint error, return the stream and pipe to failAfterError last.
-    .pipe(eslint.failAfterError());
+  return (
+    gulp
+      .src(['src/**/*.{js,ts,tsx}'])
+      // eslint() attaches the lint output to the "eslint" property
+      // of the file object so it can be used by other modules.
+      .pipe(eslint())
+      // eslint.format() outputs the lint results to the console.
+      // Alternatively use eslint.formatEach() (see Docs).
+      .pipe(eslint.format())
+      // To have the process exit with an error code (1) on
+      // lint error, return the stream and pipe to failAfterError last.
+      .pipe(eslint.failAfterError())
+  );
 });

@@ -1,0 +1,31 @@
+- [ ] Stream
+  - [ ] Sort Stream By Date's
+  - [x] Content Filters
+  - [x] News Card
+  - [ ] Content Card
+    - [ ] File Viewer
+    - [ ] Download Button
+  - [ ] Discussion Card
+  - [ ] Assignment Card
+    - [ ] Submit UI
+    - [ ] Mark UI
+    - [ ] Previous Submissions UI
+  - [ ] Quiz Card
+    - [ ] Quiz UI
+    - [ ] Mark UI
+- [ ] Widgets
+  - [ ] Calender
+  - [ ] Assignments
+- [ ] NavBar
+  - [ ] Design
+  - [ ] Search
+  - [ ] Notifications
+  - [ ] Aside
+  - [ ] Settings
+- [ ] Routing with the filters
+- [ ] Move card open from being a react state to a css thing
+- [ ] Font's
+- [x] Stream Update Cycle
+- [ ] Move All Colors and repeated stuff to be variables
+- [ ] Fix All TODO's
+- [ ] Go over style with a fine tooth comb

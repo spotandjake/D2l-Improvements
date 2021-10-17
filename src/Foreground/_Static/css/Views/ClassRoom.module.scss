@@ -9,15 +9,14 @@
   display: grid;
   grid-template-columns: 20rem 1fr;
   grid-template-rows: 15rem auto;
-  grid-gap: 2rem;
-  // grid-template-areas: 
+  grid-gap: 0.5rem;
+  // grid-template-areas:
   //   'Header Header'
   //   'Widget Stream'
   // ;
-  grid-template-areas: 
+  grid-template-areas:
     'Header Header'
-    'Stream Stream'
-  ;
+    'Stream Stream';
   // Grid Layout
   header {
     grid-area: Header;
@@ -25,4 +24,9 @@
   .stream {
     grid-area: Stream;
   }
+}
+.chipContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }

@@ -4,7 +4,8 @@
   height: 3.5rem;
   width: 100%;
   display: flex;
-  .side, .center {
+  .side,
+  .center {
     flex: 1 1 0;
     display: flex;
     align-content: center;
@@ -25,16 +26,22 @@
   background-color: var(--Background);
   outline: none;
   border: none;
-  border-radius: .5rem;
-  padding: .5rem;
-  color: #CCCCCC;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: #cccccc;
 }
 // Icons
 .Icon {
+  display: block;
   width: 1.75rem !important;
   height: 1.75rem !important;
   color: #fff;
+  img {
+    height: 100%;
+    width: 100%;
+    border-radius: 25%;
+  }
 }
 .IconButton {
-  margin: 0 .5rem !important;
+  margin: 0 0.5rem !important;
 }

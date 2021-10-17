@@ -39,6 +39,7 @@ const ClassCard = ({
                 __html:
                   (Content as RichText)?.Html || (Content as RichText).Text,
               }}
+              className={styles.Markdown}
             ></div>
           );
           break;
@@ -54,17 +55,19 @@ const ClassCard = ({
     }
   };
   return (
-    <div className={styles.container} key={Id} onClick={() => click()}>
-      <div className={styles.titleIcon}>
-        <SvgIcon
-          className={styles.Icon}
-          component={ContentIcon}
-          viewBox="0 0 24 24"
-        />
-      </div>
-      <div className={styles.titleBlock}>
-        <h2>{Title}</h2>
-        <h5>{new Date(StartDate).toDateString()}</h5>
+    <div className={styles.container} key={Id}>
+      <div className={styles.titleBlock} onClick={() => click()}>
+        <div className={styles.titleIcon}>
+          <SvgIcon
+            className={styles.Icon}
+            component={ContentIcon}
+            viewBox="0 0 24 24"
+          />
+        </div>
+        <div className={styles.titleText}>
+          <h2>{Title}</h2>
+          <h5>{new Date(StartDate).toDateString()}</h5>
+        </div>
       </div>
       <div className={styles.cardBody}>{_cardContent}</div>
     </div>

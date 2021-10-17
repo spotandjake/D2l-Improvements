@@ -53,7 +53,7 @@ const ClassList = ({ brightSpace, Route }: props) => {
                     'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
                 );
             });
-          // TODO: Get Teacher Info
+          // TODO: Try to Get Teacher Info
           const { endDate, name, startDate } = classInfo.properties;
           return (
             <ClassCard
