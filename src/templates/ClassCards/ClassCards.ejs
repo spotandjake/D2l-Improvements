@@ -1,19 +1,12 @@
 <section class="ClassContainer Search" id="ClassContainer">
   <% locals.classes.forEach((_class) => { %>
-    <div class="Class" <%= _class.disabled ? 'disabled' : '' %> class_link="<%= _class.href %>">
+    <div class="classCard" <%= _class.disabled ? 'disabled' : '' %> class_link="<%= _class.href %>">
       <picture>
-        <img src="<%- _class.picture %>" />
+        <img src="<%- _class.picture %>">
       </picture>
-      <div>
-        <h1><%= _class.name %></h1>
-        <div>
-          <div class="Profile">
-            <picture>
-              <img src="<%- _class.teacher.picture %>" />
-            </picture>
-          </div>
-          <h2><%= _class.teacher.name %></h2>
-        </div>
+      <div class="classCardContent">
+        <h4><%= _class.name %></h4>
+        <h6><%= _class.disabled ? 'Closed' : _class.Text %></h6>
       </div>
     </div>
   <% }); %>

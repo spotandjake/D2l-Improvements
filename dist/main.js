@@ -136,16 +136,17 @@
                 authorization: `Bearer ${await e.getToken()}`
               },
               method: 'GET'
-            }), s = await a.json(), o = await fetch(s.entities[2].href), c = await o.json().catch((() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658')), {endDate: l, name: d} = s.properties;
-            return {
-              name: d,
-              disabled: new Date(l).valueOf() < t,
-              href: s.links[0].href.replace('https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/'),
-              picture: c.links ? c.links[2].href : c,
-              teacher: {
-                name: 'TODO',
-                picture: 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'
+            }), s = await a.json(), o = await fetch(s.entities[2].href).then((e => e.json())).catch((async () => await fetch(s.entities[2].href, {
+              headers: {
+                authorization: `Bearer ${await e.getToken()}`
               }
+            }).then((e => e.json())).catch((() => 'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png')))), {endDate: c, name: l} = s.properties;
+            return {
+              name: l,
+              disabled: new Date(c).valueOf() < t,
+              href: s.links[0].href.replace('https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/'),
+              picture: o.links ? o.links[2].href : o,
+              Text: `Closes | ${new Date(c).toDateString()}`
             };
           })));
           n.innerHTML = function(e, t, n, r) {
@@ -167,11 +168,10 @@
               null != e && (o += e);
             }
             return c('<section class="ClassContainer Search" id="ClassContainer">\r\n  '), e.classes.forEach((e => {
-              c('\r\n    <div class="Class" '), c(t(e.disabled ? 'disabled' : '')), c(' class_link="'), 
-              c(t(e.href)), c('">\r\n      <picture>\r\n        <img src="'), c(e.picture), c('" />\r\n      </picture>\r\n      <div>\r\n        <h1>'), 
-              c(t(e.name)), c('</h1>\r\n        <div>\r\n          <div class="Profile">\r\n            <picture>\r\n              <img src="'), 
-              c(e.teacher.picture), c('" />\r\n            </picture>\r\n          </div>\r\n          <h2>'), 
-              c(t(e.teacher.name)), c('</h2>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  ');
+              c('\r\n    <div class="classCard" '), c(t(e.disabled ? 'disabled' : '')), c(' class_link="'), 
+              c(t(e.href)), c('">\r\n      <picture>\r\n        <img src="'), c(e.picture), c('">\r\n      </picture>\r\n      <div class="classCardContent">\r\n        <h4>'), 
+              c(t(e.name)), c('</h4>\r\n        <h6>'), c(t(e.disabled ? 'Closed' : e.Text)), 
+              c('</h6>\r\n      </div>\r\n    </div>\r\n  ');
             })), c('\r\n</section>'), o;
           }({
             classes: i
@@ -799,18 +799,18 @@
       this.pattern = e;
     }
     static isMultiMatch(e) {
-      return F(e, this.multiRegex);
+      return I(e, this.multiRegex);
     }
     static isSingleMatch(e) {
-      return F(e, this.singleRegex);
+      return I(e, this.singleRegex);
     }
     search() {}
   }
-  function F(e, t) {
+  function I(e, t) {
     const n = e.match(t);
     return n ? n[1] : null;
   }
-  class I extends B {
+  class L extends B {
     constructor(e, {location: t = y.location, threshold: n = y.threshold, distance: r = y.distance, includeMatches: i = y.includeMatches, findAllMatches: a = y.findAllMatches, minMatchCharLength: s = y.minMatchCharLength, isCaseSensitive: o = y.isCaseSensitive, ignoreLocation: c = y.ignoreLocation} = {}) {
       super(e), this._bitapSearch = new M(e, {
         location: t,
@@ -836,7 +836,7 @@
       return this._bitapSearch.searchIn(e);
     }
   }
-  class L extends B {
+  class F extends B {
     constructor(e) {
       super(e);
     }
@@ -882,7 +882,7 @@
         indices: [ 0, this.pattern.length - 1 ]
       };
     }
-  }, L, class extends B {
+  }, F, class extends B {
     constructor(e) {
       super(e);
     }
@@ -987,24 +987,24 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, I ], E = A.length, $ = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, D = new Set([ I.type, L.type ]), T = [];
-  function _(e, t) {
-    for (let n = 0, r = T.length; n < r; n += 1) {
-      let r = T[n];
+  }, L ], E = A.length, $ = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, T = new Set([ L.type, F.type ]), _ = [];
+  function D(e, t) {
+    for (let n = 0, r = _.length; n < r; n += 1) {
+      let r = _[n];
       if (r.condition(e, t)) return new r(e, t);
     }
     return new M(e, t);
   }
-  const z = '$and', O = '$path', N = e => !(!e[z] && !e.$or), P = e => ({
+  const z = '$and', O = '$path', N = e => !(!e[z] && !e.$or), j = e => ({
     [z]: Object.keys(e).map((t => ({
       [t]: e[t]
     })))
   });
-  function j(e, t, {auto: n = !0} = {}) {
+  function P(e, t, {auto: n = !0} = {}) {
     const r = e => {
       let i = Object.keys(e);
       const o = (e => !!e[O])(e);
-      if (!o && i.length > 1 && !N(e)) return r(P(e));
+      if (!o && i.length > 1 && !N(e)) return r(j(e));
       if ((e => !a(e) && l(e) && !N(e))(e)) {
         const r = o ? e[O] : i[0], a = o ? e.$val : e[r];
         if (!s(a)) throw new Error((e => 'Invalid value for key ' + e)(r));
@@ -1012,7 +1012,7 @@
           keyId: v(r),
           pattern: a
         };
-        return n && (c.searcher = _(a, t)), c;
+        return n && (c.searcher = D(a, t)), c;
       }
       let c = {
         children: [],
@@ -1025,7 +1025,7 @@
         }));
       })), c;
     };
-    return N(e) || (e = P(e)), r(e);
+    return N(e) || (e = j(e)), r(e);
   }
   function R(e, t) {
     const n = e.matches;
@@ -1102,7 +1102,7 @@
       });
     }
     _searchStringList(e) {
-      const t = _(e, this.options), {records: n} = this._myIndex, r = [];
+      const t = D(e, this.options), {records: n} = this._myIndex, r = [];
       return n.forEach((({v: e, i: n, n: i}) => {
         if (!d(e)) return;
         const {isMatch: a, score: s, indices: o} = t.searchIn(e);
@@ -1119,7 +1119,7 @@
       })), r;
     }
     _searchLogical(e) {
-      const t = j(e, this.options), n = (e, t, r) => {
+      const t = P(e, this.options), n = (e, t, r) => {
         if (!e.children) {
           const {keyId: n, searcher: i} = e, a = this._findMatches({
             key: this._keyStore.get(n),
@@ -1172,7 +1172,7 @@
       })), a;
     }
     _searchObjectList(e) {
-      const t = _(e, this.options), {keys: n, records: r} = this._myIndex, i = [];
+      const t = D(e, this.options), {keys: n, records: r} = this._myIndex, i = [];
       return r.forEach((({$: e, i: r}) => {
         if (!d(e)) return;
         let a = [];
@@ -1222,7 +1222,7 @@
     });
     return i.setKeys(n), i.setIndexRecords(r), i;
   }, q.config = y, function(...e) {
-    T.push(...e);
+    _.push(...e);
   }(class {
     constructor(e, {isCaseSensitive: t = y.isCaseSensitive, includeMatches: n = y.includeMatches, minMatchCharLength: r = y.minMatchCharLength, ignoreLocation: i = y.ignoreLocation, findAllMatches: a = y.findAllMatches, location: s = y.location, threshold: o = y.threshold, distance: c = y.distance} = {}) {
       this.query = null, this.options = {
@@ -1281,7 +1281,7 @@
           }
           if (i += 1, s += d, n) {
             const e = r.constructor.type;
-            D.has(e) ? a = [ ...a, ...l ] : a.push(l);
+            T.has(e) ? a = [ ...a, ...l ] : a.push(l);
           }
         }
         if (i) {
@@ -1322,7 +1322,7 @@
         null != e && (o += e);
       }
       return c('<meta charset="utf-8">\r\n<link rel="icon" href="https://s.brightspace.com/lib/favicon/2.0.0/favicon.ico">\r\n<title>'), 
-      c(t(e.title)), c('</title>\r\n<meta name="description" content="D2l Overhaul">\r\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\r\n\x3c!-- FONT --\x3e\r\n<style>/* fallback */\r\n@font-face {\r\n  font-family: \'Material Icons\';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\r\n}\r\n\r\n.material-icons {\r\n  font-family: \'Material Icons\';\r\n  font-weight: normal;\r\n  font-style: normal;\r\n  font-size: 24px;  /* Preferred icon size */\r\n  display: inline-block;\r\n  line-height: 1;\r\n  text-transform: none;\r\n  letter-spacing: normal;\r\n  word-wrap: normal;\r\n  white-space: nowrap;\r\n  direction: ltr;\r\n  user-select: none;\r\n\r\n  /* Support for all WebKit browsers. */\r\n  -webkit-font-smoothing: antialiased;\r\n  /* Support for Safari and Chrome. */\r\n  text-rendering: optimizeLegibility;\r\n\r\n  /* Support for Firefox. */\r\n  -moz-osx-font-smoothing: grayscale;\r\n\r\n  /* Support for IE. */\r\n  font-feature-settings: \'liga\';\r\n}\r\n/* Rules for sizing the icon. */\r\n.material-icons.md-18 { font-size: 18px; }\r\n.material-icons.md-24 { font-size: 24px; }\r\n.material-icons.md-36 { font-size: 36px; }\r\n.material-icons.md-48 { font-size: 48px; }\r\n\r\n/* Rules for using icons as black on a light background. */\r\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\r\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\r\n\r\n/* Rules for using icons as white on a dark background. */\r\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\r\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\r\n\r\n/* Rules for using icons as orange on a dark background. */\r\n.material-icons.orange600 { color: #FB8C00; }</style>\r\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\r\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\r\n\x3c!-- CSS --\x3e\r\n<style>:root {\r\n  --Background: #2C2C2C;\r\n  --Foreground: #3C3C3C;\r\n  --Border: #4A4A4A;\r\n  --Text-Main: #fff;\r\n}</style>\r\n<style>/* General Page Stuff */\nhtml, body {\n  height: 100%;\n  width: 100%;\n  font-family: \'Roboto\',Helvetica,Arial,sans-serif;\n  color: var(--Text-Main); }\n\nbody {\n  margin: 0;\n  background-color: var(--Background);\n  position: relative; }\n\n* {\n  box-sizing: border-box; }\n\npicture, picture img {\n  display: block;\n  height: 100%;\n  width: 100%; }\n\n*::-webkit-scrollbar {\n  width: 16px; }\n\n*::-webkit-scrollbar-thumb {\n  background: #dadce0;\n  background-clip: padding-box;\n  border: 4px solid transparent;\n  border-radius: 8px;\n  box-shadow: none;\n  min-height: 50px; }\n\n*::-webkit-scrollbar-track {\n  background: none;\n  border: none; }\n\n/* Text */\nh1 {\n  color: var(--Text-Main);\n  font-size: 1.375rem;\n  font-weight: 500;\n  line-height: 1.75rem;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif; }\n\nh2 {\n  color: var(--Text-Main);\n  font-size: 1rem;\n  font-weight: 400;\n  line-height: 1.25rem;\n  margin: 0; }\n\n/* Aside */\n.SideBar {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n  width: 19rem;\n  padding: .5rem 0;\n  z-index: 990;\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  background-color: var(--Foreground);\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  overflow-y: scroll;\n  max-width: 0;\n  transition: max-width .5s; }\n  .SideBar.Active {\n    max-width: 100%; }\n\n.SideBarSeperator {\n  border-top: 0.0625rem solid var(--Border);\n  margin: .5rem 0; }\n\n.SideBarSection {\n  flex-grow: 1;\n  min-height: max-content; }\n\n.SideBarHeader {\n  padding: 0 1rem;\n  letter-spacing: .01785714em;\n  font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  line-height: 1.25rem; }\n\n.SideBarItem {\n  display: flex;\n  align-content: center;\n  border-radius: 0 2rem 2rem 0;\n  height: 3.5rem;\n  padding-left: 1.5rem;\n  margin-right: 1rem;\n  cursor: pointer;\n  text-decoration: none;\n  color: #fff; }\n  .SideBarItem .SideBarItemText {\n    margin-left: 1rem;\n    font-family: \'Google Sans\',Roboto,Arial,sans-serif;\n    letter-spacing: .01785714em;\n    font-size: 0.875rem;\n    font-weight: 500;\n    overflow: hidden;\n    white-space: nowrap;\n    margin-right: 4rem;\n    text-overflow: ellipsis; }\n  .SideBarItem span {\n    line-height: 3.5rem; }\n  .SideBarItem:hover {\n    background-color: #343434; }\n\n/* Content */\n#Content {\n  min-height: 100%;\n  height: min-content;\n  width: 100%;\n  display: flex;\n  flex-direction: column; }\n\n#Content > * {\n  padding: 1rem; }\n\nmain {\n  height: 100%;\n  width: 100%; }\n\n/* Home Page */\n.Home > main {\n  max-width: 70rem;\n  margin: auto;\n  display: grid; }\n\n/* Loader Page */\n.Loader {\n  display: flex;\n  align-content: center;\n  flex-direction: column; }\n\n.lds-grid {\n  margin: auto;\n  display: grid;\n  grid-template-columns: repeat(3, 16px);\n  grid-template-rows: repeat(3, 16px);\n  grid-gap: 8px; }\n\n.lds-grid div {\n  border-radius: 50%;\n  background: #fff;\n  animation: lds-grid 1.2s linear infinite; }\n\n.lds-grid div:nth-child(1) {\n  animation-delay: 0s; }\n\n.lds-grid div:nth-child(2), .lds-grid div:nth-child(4) {\n  animation-delay: -0.4s; }\n\n.lds-grid div:nth-child(3), .lds-grid div:nth-child(5), .lds-grid div:nth-child(7) {\n  animation-delay: -0.8s; }\n\n.lds-grid div:nth-child(6), .lds-grid div:nth-child(8) {\n  animation-delay: -1.2s; }\n\n.lds-grid div:nth-child(9) {\n  animation-delay: -1.6s; }\n\n@keyframes lds-grid {\n  0%, 100% {\n    opacity: 1; }\n  50% {\n    opacity: 0.5; } }\n\n/* General */\n.Hidden, .Filtered {\n  display: none !important; }\n\n/* Hovers */\n.Class, .StreamCard {\n  cursor: pointer; }\n\n.Class:hover, .StreamCard:hover {\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  border-radius: .75rem; }\n\n/* Components */\n.NavBar {\n  padding: .75rem 1rem !important;\n  height: 4rem;\n  width: 100%;\n  background: var(--Foreground);\n  display: grid;\n  grid-template-columns: 2.5rem auto max-content;\n  position: relative; }\n  .NavBar .AsideButton {\n    display: flex;\n    align-content: center;\n    border-radius: 50%; }\n    .NavBar .AsideButton:hover {\n      background: var(--Background); }\n    .NavBar .AsideButton svg {\n      margin: auto;\n      width: 2rem;\n      height: 2rem; }\n  .NavBar input {\n    height: 2.5rem;\n    width: 50%;\n    margin: auto;\n    display: block;\n    background-color: #212121;\n    outline: none;\n    border: none;\n    border-radius: .5rem;\n    padding: .5rem;\n    color: #fff; }\n  .NavBar .Account {\n    display: grid;\n    grid-template-columns: repeat(4, 2.5rem);\n    grid-gap: .25rem; }\n    .NavBar .Account span {\n      width: 2.5rem;\n      height: 2.5rem;\n      text-align: center;\n      line-height: 2.5rem; }\n      .NavBar .Account span.Active {\n        color: #FB8C00; }\n    .NavBar .Account .Profile picture {\n      padding: .25rem; }\n    .NavBar .Account span, .NavBar .Account div {\n      cursor: pointer;\n      border-radius: .5rem; }\n    .NavBar .Account span:hover, .NavBar .Account div:hover {\n      background-color: #2F3033; }\n\n.ClassContainer {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-template-rows: repeat(auto-fit, min-content);\n  grid-gap: 2rem; }\n\n.Class {\n  height: 15rem;\n  width: 100%;\n  overflow: hidden;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  position: relative;\n  z-index: 0; }\n  .Class h2 {\n    height: 100%;\n    line-height: 3rem;\n    padding-left: 1rem; }\n\n.Class > div {\n  height: 100%;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.25);\n  padding: 1rem;\n  display: grid;\n  grid-template-rows: auto 3rem; }\n\n.Class div div {\n  display: flex; }\n\n.Class > picture {\n  z-index: -1;\n  position: absolute; }\n\n.Class[disabled] > picture {\n  filter: grayscale(100%); }\n\n.Profile {\n  height: 100%;\n  aspect-ratio: 1 / 1;\n  border-radius: 50%; }\n\n/* Stream */\n.Stream > main {\n  flex-grow: 1;\n  min-height: max-content;\n  width: calc(100% - 2*1.5rem);\n  max-width: 62.5rem;\n  margin: 0 auto;\n  padding: 0 !important; }\n\n.ClassPicture {\n  margin: 1.5rem 0;\n  overflow: hidden;\n  border-radius: 1rem;\n  position: relative; }\n\n.ClassPictureContent {\n  display: flex;\n  flex-direction: column;\n  padding: 1.5rem;\n  margin: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%; }\n  .ClassPictureContent h1, .ClassPictureContent h2 {\n    margin: 0; }\n  .ClassPictureContent h4 {\n    margin-top: .4rem;\n    font-weight: 500;\n    font-style: normal; }\n\n.ChipFilter {\n  display: inline-flex;\n  height: max-content;\n  width: max-content;\n  padding: .25rem .5rem;\n  border: 0.0625rem solid var(--Border);\n  border-radius: 2rem;\n  font-size: .75rem;\n  cursor: pointer;\n  user-select: none;\n  background-color: var(--Foreground); }\n  .ChipFilter .chipIcon {\n    border-radius: 50%;\n    padding: .25rem;\n    font-size: .75rem;\n    margin-right: .25rem;\n    background-color: #3367D6; }\n  .ChipFilter p {\n    margin: auto;\n    display: inline-block; }\n  .ChipFilter:hover {\n    background-color: #343434; }\n  .ChipFilter.Active {\n    background-color: #181818; }\n\n/* Stream Cards */\n.StreamCard {\n  width: 100%;\n  height: 4rem;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: .5rem;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  grid-template-rows: 3rem max-content;\n  grid-template-areas: \'Icon Title\'\r \'Content Content\';\n  padding: .5rem;\n  grid-gap: .5rem;\n  margin: 1rem 0; }\n  .StreamCard h1, .StreamCard h3 {\n    margin: 0; }\n  .StreamCard h3 {\n    font-size: .75rem; }\n\n.StreamCardTitle {\n  grid-area: Title; }\n\n.StreamCardIcon {\n  grid-area: Icon;\n  background-color: var(--Background);\n  width: 3rem;\n  height: 3rem;\n  border-radius: 2rem;\n  display: flex;\n  align-content: center; }\n  .StreamCardIcon.OnSubmission {\n    background-color: #3367d6; }\n  .StreamCardIcon.DueDate {\n    background-color: #e91e63; }\n  .StreamCardIcon.Unread {\n    background-color: #FB8C00; }\n  .StreamCardIcon span {\n    margin: auto; }\n\n.StreamIframe {\n  border: none;\n  overflow: hidden;\n  height: calc(100vh - 64px);\n  width: 100%;\n  background: #fff; }\n\n.StreamCardBody {\n  grid-area: Content;\n  overflow: hidden;\n  width: 100%;\n  height: 0;\n  cursor: auto; }\n\n.StreamCard.Active, .StreamCard.Active > .StreamCardBody {\n  height: max-content; }\n\n.StreamCardBody img, .StreamCardBody video {\n  border-radius: .5rem; }\n\n.StreamCardBody .btn {\n  display: block;\n  background-color: #3367d6;\n  padding: .75rem 1rem;\n  color: #fff;\n  border-radius: .5rem;\n  height: max-content;\n  width: max-content;\n  text-decoration: none; }\n\n.StreamCardBody .btn:hover {\n  background-color: #FB8C00; }\n\n.StreamCardBody object {\n  aspect-ratio: 16 /9; }\n\n.StreamCardBody .Loader {\n  min-height: 20rem; }\n\n.FileSubmit {\n  height: 12.5rem;\n  display: grid;\n  grid-template-columns: 75% 1fr; }\n  .FileSubmit .UploadedFiles {\n    display: flex;\n    flex-wrap: wrap;\n    overflow-y: auto; }\n    .FileSubmit .UploadedFiles .UploadedFile {\n      width: 8rem;\n      height: 4.5rem;\n      background: var(--Background);\n      border-radius: .5rem;\n      margin: .25rem;\n      position: relative;\n      overflow: hidden; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileTitle {\n        position: absolute;\n        bottom: 0;\n        left: 0;\n        width: 100%;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        white-space: nowrap;\n        text-overflow: ellipsis;\n        padding: 0 .5rem; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileRemove {\n        position: absolute;\n        top: 0;\n        right: 0;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        padding: .25rem;\n        border-radius: 0 0 0 .5rem; }\n  .FileSubmit .FileForm {\n    display: flex;\n    flex-direction: column; }\n    .FileSubmit .FileForm textarea {\n      background-color: #222222;\n      border: 0.0625rem solid var(--Border);\n      flex-grow: 1;\n      border-radius: .5rem;\n      resize: none;\n      outline: none;\n      color: #fff;\n      padding: .5rem; }\n    .FileSubmit .FileForm button {\n      background-color: #3367D6;\n      margin-top: 1rem;\n      height: 2rem;\n      border-radius: .5rem;\n      border: none;\n      outline: none;\n      cursor: pointer; }\n      .FileSubmit .FileForm button:hover {\n        opacity: .75; }\n\n.DropDown {\n  min-height: 30rem;\n  width: 25rem;\n  border-radius: .5rem;\n  border: 0.0625rem solid var(--Border);\n  background-color: var(--Foreground);\n  position: absolute;\n  top: 100%;\n  right: 0;\n  z-index: 2;\n  padding: 1rem;\n  margin: -.25rem .5rem;\n  overflow-y: scroll; }\n\n.NotificationShade {\n  list-style: none;\n  padding-inline-start: 0; }\n  .NotificationShade li {\n    border-bottom: 1px solid white;\n    padding-top: 1rem; }\n    .NotificationShade li a {\n      color: #fff;\n      text-decoration: none;\n      font-size: 1.5rem;\n      display: -webkit-box;\n      -webkit-line-clamp: 1;\n      -webkit-box-orient: vertical;\n      overflow: hidden; }\n    .NotificationShade li img {\n      display: none; }\n</style>'), 
+      c(t(e.title)), c('</title>\r\n<meta name="description" content="D2l Overhaul">\r\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\r\n\x3c!-- FONT --\x3e\r\n<style>/* fallback */\r\n@font-face {\r\n  font-family: \'Material Icons\';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\r\n}\r\n\r\n.material-icons {\r\n  font-family: \'Material Icons\';\r\n  font-weight: normal;\r\n  font-style: normal;\r\n  font-size: 24px;  /* Preferred icon size */\r\n  display: inline-block;\r\n  line-height: 1;\r\n  text-transform: none;\r\n  letter-spacing: normal;\r\n  word-wrap: normal;\r\n  white-space: nowrap;\r\n  direction: ltr;\r\n  user-select: none;\r\n\r\n  /* Support for all WebKit browsers. */\r\n  -webkit-font-smoothing: antialiased;\r\n  /* Support for Safari and Chrome. */\r\n  text-rendering: optimizeLegibility;\r\n\r\n  /* Support for Firefox. */\r\n  -moz-osx-font-smoothing: grayscale;\r\n\r\n  /* Support for IE. */\r\n  font-feature-settings: \'liga\';\r\n}\r\n/* Rules for sizing the icon. */\r\n.material-icons.md-18 { font-size: 18px; }\r\n.material-icons.md-24 { font-size: 24px; }\r\n.material-icons.md-36 { font-size: 36px; }\r\n.material-icons.md-48 { font-size: 48px; }\r\n\r\n/* Rules for using icons as black on a light background. */\r\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\r\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\r\n\r\n/* Rules for using icons as white on a dark background. */\r\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\r\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\r\n\r\n/* Rules for using icons as orange on a dark background. */\r\n.material-icons.orange600 { color: #FB8C00; }</style>\r\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\r\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\r\n\x3c!-- CSS --\x3e\r\n<style>:root {\r\n  --Background: #0c0c0c;\r\n  --Foreground: #18181b;\r\n  --Border: #252525;\r\n  --Text-Main: #fff;\r\n\r\n  --Active: #3367d6;\r\n}\r\n</style>\r\n<style>/* General Page Stuff */\nhtml,\nbody {\n  height: 100%;\n  width: 100%;\n  font-family: \'Roboto\', Helvetica, Arial, sans-serif;\n  color: var(--Text-Main); }\n\nbody {\n  margin: 0;\n  background-color: var(--Background);\n  position: relative; }\n\n* {\n  box-sizing: border-box; }\n\npicture,\npicture img {\n  display: block;\n  height: 100%;\n  width: 100%; }\n\n*::-webkit-scrollbar {\n  width: 16px; }\n\n*::-webkit-scrollbar-thumb {\n  background: #dadce0;\n  background-clip: padding-box;\n  border: 4px solid transparent;\n  border-radius: 8px;\n  box-shadow: none;\n  min-height: 50px; }\n\n*::-webkit-scrollbar-track {\n  background: none;\n  border: none; }\n\n/* Text */\nh1,\nh2 {\n  color: var(--Text-Main); }\n\nh1 {\n  font-size: 1.375rem;\n  font-weight: 500;\n  line-height: 1.75rem;\n  font-family: \'Google Sans\', Roboto, Arial, sans-serif; }\n\nh2 {\n  font-size: 1rem;\n  font-weight: 400;\n  line-height: 1.25rem;\n  margin: 0; }\n\n/* Aside */\n.SideBar {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n  width: 19rem;\n  padding: 0.5rem 0;\n  z-index: 990;\n  box-shadow: 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f,\r 0 5px 5px -3px #00000033;\n  background-color: var(--Foreground);\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  overflow-y: scroll;\n  max-width: 0;\n  transition: max-width 0.5s; }\n  .SideBar.Active {\n    max-width: 100%; }\n  .SideBar hr {\n    border-top: 0.0625rem solid var(--Border);\n    margin: 0.5rem; }\n\n.SideBarSection {\n  flex-grow: 1;\n  min-height: max-content; }\n\n.SideBarHeader {\n  padding: 0 1rem;\n  letter-spacing: 0.01785714em;\n  font-family: \'Google Sans\', Roboto, Arial, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  line-height: 1.25rem; }\n\n.SideBarItem {\n  display: flex;\n  align-content: center;\n  border-radius: 0 2rem 2rem 0;\n  height: 3.5rem;\n  padding-left: 1.5rem;\n  margin-right: 1rem;\n  cursor: pointer;\n  text-decoration: none;\n  color: #fff; }\n  .SideBarItem .SideBarItemText {\n    margin-left: 1rem;\n    font-family: \'Google Sans\', Roboto, Arial, sans-serif;\n    letter-spacing: 0.01785714em;\n    font-size: 0.875rem;\n    font-weight: 500;\n    overflow: hidden;\n    white-space: nowrap;\n    margin-right: 4rem;\n    text-overflow: ellipsis; }\n  .SideBarItem span {\n    line-height: 3.5rem; }\n  .SideBarItem:hover {\n    background-color: #343434; }\n\n/* Content */\n#Content {\n  min-height: 100%;\n  height: min-content;\n  width: 100%;\n  display: flex;\n  flex-direction: column; }\n\n#Content > * {\n  padding: 1rem; }\n\nmain {\n  height: 100%;\n  width: 100%; }\n\n/* Home Page */\n.Home > main {\n  max-width: 70rem;\n  margin: auto;\n  display: grid; }\n\n/* Loader Page */\n.Loader {\n  display: flex;\n  align-content: center;\n  flex-direction: column; }\n\n.lds-grid {\n  margin: auto;\n  display: grid;\n  grid-template-columns: repeat(3, 16px);\n  grid-template-rows: repeat(3, 16px);\n  grid-gap: 8px; }\n\n.lds-grid div {\n  border-radius: 50%;\n  background: #fff;\n  animation: lds-grid 1.2s linear infinite; }\n\n.lds-grid div:nth-child(1) {\n  animation-delay: 0s; }\n\n.lds-grid div:nth-child(2),\n.lds-grid div:nth-child(4) {\n  animation-delay: -0.4s; }\n\n.lds-grid div:nth-child(3),\n.lds-grid div:nth-child(5),\n.lds-grid div:nth-child(7) {\n  animation-delay: -0.8s; }\n\n.lds-grid div:nth-child(6),\n.lds-grid div:nth-child(8) {\n  animation-delay: -1.2s; }\n\n.lds-grid div:nth-child(9) {\n  animation-delay: -1.6s; }\n\n@keyframes lds-grid {\n  0%,\n  100% {\n    opacity: 1; }\n  50% {\n    opacity: 0.5; } }\n\n/* General */\n.Hidden,\n.Filtered {\n  display: none !important; }\n\n/* Hovers */\n.StreamCard {\n  cursor: pointer; }\n\n.StreamCard:hover {\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  border-radius: 0.75rem; }\n\n/* Components */\n.NavBar {\n  padding: 0.75rem 1rem !important;\n  height: 4rem;\n  width: 100%;\n  background: var(--Foreground);\n  display: grid;\n  grid-template-columns: 2.5rem auto max-content;\n  position: relative; }\n  .NavBar .AsideButton {\n    display: flex;\n    align-content: center;\n    border-radius: 50%; }\n    .NavBar .AsideButton:hover {\n      background: var(--Background); }\n    .NavBar .AsideButton svg {\n      margin: auto;\n      width: 2rem;\n      height: 2rem; }\n  .NavBar input {\n    height: 2.5rem;\n    width: 50%;\n    margin: auto;\n    display: block;\n    background-color: #212121;\n    outline: none;\n    border: none;\n    border-radius: 0.5rem;\n    padding: 0.5rem;\n    color: #fff; }\n  .NavBar .Account {\n    display: grid;\n    grid-template-columns: repeat(4, 2.5rem);\n    grid-gap: 0.25rem; }\n    .NavBar .Account span {\n      width: 2.5rem;\n      height: 2.5rem;\n      text-align: center;\n      line-height: 2.5rem; }\n      .NavBar .Account span.Active {\n        color: #fb8c00; }\n    .NavBar .Account .Profile picture {\n      padding: 0.25rem; }\n    .NavBar .Account span,\n    .NavBar .Account div {\n      cursor: pointer;\n      border-radius: 0.5rem; }\n    .NavBar .Account span:hover,\n    .NavBar .Account div:hover {\n      background-color: #2f3033; }\n\n.ClassContainer {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  grid-gap: 2rem;\n  margin: 1rem auto;\n  width: 100%; }\n\n.classCard {\n  width: 100%;\n  aspect-ratio: 16 / 7;\n  position: relative;\n  border-radius: 1rem;\n  overflow: hidden;\n  cursor: pointer; }\n  .classCard img {\n    min-height: 100%;\n    width: 100%; }\n  .classCard picture {\n    display: block;\n    height: 100%;\n    width: 100%;\n    position: absolute;\n    top: 0;\n    left: 0; }\n  .classCard .classCardContent {\n    position: absolute;\n    width: 100%;\n    padding: 1rem 2rem;\n    bottom: 0;\n    left: 0; }\n    .classCard .classCardContent h4,\n    .classCard .classCardContent h6 {\n      color: #f2f2f2;\n      font-style: normal;\n      margin-bottom: 1rem;\n      margin-top: 0; }\n    .classCard .classCardContent h4 {\n      font-weight: bold;\n      font-size: 1.6rem;\n      overflow: hidden;\n      text-overflow: ellipsis;\n      white-space: nowrap; }\n    .classCard .classCardContent h6 {\n      font-weight: 500;\n      font-size: 0.9rem; }\n  .classCard[disabled] img {\n    filter: brightness(0.5) blur(10px); }\n  .classCard:hover {\n    transform: scale(1.05); }\n\n.Profile {\n  height: 100%;\n  aspect-ratio: 1 / 1;\n  border-radius: 50%; }\n\n/* Stream */\n.Stream > main {\n  flex-grow: 1;\n  min-height: max-content;\n  width: calc(100% - 2 * 1.5rem);\n  max-width: 62.5rem;\n  margin: 0 auto;\n  padding: 0 !important; }\n\n.ClassPicture {\n  margin: 1.5rem 0;\n  overflow: hidden;\n  border-radius: 1rem;\n  position: relative; }\n\n.ClassPictureContent {\n  display: flex;\n  flex-direction: column;\n  padding: 1.5rem;\n  margin: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%; }\n  .ClassPictureContent h1,\n  .ClassPictureContent h2 {\n    margin: 0; }\n  .ClassPictureContent h4 {\n    margin-top: 0.4rem;\n    font-weight: 500;\n    font-style: normal; }\n\n.ChipFilter {\n  display: inline-flex;\n  height: max-content;\n  width: max-content;\n  padding: 0.25rem 0.5rem;\n  border: 0.0625rem solid var(--Border);\n  border-radius: 2rem;\n  font-size: 0.75rem;\n  cursor: pointer;\n  user-select: none;\n  background-color: var(--Foreground); }\n  .ChipFilter .chipIcon {\n    border-radius: 50%;\n    padding: 0.25rem;\n    font-size: 0.75rem;\n    margin-right: 0.25rem;\n    background-color: var(--Active); }\n  .ChipFilter p {\n    margin: auto;\n    display: inline-block; }\n  .ChipFilter:hover {\n    background-color: #343434; }\n  .ChipFilter.Active {\n    background-color: var(--Active); }\n\n/* Stream Cards */\n.StreamCard {\n  width: 100%;\n  height: 4rem;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: 0.5rem;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  grid-template-rows: 3rem max-content;\n  grid-template-areas: \'Icon Title\'\r \'Content Content\';\n  padding: 0.5rem;\n  grid-gap: 0.5rem;\n  margin: 1rem 0; }\n  .StreamCard h1,\n  .StreamCard h3 {\n    margin: 0; }\n  .StreamCard h3 {\n    font-size: 0.75rem; }\n  .StreamCard.Active,\n  .StreamCard.Active > .StreamCardBody {\n    height: max-content; }\n\n.StreamCardTitle {\n  grid-area: Title; }\n\n.StreamCardIcon {\n  grid-area: Icon;\n  background-color: var(--Background);\n  width: 3rem;\n  height: 3rem;\n  border-radius: 2rem;\n  display: flex;\n  align-content: center; }\n  .StreamCardIcon.OnSubmission {\n    background-color: var(--Active); }\n  .StreamCardIcon.DueDate {\n    background-color: #e91e63; }\n  .StreamCardIcon.Unread {\n    background-color: #fb8c00; }\n  .StreamCardIcon span {\n    margin: auto; }\n\n.StreamIframe {\n  border: none;\n  overflow: hidden;\n  height: calc(100vh - 64px);\n  width: 100%;\n  background: #fff; }\n\n.StreamCardBody {\n  grid-area: Content;\n  overflow: hidden;\n  width: 100%;\n  height: 0;\n  cursor: auto; }\n  .StreamCardBody img,\n  .StreamCardBody video {\n    border-radius: 0.5rem; }\n  .StreamCardBody .btn {\n    display: block;\n    background-color: var(--Active);\n    padding: 0.75rem 1rem;\n    color: #fff;\n    border-radius: 0.5rem;\n    height: max-content;\n    width: max-content;\n    text-decoration: none; }\n    .StreamCardBody .btn:hover {\n      background-color: #fb8c00; }\n  .StreamCardBody object {\n    aspect-ratio: 16 /9; }\n  .StreamCardBody .Loader {\n    min-height: 20rem; }\n\n.FileSubmit {\n  height: 12.5rem;\n  display: grid;\n  grid-template-columns: 75% 1fr; }\n  .FileSubmit .UploadedFiles {\n    display: flex;\n    flex-wrap: wrap;\n    overflow-y: auto; }\n    .FileSubmit .UploadedFiles .UploadedFile {\n      width: 8rem;\n      height: 4.5rem;\n      background: var(--Background);\n      border-radius: 0.5rem;\n      margin: 0.25rem;\n      position: relative;\n      overflow: hidden; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileTitle {\n        position: absolute;\n        bottom: 0;\n        left: 0;\n        width: 100%;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        white-space: nowrap;\n        text-overflow: ellipsis;\n        padding: 0 0.5rem; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileRemove {\n        position: absolute;\n        top: 0;\n        right: 0;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        padding: 0.25rem;\n        border-radius: 0 0 0 0.5rem; }\n  .FileSubmit .FileForm {\n    display: flex;\n    flex-direction: column; }\n    .FileSubmit .FileForm textarea {\n      background-color: #222222;\n      border: 0.0625rem solid var(--Border);\n      flex-grow: 1;\n      border-radius: 0.5rem;\n      resize: none;\n      outline: none;\n      color: #fff;\n      padding: 0.5rem; }\n    .FileSubmit .FileForm button {\n      background-color: var(--Active);\n      margin-top: 1rem;\n      height: 2rem;\n      border-radius: 0.5rem;\n      border: none;\n      outline: none;\n      cursor: pointer; }\n      .FileSubmit .FileForm button:hover {\n        opacity: 0.75; }\n\n.DropDown {\n  min-height: 30rem;\n  width: 25rem;\n  border-radius: 0.5rem;\n  border: 0.0625rem solid var(--Border);\n  background-color: var(--Foreground);\n  position: absolute;\n  top: 100%;\n  right: 0;\n  z-index: 2;\n  padding: 1rem;\n  margin: -0.25rem 0.5rem;\n  overflow-y: scroll; }\n\n.NotificationShade {\n  list-style: none;\n  padding-inline-start: 0; }\n  .NotificationShade li {\n    border-bottom: 1px solid white;\n    padding-top: 1rem; }\n    .NotificationShade li a {\n      color: #fff;\n      text-decoration: none;\n      font-size: 1.5rem;\n      display: -webkit-box;\n      -webkit-line-clamp: 1;\n      -webkit-box-orient: vertical;\n      overflow: hidden; }\n    .NotificationShade li img {\n      display: none; }\n</style>'), 
       o;
     }({
       title: document.title
@@ -1462,12 +1462,12 @@
         function c(e) {
           null != e && (o += e);
         }
-        return c('<a class="SideBarItem" id="SideBarClassesBtn"><span class="material-icons">home</span><span class="SideBarItemText">Classes</span></a>\r\n<a class="SideBarItem" id="SideBarCalenderBtn"><span class="material-icons">calendar_today</span><span class="SideBarItemText">Calender</span></a>\r\n<div class="SideBarSeperator"></div>\r\n<div class="SideBarSection" id="SideBarClasses">\r\n  <div class="SideBarHeader">Enrolled</div>\r\n  '), 
+        return c('<a class="SideBarItem" id="SideBarClassesBtn"><span class="material-icons">home</span><span class="SideBarItemText">Classes</span></a>\r\n<a class="SideBarItem" id="SideBarCalenderBtn"><span class="material-icons">calendar_today</span><span class="SideBarItemText">Calender</span></a>\r\n<hr />\r\n<div class="SideBarSection" id="SideBarClasses">\r\n  <div class="SideBarHeader">Enrolled</div>\r\n  '), 
         e.classes.forEach((e => {
           c('\r\n    '), e.disabled || (c('\r\n      <a class="SideBarItem" id="SideBarCalenderBtn" href="'), 
           c(t(e.href)), c('"><span class="material-icons">class</span><span class="SideBarItemText">'), 
           c(t(e.name)), c('</span></a>\r\n    ')), c('\r\n  ');
-        })), c('\r\n</div>\r\n<div class="SideBarSeperator"></div>\r\n<a class="SideBarItem" id="SideBarSettingsBtn"><span class="material-icons">settings</span><span class="SideBarItemText">Settings</span></a>'), 
+        })), c('\r\n</div>\r\n<hr />\r\n<a class="SideBarItem" id="SideBarSettingsBtn"><span class="material-icons">settings</span><span class="SideBarItemText">Settings</span></a>'), 
         o;
       }({
         classes: i

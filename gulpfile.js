@@ -49,10 +49,56 @@ gulp.task('build', async () => {
   });
   // Bundle Google Picker Library
   await fs.promises.copyFile('./src/js/libs/client.js', './dist/client.js');
+  // Read Build Size Stuff
+  const oldCode = fs.existsSync('./dist/main.js')
+    ? await fs.promises.readFile('./dist/main.js', 'utf-8')
+    : '';
+  const previousStats = {
+    chars: oldCode.length,
+    lines: oldCode.split('\n').length,
+    blanks: oldCode.split('\n').filter((n) => n.trim() == '').length,
+    comments: oldCode.split('\n').filter((n) => n.trim().startsWith('//'))
+      .length,
+  };
   // Output
-  return bundle.write({
+  await bundle.write({
     file: 'dist/main.js',
     format: 'iife',
+  });
+  const code = fs.existsSync('./dist/main.js')
+    ? await fs.promises.readFile('./dist/main.js', 'utf-8')
+    : '';
+  // Size Stuff
+  const stats = {
+    chars: code.length,
+    lines: code.split('\n').length,
+    blanks: code.split('\n').filter((n) => n.trim() == '').length,
+    comments: code.split('\n').filter((n) => n.trim().startsWith('//')).length,
+  };
+  console.table({
+    previous: {
+      ...previousStats,
+      code: previousStats.lines - previousStats.blanks - previousStats.comments,
+    },
+    current: {
+      ...stats,
+      code: stats.lines - stats.blanks - stats.comments,
+    },
+    reduction: {
+      chars: previousStats.chars - code.length,
+      lines: previousStats.lines - code.split('\n').length,
+      blanks:
+        previousStats.blanks -
+        code.split('\n').filter((n) => n.trim() == '').length,
+      comments:
+        previousStats.comments -
+        code.split('\n').filter((n) => n.trim().startsWith('//')).length,
+      code:
+        previousStats.lines -
+        previousStats.blanks -
+        previousStats.comments -
+        (stats.lines - stats.blanks - stats.comments),
+    },
   });
 });
 

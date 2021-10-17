@@ -6,39 +6,56 @@ export default async (app) => {
   // Fetch Dom Elements
   const main = document.getElementById('main');
   // Fetch Classes Data
-  const classData = await fetch(`https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${app.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
-    headers: {
-      authorization: `Bearer ${await app.getToken()}`
+  const classData = await fetch(
+    `https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${app.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`,
+    {
+      headers: {
+        authorization: `Bearer ${await app.getToken()}`,
+      },
     }
-  }).then(r => r.json());
+  ).then((r) => r.json());
   // Put on Page
-  const classes = await Promise.all(classData.entities.map(async ({ href }) => {
-    const _classResources = await fetch(href, {
-      headers: {authorization: `Bearer ${await app.getToken()}`},
-      method:'GET',
-    });
-    const classResources = await _classResources.json();
-    const _classInfo = await fetch(classResources.links[1].href, {
-      headers: {authorization: `Bearer ${await app.getToken()}`},
-      method:'GET',
-    });
-    const classInfo = await _classInfo.json();
-    // Get Image
-    const _imageInfo = await fetch(classInfo.entities[2].href);
-    const imageInfo = await _imageInfo.json().catch(() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'); //TODO: fix this url
-    // TODO: Get Teacher Info
-    const {endDate, name} = classInfo.properties;
-    return {
-      name: name,
-      disabled: new Date(endDate).valueOf() < Today,
-      href: classInfo.links[0].href.replace('https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/'), //TODO: fix this url
-      picture: imageInfo.links ? imageInfo.links[2].href : imageInfo, //TODO: fix this url
-      teacher: {
-        name: 'TODO', //TODO: fix this url
-        picture: 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658', //TODO: fix this url
-      }
-    };
-  }));
+  const classes = await Promise.all(
+    classData.entities.map(async ({ href }) => {
+      const _classResources = await fetch(href, {
+        headers: { authorization: `Bearer ${await app.getToken()}` },
+        method: 'GET',
+      });
+      const classResources = await _classResources.json();
+      const _classInfo = await fetch(classResources.links[1].href, {
+        headers: { authorization: `Bearer ${await app.getToken()}` },
+        method: 'GET',
+      });
+      const classInfo = await _classInfo.json();
+      // Get Image
+      const imageInfo = await fetch(classInfo.entities[2].href)
+        .then((res) => res.json())
+        .catch(async () => {
+          return await fetch(classInfo.entities[2].href, {
+            headers: {
+              authorization: `Bearer ${await app.getToken()}`,
+            },
+          })
+            .then((res) => res.json())
+            .catch(
+              () =>
+                'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
+            );
+        });
+      // TODO: Get Teacher Info
+      const { endDate, name } = classInfo.properties;
+      return {
+        name: name,
+        disabled: new Date(endDate).valueOf() < Today,
+        href: classInfo.links[0].href.replace(
+          'https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/',
+          'https://durham.elearningontario.ca/d2l/home/'
+        ), //TODO: fix this url
+        picture: imageInfo.links ? imageInfo.links[2].href : imageInfo,
+        Text: `Closes | ${new Date(endDate).toDateString()}`,
+      };
+    })
+  );
   main.innerHTML = classTemplate({ classes: classes });
   // OnClick Function
   const cancelFunction = (elm) => {
