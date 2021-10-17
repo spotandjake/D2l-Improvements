@@ -1,6 +1,8 @@
 - [ ] Stream
   - [ ] Sort Stream By Date's
-  - [x] Content Filters
+  - [ ] Content Filters
+    - [x] Get Content Filters Working
+    - [ ] Move Content Filters to work on css instead of react state
   - [x] News Card
   - [ ] Content Card
     - [ ] File Viewer
@@ -8,6 +10,7 @@
   - [ ] Discussion Card
   - [ ] Assignment Card
     - [ ] Submit UI
+      - [ ] Somehow, get the google file viewer ui working, i have no clue how i am gonna do this
     - [ ] Mark UI
     - [ ] Previous Submissions UI
   - [ ] Quiz Card
@@ -19,13 +22,16 @@
 - [ ] NavBar
   - [ ] Design
   - [ ] Search
+    - [ ] fuse.js
   - [ ] Notifications
   - [ ] Aside
   - [ ] Settings
 - [ ] Routing with the filters
 - [ ] Move card open from being a react state to a css thing
-- [ ] Font's
-- [x] Stream Update Cycle
+- [x] Font's
+- [ ] Stream Update Cycle
+  - [x] Stream Update Cycle
+  - [ ] Detect User Inactivity and slow refresh rate
 - [ ] Move All Colors and repeated stuff to be variables
 - [ ] Fix All TODO's
 - [ ] Go over style with a fine tooth comb
