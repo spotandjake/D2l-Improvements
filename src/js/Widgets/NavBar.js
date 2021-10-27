@@ -98,6 +98,7 @@ const NavBar = (navBar, app) => {
         });
         const res = await parseResponse(response);
         html = res.Payload.Html;
+        mailButton.classList.toggle('Active', false);
         break;
       }
       case 'MessageButton':
@@ -108,6 +109,7 @@ const NavBar = (navBar, app) => {
         });
         const res = await parseResponse(response);
         html = res.Payload.Html;
+        notificationButton.classList.toggle('Active', false);
         break;
       }
     }
