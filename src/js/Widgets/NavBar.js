@@ -64,21 +64,19 @@ const NavBar = (navBar, app) => {
   const alertWatch = async () => {
     const response = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive');
     const res = await parseResponse(response);
-    if (res.Payload) {
-      [ 'Messages', 'Grades' ].forEach((type) => {
-        const active = res.Payload.includes(type);
-        switch (type) {
-          case 'Messages':
-            mailButton.classList.toggle('Active', active);
-            break;
-          case 'Grades':
-            notificationButton.classList.toggle('Active', active);
-            break;
-          default:
-            alert(`Unknown Notification Type ${type}`);
-        }
-      });
-    }
+    [ 'Messages', 'Grades' ].forEach((type) => {
+      const active = (res.Payload || []).includes(type);
+      switch (type) {
+        case 'Messages':
+          mailButton.classList.toggle('Active', active);
+          break;
+        case 'Grades':
+          notificationButton.classList.toggle('Active', active);
+          break;
+        default:
+          alert(`Unknown Notification Type ${type}`);
+      }
+    });
   };
   alertWatch();
   setInterval(() => alertWatch(), 5000);
@@ -93,7 +91,7 @@ const NavBar = (navBar, app) => {
     // Deal with the dropdown types
     switch (type) {
       case 'MailButton': {
-        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=2&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
+        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=2&requestId=3`, {
           method: 'GET',
         });
         const res = await parseResponse(response);
@@ -104,7 +102,7 @@ const NavBar = (navBar, app) => {
       case 'MessageButton':
         break;
       case 'NotificationButton': {
-        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=1&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
+        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=1&requestId=3`, {
           method: 'GET',
         });
         const res = await parseResponse(response);
