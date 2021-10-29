@@ -207,6 +207,7 @@ main {
   height: 4rem;
   width: 100%;
   display: flex;
+  position: relative;
   .side,
   .center {
     flex: 1 1 0;
