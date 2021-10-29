@@ -10,20 +10,17 @@ const Aside = async (aside, app) => {
   // Put on Page
   const classes = await Promise.all(classData.entities.map(async ({ href }) => {
     const _classResources = await fetch(href, {
-      headers: {authorization: `Bearer ${await app.getToken()}`},
-      method:'GET',
+      headers: {authorization: `Bearer ${await app.getToken()}`}
     });
     const classResources = await _classResources.json();
     const _classInfo = await fetch(classResources.links[1].href, {
-      headers: {authorization: `Bearer ${await app.getToken()}`},
-      method:'GET',
+      headers: {authorization: `Bearer ${await app.getToken()}`}
     });
-    const classInfo = await _classInfo.json();
-    const {endDate, name} = classInfo.properties;
+    const { properties: { endDate, name } } = await _classInfo.json();
     return {
       name: name,
       disabled: new Date(endDate).valueOf() < Today,
-      href: classInfo.links[0].href.replace(`https://${app.orgID}.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/`) //TODO: fix this url
+      href: classInfo.links[0].href.replace(`https://${app.orgID}.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/`)
     };
   }));
   // Add Template
@@ -33,8 +30,6 @@ const Aside = async (aside, app) => {
   // const calenderBtn = document.getElementById('SideBarCalenderBtn');
   // const settingsBtn = document.getElementById('SideBarSettingsBtn');
   // Handle Button Clicks
-  classesBtn.addEventListener('click', () => {
-    app.setPage('HOME');
-  });
+  classesBtn.addEventListener('click', () => app.setPage('HOME'));
 };
 export default Aside;
