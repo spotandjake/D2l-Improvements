@@ -18,7 +18,7 @@ const parseResponse = async (response) => JSON.parse((await response.text()).tri
 const NavBar = (navBar, app) => {
   const main = document.getElementById('main');
   const aside = document.getElementById('SideBar');
-  const asideBtn = document.getElementById('AsideButtton');
+  const asideBtn = document.getElementById('AsideButton');
   const searchBar = document.getElementById('Search');
   // const accountButton = document.getElementById('AccountButtton');
   const mailButton = document.getElementById('MailButton');
