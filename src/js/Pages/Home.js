@@ -46,7 +46,7 @@ export default async (app) => {
         name: name,
         disabled: new Date(endDate).valueOf() < Today,
         href: classInfo.links[0].href.replace(
-          'https://${app.orgID}.folio.api.brightspace.com/organizations/',
+          `https://${app.orgID}.folio.api.brightspace.com/organizations/`,
           'https://durham.elearningontario.ca/d2l/home/'
         ), //TODO: fix this url
         picture: imageInfo.links ? imageInfo.links[2].href : imageInfo,
