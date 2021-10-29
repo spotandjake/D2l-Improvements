@@ -16,11 +16,11 @@ const Aside = async (aside, app) => {
     const _classInfo = await fetch(classResources.links[1].href, {
       headers: {authorization: `Bearer ${await app.getToken()}`}
     });
-    const { properties: { endDate, name } } = await _classInfo.json();
+    const { properties: { endDate, name }, links } = await _classInfo.json();
     return {
       name: name,
       disabled: new Date(endDate).valueOf() < Today,
-      href: classInfo.links[0].href.replace(`https://${app.orgID}.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/`)
+      href: links[0].href.replace(`https://${app.orgID}.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/`)
     };
   }));
   // Add Template
