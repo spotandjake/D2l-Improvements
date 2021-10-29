@@ -38,15 +38,6 @@ gulp.task('build', async () => {
     './dist/manifest.json',
     JSON.stringify(manifest, 2, 2)
   );
-  // Bundle Blocker
-  const bundleBlocker = await rollup.rollup({
-    input: 'src/js/blocker.js',
-    plugins: [terser(terserOptions)],
-  });
-  bundleBlocker.write({
-    file: 'dist/blocker.js',
-    format: 'iife',
-  });
   // Bundle Google Picker Library
   await fs.promises.copyFile('./src/js/libs/client.js', './dist/client.js');
   // Read Build Size Stuff
