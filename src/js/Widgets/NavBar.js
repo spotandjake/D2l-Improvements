@@ -91,9 +91,7 @@ const NavBar = (navBar, app) => {
     // Deal with the dropdown types
     switch (type) {
       case 'MailButton': {
-        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=2&requestId=3`, {
-          method: 'GET',
-        });
+        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=2&requestId=3`);
         const res = await parseResponse(response);
         html = res.Payload.Html;
         mailButton.classList.toggle('Active', false);
