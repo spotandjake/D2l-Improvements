@@ -210,9 +210,12 @@ main {
   grid-template-columns: 2.5rem auto max-content;
   position: relative;
   .AsideButton {
-    display: flex;
-    align-content: center;
     border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    line-height: 2.5rem;
+    cursor: pointer;
     &:hover {
       background: var(--Background);
     }
