@@ -151,16 +151,10 @@ export default async (app) => {
       () =>
         'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'
     );
-  // TODO: Get Teacher Info
   const classData = {
     name: classInfo.properties.name,
     description: classInfo.properties.description,
     picture: imageInfo.links ? imageInfo.links[2].href : imageInfo,
-    teacher: {
-      name: 'TODO',
-      picture:
-        'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658',
-    },
   };
   // Fetch Stream Data
   const { html, assignments } = await fetchStream(app);
@@ -246,10 +240,7 @@ export default async (app) => {
               default:
                 console.log(fileType);
                 console.log(_url);
-                console.log(
-                  '================================================================'
-                );
-                // alert(`${fileType.type}: is able to be viewed customizably`);
+                console.log('='.repeat(64));
                 break;
             }
             // TODO: add some ui.
