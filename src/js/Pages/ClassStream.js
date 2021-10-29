@@ -80,6 +80,9 @@ const fetchStream = async (app) => {
   );
   const assignments = await _assignments.json();
   assignments.forEach((elm) => {
+    // Fetch Mark
+    // TODO: /d2l/api/le/${app.apiVersion.le}/${app.cid}/grades/final/values/${app.uid}
+    // Make Card
     items.push({
       date: new Date(elm.DueDate).valueOf(),
       element: cardTemplate({
