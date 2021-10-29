@@ -11,8 +11,7 @@ const Page = {
 class App {
   constructor() {
     // Static Values
-    this.organizationURL =
-      'https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/';
+    this.orgID = 'bc59e98c-eabc-4d42-98e1-edfe93518966';
     // Values
     this.location = Page.HOME;
     this.token;
