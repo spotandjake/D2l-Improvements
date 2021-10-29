@@ -7,7 +7,7 @@ import { minify } from 'html-minifier';
 const linkTagRegEx =
   /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
 const readStyleFile = (tplFilePath, href) =>
-  fs.readFileSync(path.resolve(path.parse(tplFilePath).dir, href), 'utf8');
+  fs.readFileSync(path.resolve(path.parse(tplFilePath).dir, href), 'utf8').replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//g, '');
 const defaultCompilerOptions = {
   client: true,
   strict: true,
@@ -25,8 +25,8 @@ const compilers = {
           url
         ),
       }),
+      outputStyle: 'compressed'
     });
-
     return compiled.css.toString('utf8');
   },
 };
@@ -72,7 +72,6 @@ const index = ({
           codeToCompile,
           Object.assign(defaultCompilerOptions, compilerOptions)
         );
-
         return {
           code: `export default ${renderCode(templateFn, render)};`,
           map: { mappings: '' },
