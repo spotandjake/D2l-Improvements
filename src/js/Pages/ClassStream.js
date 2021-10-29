@@ -136,7 +136,7 @@ export default async (app) => {
   // Fetch Dom Elements
   const main = document.getElementById('main');
   // Fetch Class Data
-  const _classInfo = await fetch(`${app.organizationURL}${app.cid}`, {
+  const _classInfo = await fetch(`https://${app.orgID}.organizations.api.brightspace.com/${app.cid}`, {
     headers: {
       Accept: 'application/vnd.siren+json',
       authorization: `Bearer ${await app.getToken()}`,
