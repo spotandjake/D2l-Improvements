@@ -18,13 +18,11 @@ export default async (app) => {
   const classes = await Promise.all(
     classData.entities.map(async ({ href }) => {
       const _classResources = await fetch(href, {
-        headers: { authorization: `Bearer ${await app.getToken()}` },
-        method: 'GET',
+        headers: { authorization: `Bearer ${await app.getToken()}` }
       });
       const classResources = await _classResources.json();
       const _classInfo = await fetch(classResources.links[1].href, {
-        headers: { authorization: `Bearer ${await app.getToken()}` },
-        method: 'GET',
+        headers: { authorization: `Bearer ${await app.getToken()}` }
       });
       const classInfo = await _classInfo.json();
       // Get Image
