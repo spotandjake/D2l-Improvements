@@ -7,7 +7,7 @@ export default async (app) => {
   const main = document.getElementById('main');
   // Fetch Classes Data
   const classData = await fetch(
-    `https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${app.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`,
+    `https://${app.orgID}.enrollments.api.brightspace.com/users/${app.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`,
     {
       headers: {
         authorization: `Bearer ${await app.getToken()}`,
@@ -46,7 +46,7 @@ export default async (app) => {
         name: name,
         disabled: new Date(endDate).valueOf() < Today,
         href: classInfo.links[0].href.replace(
-          'https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/',
+          'https://${app.orgID}.folio.api.brightspace.com/organizations/',
           'https://durham.elearningontario.ca/d2l/home/'
         ), //TODO: fix this url
         picture: imageInfo.links ? imageInfo.links[2].href : imageInfo,
