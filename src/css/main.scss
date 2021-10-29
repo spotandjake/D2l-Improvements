@@ -201,13 +201,25 @@ main {
 }
 /* Components */
 .NavBar {
-  padding: 0.75rem 1rem !important;
+  $searchSize: calc(100% - 80rem);
+  padding: .75rem 1rem !important;
+  background-color: var(--Foreground);
   height: 4rem;
   width: 100%;
-  background: var(--Foreground);
-  display: grid;
-  grid-template-columns: 2.5rem auto max-content;
-  position: relative;
+  display: flex;
+  .side,
+  .center {
+    flex: 1 1 0;
+    display: flex;
+    align-content: center;
+    margin: auto 0;
+  }
+  .center {
+    flex-basis: $searchSize;
+  }
+  .rightSide {
+    justify-content: end;
+  }
   .AsideButton {
     border-radius: 50%;
     width: 2.5rem;
@@ -221,20 +233,20 @@ main {
   }
   input {
     height: 2.5rem;
-    width: 50%;
-    margin: auto;
+    width: 100%;
     display: block;
-    background-color: #212121;
+    background-color: var(--Background);
     outline: none;
     border: none;
     border-radius: 0.5rem;
     padding: 0.5rem;
-    color: #fff;
+    color: #cccccc;
   }
   .Account {
     display: grid;
     grid-template-columns: repeat(4, 2.5rem);
     grid-gap: 0.25rem;
+    margin-left: auto;
     span {
       width: 2.5rem;
       height: 2.5rem;
