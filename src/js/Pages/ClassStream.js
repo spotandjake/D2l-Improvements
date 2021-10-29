@@ -79,9 +79,11 @@ const fetchStream = async (app) => {
     `/d2l/api/le/${app.apiVersion.le}/${app.cid}/dropbox/folders/`
   );
   const assignments = await _assignments.json();
-  assignments.forEach((elm) => {
+  for (const elm of assignments) {
     // Fetch Mark
-    // TODO: /d2l/api/le/${app.apiVersion.le}/${app.cid}/grades/final/values/${app.uid}
+    // TODO: 
+    const mark = elm.GradeItemId ? await fetch(`/d2l/api/le/${app.apiVersion.le}/${app.cid}/grades/${elm.GradeItemId}/values/${app.uid}`).then((res) => res.json()).catch(() => 'Mark could not be retrieved') : 'Not Yet Marked';
+    console.log(mark);
     // Make Card
     items.push({
       date: new Date(elm.DueDate).valueOf(),
@@ -100,7 +102,7 @@ const fetchStream = async (app) => {
         Body: { Html: '' },
       }),
     });
-  });
+  }
   // Fetch Quizzes
   const _quizzes = await fetch(
     `/d2l/api/le/${app.apiVersion.le}/${app.cid}/quizzes/`
