@@ -102,9 +102,7 @@ const NavBar = (navBar, app) => {
       case 'MessageButton':
         break;
       case 'NotificationButton': {
-        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=1&requestId=3`, {
-          method: 'GET',
-        });
+        const response = await fetch(`/d2l/MiniBar/${app.cid}/ActivityFeed/GetAlertsDaylight?Category=1&requestId=3`);
         const res = await parseResponse(response);
         html = res.Payload.Html;
         notificationButton.classList.toggle('Active', false);
