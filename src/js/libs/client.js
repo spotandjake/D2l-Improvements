@@ -116,16 +116,32 @@ window.addEventListener('message', async (event) => {
         break;
       }
       case 'EXPORT': {
-        const data = await gapi.client.drive.files.export({
-          fileId: event.data.fileId,
-          mimeType: 'application/pdf'
-        })
-        window.postMessage({
-          type: 'FROM_PAGE',
-          action: 'EXPORT',
-          id: event.data.id,
-          data: data
-        }, '*');
+        try {
+          const data = await gapi.client.drive.files.export({
+            fileId: event.data.fileId,
+            mimeType: 'application/pdf'
+          });
+          window.postMessage({
+            type: 'FROM_PAGE',
+            action: 'EXPORT',
+            id: event.data.id,
+            data: {
+              status: 1,
+              body: data
+            }
+          }, '*');
+        } catch (err) {
+          console.log(err);
+          window.postMessage({
+            type: 'FROM_PAGE',
+            action: 'EXPORT',
+            id: event.data.id,
+            data: {
+              status: 0,
+              body: err
+            }
+          }, '*');
+        }
         break;
       }
     }

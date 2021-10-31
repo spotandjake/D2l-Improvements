@@ -3,6 +3,21 @@ import pageTemplate from '../../templates/Pages/ClassStream.ejs';
 import cardTemplate from '../../templates/Stream-Card.ejs';
 import uploadedFileTemplate from '../../templates/UploadedFile.ejs';
 import Picker from '../libs/googlePicker.js';
+// Body Helper
+const boundary = 'xxBOUNDARYxx';
+const buildMultipartBody = (jsonData, files) => {
+  const newLine = '\r\n';
+  const doubleDashes = '--';
+  const endBoundary = `${doubleDashes}${boundary}${doubleDashes}${newLine}`;
+  const startAndMiddleBoundary = `${doubleDashes}${boundary}${newLine}`;
+  let content = `${startAndMiddleBoundary}Content-Type: application/json${newLine}${newLine}${JSON.stringify(
+    jsonData
+  )}${newLine}`;
+  files.forEach(({ fileName, fileType, fileContent }) => {
+    content += `${startAndMiddleBoundary}Content-Disposition: form-data; name=""; filename="${fileName}"${newLine}Content-Type: ${fileType}${newLine}${newLine}${fileContent}${newLine}${endBoundary}`;
+  });
+  return content;
+};
 // Fetch Announcement Helper
 const fetchStream = async (app) => {
   const items = []; // Convert from a list of html strings to a list of html strings with dates
@@ -171,8 +186,8 @@ export default async (app) => {
     else {
       elm.classList.add('Active');
       // Add Our Content Read Update
-      const catagory = elm.getAttribute('Category');
-      if (catagory == 'ChipFilterContent') {
+      const category = elm.getAttribute('Category');
+      if (category == 'ChipFilterContent') {
         if (elm.querySelector('.StreamCardIcon').classList.contains('Unread')) {
           await fetch(
             `/d2l/api/le/unstable/${app.cid}/content/topics/${elm.id}/view`,
@@ -190,70 +205,110 @@ export default async (app) => {
         // Content
         const _url = elm.getAttribute('_url');
         let html = `<a class="btn" href="${_url}">View Content</a>`;
-        // TODO: Improve this, we want to support all possible file types, and this is unmaintainable
-        if (
-          /\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(
+        switch (true) {
+          case /docs\.google\.com/i.test(_url):
+            html = `<iframe allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}"></iframe>`;
+            break;
+          case /www\.youtube\.com/i.test(_url):
+            html = `<object data="https://www.youtube.com/embed/${new URL(
+              _url
+            ).searchParams.get(
+              'v'
+            )}" type="application/pdf" width="100%" height="auto">
+            <embed src="https://www.youtube.com/embed/${new URL(
+              _url
+            ).searchParams.get('v')} type="application/pdf"></embed></object>`;
+            break;
+          case /\.(doc|docm|docm|docx|docx|dotx|potx|ppt|pptm|pptm|pptx|xlw|xls|xlsm|xlsm|xlsx|xltx)/i.test(
             _url
-          ) ||
-          /docs\.google\.com/.test(_url)
-        ) {
-          if (/\.(jpg)/i.test(_url)) {
-            html = `<img width="100%" src="/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/topics/${elm.id}/file?stream=true">`;
-          } else if (/\.(mp4)/i.test(_url)) {
-            html = `
-            <video width="100%" height="auto" controls="">
-              <source src="${_url}">
-              Your browser does not support the video tag.
-            </video>`;
-          } else if (
-            /\.(xlsm|xlsx|xls|pptx|xlw)/i.test(_url) ||
-            /docs\.google\.com/.test(_url)
-          ) {
-            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">${html}</iframe>`;
-          } else {
-            const _fileData = await fetch(
-              `/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`
-            );
-            html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(
-              await _fileData.blob()
-            )}">${html}</iframe>`;
-          }
-        } else if (_url.includes('www.youtube.com')) {
-          // Youtube
-          const url = new URL(_url).searchParams.get('v');
-          html = `<object data="https://www.youtube.com/embed/${url}" width="100%" height="auto">
-            <embed src="https://www.youtube.com/embed/${url}" width="100%" height="auto"> </embed>
-            Error: Embedded data could not be displayed.
-          </object>`;
-        } else {
-          try {
-            const _fileType = await fetch(_url);
-            const fileType = await _fileType.blob();
-            switch (fileType.type) {
-              case 'text/html':
-                html = `<object data="${_url}" width="100%" height="auto">
-                  <embed src="${_url}" width="100%" height="auto"> </embed>
-                  Error: Embedded data could not be displayed.
-                </object>`;
-                break;
-              // Download These
-              case 'application/octet-stream':
-              case 'application/x-msaccess':
-                html = `<a class="btn" href="${_url}">Dowload Content</a>`;
-                break;
-              // Not Implemented Yet
-              default:
-                console.log(fileType);
-                console.log(_url);
-                console.log('='.repeat(64));
-                break;
-            }
-            // TODO: add some ui.
-          } catch (err) {
-            console.log('There was an error opening this');
-            // TODO: add some ui indicating this and allowing the user to view the file anyways.
-          }
+          ):
+            // TODO:
+            break;
+          case /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)/i.test(
+            _url
+          ):
+            html = `<picture class="contentMedia"><img src="${_url}" /></picture>`;
+            break;
+          case /\.(3gp|aac|flac|mpg|mpeg|mp3|mp4|m4a|m4v|m4p|oga|ogg|ogv|ogg|mov|wav|webm)/i.test(
+            _url
+          ):
+            html = `<video class="contentMedia" controls><source src="${_url}" /></video>`;
+            break;
+          case /\.(pdf)/i.test(_url):
+            break;
+          case _content.startsWith('/') && /\.(html|htm)/i.test(_url):
+            break;
+          default:
+            break;
         }
+        // let html = `<a class="btn" href="${_url}">View Content</a>`;
+        // TODO: Improve this, we want to support all possible file types, and this is unmaintainable
+        // if (
+        //   /\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(
+        //     _url
+        //   ) ||
+        //   /docs\.google\.com/.test(_url)
+        // ) {
+        //   if (/\.(jpg)/i.test(_url)) {
+        //     html = `<img width="100%" src="/d2l/api/le/${app.apiVersion.le}/${app.cid}/content/topics/${elm.id}/file?stream=true">`;
+        //   } else if (/\.(mp4)/i.test(_url)) {
+        //     html = `
+        //     <video width="100%" height="auto" controls="">
+        //       <source src="${_url}">
+        //       Your browser does not support the video tag.
+        //     </video>`;
+        //   } else if (
+        //     /\.(xlsm|xlsx|xls|pptx|xlw)/i.test(_url) ||
+        //     /docs\.google\.com/.test(_url)
+        //   ) {
+        //     html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${_url}">${html}</iframe>`;
+        //   } else {
+        //     const _fileData = await fetch(
+        //       `/d2l/le/content/${app.cid}/topics/files/download/${elm.id}/DirectFileTopicDownload`
+        //     );
+        //     html = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(
+        //       await _fileData.blob()
+        //     )}">${html}</iframe>`;
+        //   }
+        // } else if (_url.includes('www.youtube.com')) {
+        //   // Youtube
+        //   const url = new URL(_url).searchParams.get('v');
+        //   html = `<object data="https://www.youtube.com/embed/${url}" width="100%" height="auto">
+        //     <embed src="https://www.youtube.com/embed/${url}" width="100%" height="auto"> </embed>
+        //     Error: Embedded data could not be displayed.
+        //   </object>`;
+        // } else {
+        //   try {
+        //     const _fileType = await fetch(_url);
+        //     const fileType = await _fileType.blob();
+        //     switch (fileType.type) {
+        //       case 'text/html':
+        //         html = `<object data="${_url}" width="100%" height="auto">
+        //           <embed src="${_url}" width="100%" height="auto"> </embed>
+        //           Error: Embedded data could not be displayed.
+        //         </object>`;
+        //         break;
+        //       // Download These
+        //       case 'application/octet-stream':
+        //       case 'application/x-msaccess':
+        //         html = `<a class="btn" href="${_url}">Dowload Content</a>`;
+        //         break;
+        //       // Not Implemented Yet
+        //       default:
+        //         console.log(fileType);
+        //         console.log(_url);
+        //         console.log(
+        //           '================================================================'
+        //         );
+        //         // alert(`${fileType.type}: is able to be viewed customizable`);
+        //         break;
+        //     }
+        //     // TODO: add some ui.
+        //   } catch (err) {
+        //     console.log('There was an error opening this');
+        //     // TODO: add some ui indicating this and allowing the user to view the file anyways.
+        //   }
+        // }
         elm.querySelector('.StreamCardBody').innerHTML = html;
       }
     }
@@ -264,7 +319,7 @@ export default async (app) => {
     '624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com',
     'united-rope-234818',
     [
-      'https://www.googleapis.com/auth/drive', //TODO be more specific here
+      'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.file',
       'https://www.googleapis.com/auth/drive.readonly',
     ],
@@ -304,24 +359,54 @@ export default async (app) => {
         .querySelector('.FileFormSubmit')
         .addEventListener('click', async () => {
           // Loop Over All Submitted Files
-          const uploadedFiles = await Promise.all(
-            [...elm.querySelector('.UploadedFiles').children].map(
-              async (_file) => {
-                const fileId = _file.getAttribute('documentid');
-                return await picker.export(fileId);
-              }
+          const uploadedFiles = (
+            await Promise.all(
+              [...elm.querySelector('.UploadedFiles').children].map(
+                async (_file) => {
+                  const fileId = _file.getAttribute('documentid');
+                  const fileInfo = await picker
+                    .export(fileId)
+                    .catch(() => null);
+                  if (fileInfo.status == 0)
+                    alert('There was an issue uploading the file');
+                  return {
+                    status: fileInfo.status,
+                    name: `${_file.querySelector('.FileTitle').innerText}.pdf`,
+                    type: 'application/pdf',
+                    body: fileInfo.body.body,
+                  };
+                }
+              )
             )
-          );
+          )
+            .filter((file) => file.status == 1)
+            .map((data) => ({
+              name: data.name,
+              type: data.type,
+              body: data.body,
+            }));
           const Description = elm.querySelector('.FileFormDescription').value;
           elm.querySelector('.UploadedFiles').innerHTML = '';
           elm.querySelector('.FileFormDescription').value = '';
-          // TODO: Submit files, convert file to correct format
-          const submissionBody = {
-            files: uploadedFiles,
-            description: Description,
-          };
-          console.log(submissionBody);
-          alert('Submitted');
+          // Send the request
+          // TODO: we messed something up here, we need to fix this
+          const _result = await fetch(
+            `/d2l/api/le/1.41/${app.cid}/dropbox/folders/${elm.id}/submissions/mysubmissions/`,
+            {
+              method: 'POST',
+              headers: {
+                authorization: `Bearer ${await app.getToken()}`,
+                'Content-Type': `multipart/mixed;boundary=${boundary}`,
+              },
+              body: buildMultipartBody(
+                { Text: Description, Html: '' },
+                uploadedFiles.length > 0
+                  ? uploadedFiles
+                  : [{ name: 'Comment.txt', type: 'text/html', Description }]
+              ),
+            }
+          );
+          await _result.text();
         });
     }
   });

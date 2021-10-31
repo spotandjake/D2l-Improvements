@@ -74,23 +74,29 @@
       }));
     }
   }
-  const n = 'HOME', r = 'STREAM', i = new class {
+  const n = 'xxBOUNDARYxx', r = (e, t) => {
+    const r = `--${n}--\r\n`, i = `--${n}\r\n`;
+    let a = `${i}Content-Type: application/json\r\n\r\n${JSON.stringify(e)}\r\n`;
+    return t.forEach((({fileName: e, fileType: t, fileContent: n}) => {
+      a += `${i}Content-Disposition: form-data; name=""; filename="${e}"\r\nContent-Type: ${t}\r\n\r\n${n}\r\n${r}`;
+    })), a;
+  }, i = 'HOME', a = 'STREAM', s = new class {
     constructor() {
       this.organizationURL = 'https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/', 
-      this.location = n, this.token, this.data = {}, this.uid, this.cid, this.cancel, 
+      this.location = i, this.token, this.data = {}, this.uid, this.cid, this.cancel, 
       this.apiVersion = {};
     }
     async start(e) {
       this.data = e, this.cid = e.orgUnitId, await this._apiVersion(), setInterval((() => this.getToken(!0)), 3e5);
-      let t = n;
+      let t = i;
       switch (!0) {
        case /\/d2l\/home\/[^/]+$/.test(window.location.pathname):
-        t = r, this.cid = window.location.pathname.replace('/d2l/home/', '');
+        t = a, this.cid = window.location.pathname.replace('/d2l/home/', '');
         break;
 
        case '/d2l/home' == window.location.pathname:
        default:
-        t = n;
+        t = i;
       }
       this.setPage(t);
     }
@@ -116,10 +122,10 @@
       }
       return this.token;
     }
-    setPage(i) {
-      const a = document.getElementById('Content').classList;
-      switch ('function' == typeof this.cancel && this.cancel(), i) {
-       case n:
+    setPage(s) {
+      const o = document.getElementById('Content').classList;
+      switch ('function' == typeof this.cancel && this.cancel(), s) {
+       case i:
         for (this.cid = null, this.cancel = (async e => {
           const t = (new Date).valueOf(), n = document.getElementById('main'), r = await fetch(`https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${e.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
             headers: {
@@ -186,26 +192,26 @@
               e.removeEventListener('click', (() => a(e)));
             }));
           };
-        })(this); a.length > 0; ) a.remove(a.item(0));
-        a.add('Home');
+        })(this); o.length > 0; ) o.remove(o.item(0));
+        o.add('Home');
         break;
 
-       case r:
-        for (this.cancel = (async n => {
-          const r = document.getElementById('main'), i = await fetch(`${n.organizationURL}${n.cid}`, {
+       case a:
+        for (this.cancel = (async i => {
+          const a = document.getElementById('main'), s = await fetch(`${i.organizationURL}${i.cid}`, {
             headers: {
               Accept: 'application/vnd.siren+json',
-              authorization: `Bearer ${await n.getToken()}`
+              authorization: `Bearer ${await i.getToken()}`
             }
-          }), a = await i.json(), s = await fetch(a.entities[2].href), o = await s.json().catch((() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658')), c = {
-            name: a.properties.name,
-            description: a.properties.description,
-            picture: o.links ? o.links[2].href : o,
+          }), o = await s.json(), c = await fetch(o.entities[2].href), l = await c.json().catch((() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658')), d = {
+            name: o.properties.name,
+            description: o.properties.description,
+            picture: l.links ? l.links[2].href : l,
             teacher: {
               name: 'TODO',
               picture: 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'
             }
-          }, {html: l, assignments: d} = await (async t => {
+          }, {html: h, assignments: u} = await (async t => {
             const n = [], r = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/news/`);
             (await r.json()).forEach((t => {
               t.StartDate = new Date(t.StartDate).toDateString(), t.Category = 'ChipFilterHome', 
@@ -290,8 +296,8 @@
               assignments: h,
               content: l
             };
-          })(n);
-          r.innerHTML = function(e, t, n, r) {
+          })(i);
+          a.innerHTML = function(e, t, n, r) {
             t = t || function(e) {
               return null == e ? '' : String(e).replace(a, s);
             };
@@ -313,53 +319,53 @@
             c(t(e.classData.name)), c('</h1>\r\n    <h2>'), c(t(e.classData.description)), c('</h2>\r\n    <h4>Meet Link: <a>Link</a></h4>\r\n  </div>\r\n</section>\r\n<div class="StreamFilter" id="ChipFilters">\r\n  <div class="ChipFilter Active" id="ChipFilterHome"><span class="material-icons chipIcon">home</span><p>Stream</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterContent"><span class="material-icons chipIcon">source</span><p>Content</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterDiscussions"><span class="material-icons chipIcon">chat</span><p>Discussions</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterAssignments"><span class="material-icons chipIcon">assignment</span><p>Assignments</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterQuizzes"><span class="material-icons chipIcon">quiz</span><p>Quizzes</p></div>\r\n</div>\r\n\x3c!-- Stream Announcements --\x3e\r\n<section class="StreamCards Search Filter">'), 
             c(e.announcements), c('</section>'), o;
           }({
-            announcements: l,
-            classData: c
+            announcements: h,
+            classData: d
           });
-          const h = async e => {
+          const m = async e => {
             if (e.classList.contains('Active')) e.classList.remove('Active'); else if (e.classList.add('Active'), 
             'ChipFilterContent' == e.getAttribute('Category')) {
-              e.querySelector('.StreamCardIcon').classList.contains('Unread') && (await fetch(`/d2l/api/le/unstable/${n.cid}/content/topics/${e.id}/view`, {
+              e.querySelector('.StreamCardIcon').classList.contains('Unread') && (await fetch(`/d2l/api/le/unstable/${i.cid}/content/topics/${e.id}/view`, {
                 headers: {
-                  authorization: `Bearer ${await n.getToken()}`
+                  authorization: `Bearer ${await i.getToken()}`
                 },
                 method: 'POST'
               }), e.querySelector('.StreamCardIcon').classList.remove('Unread'), e.querySelector('.StreamCardIcon').classList.add('OnSubmission')), 
               e.classList.add('Active');
               const t = e.getAttribute('_url');
-              let r = `<a class="btn" href="${t}">View Content</a>`;
-              if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(t) || /docs\.google\.com/.test(t)) if (/\.(jpg)/i.test(t)) r = `<img width="100%" src="/d2l/api/le/${n.apiVersion.le}/${n.cid}/content/topics/${e.id}/file?stream=true">`; else if (/\.(mp4)/i.test(t)) r = `\n            <video width="100%" height="auto" controls="">\n              <source src="${t}">\n              Your browser does not support the video tag.\n            </video>`; else if (/\.(xlsm|xlsx|xls|pptx|xlw)/i.test(t) || /docs\.google\.com/.test(t)) r = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${t}">${r}</iframe>`; else {
-                const t = await fetch(`/d2l/le/content/${n.cid}/topics/files/download/${e.id}/DirectFileTopicDownload`);
-                r = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await t.blob())}">${r}</iframe>`;
+              let n = `<a class="btn" href="${t}">View Content</a>`;
+              if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(t) || /docs\.google\.com/.test(t)) if (/\.(jpg)/i.test(t)) n = `<img width="100%" src="/d2l/api/le/${i.apiVersion.le}/${i.cid}/content/topics/${e.id}/file?stream=true">`; else if (/\.(mp4)/i.test(t)) n = `\n            <video width="100%" height="auto" controls="">\n              <source src="${t}">\n              Your browser does not support the video tag.\n            </video>`; else if (/\.(xlsm|xlsx|xls|pptx|xlw)/i.test(t) || /docs\.google\.com/.test(t)) n = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${t}">${n}</iframe>`; else {
+                const t = await fetch(`/d2l/le/content/${i.cid}/topics/files/download/${e.id}/DirectFileTopicDownload`);
+                n = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await t.blob())}">${n}</iframe>`;
               } else if (t.includes('www.youtube.com')) {
                 const e = new URL(t).searchParams.get('v');
-                r = `<object data="https://www.youtube.com/embed/${e}" width="100%" height="auto">\n            <embed src="https://www.youtube.com/embed/${e}" width="100%" height="auto"> </embed>\n            Error: Embedded data could not be displayed.\n          </object>`;
+                n = `<object data="https://www.youtube.com/embed/${e}" width="100%" height="auto">\n            <embed src="https://www.youtube.com/embed/${e}" width="100%" height="auto"> </embed>\n            Error: Embedded data could not be displayed.\n          </object>`;
               } else try {
-                const e = await fetch(t), n = await e.blob();
-                switch (n.type) {
+                const e = await fetch(t), r = await e.blob();
+                switch (r.type) {
                  case 'text/html':
-                  r = `<object data="${t}" width="100%" height="auto">\n                  <embed src="${t}" width="100%" height="auto"> </embed>\n                  Error: Embedded data could not be displayed.\n                </object>`;
+                  n = `<object data="${t}" width="100%" height="auto">\n                  <embed src="${t}" width="100%" height="auto"> </embed>\n                  Error: Embedded data could not be displayed.\n                </object>`;
                   break;
 
                  case 'application/octet-stream':
                  case 'application/x-msaccess':
-                  r = `<a class="btn" href="${t}">Dowload Content</a>`;
+                  n = `<a class="btn" href="${t}">Dowload Content</a>`;
                   break;
 
                  default:
-                  console.log(n), console.log(t), console.log('================================================================');
+                  console.log(r), console.log(t), console.log('================================================================');
                 }
               } catch (e) {
                 console.log('There was an error opening this');
               }
-              e.querySelector('.StreamCardBody').innerHTML = r;
+              e.querySelector('.StreamCardBody').innerHTML = n;
             }
-          }, u = new t('AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw', '624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com', 'united-rope-234818', [ 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive.readonly' ], '');
-          [ ...r.querySelector('section.StreamCards').children ].forEach((e => {
-            e.addEventListener('click', (() => h(e))), e.querySelector('.StreamCardBody').addEventListener('click', (e => e.stopPropagation())), 
+          }, p = new t('AIzaSyCVB1GYyFHjovliBp1mphU7bJIldMu-Xaw', '624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com', 'united-rope-234818', [ 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive.readonly' ], '');
+          [ ...a.querySelector('section.StreamCards').children ].forEach((e => {
+            e.addEventListener('click', (() => m(e))), e.querySelector('.StreamCardBody').addEventListener('click', (e => e.stopPropagation())), 
             'ChipFilterAssignments' == e.getAttribute('Category') && (e.querySelector('.FileFormAdd').addEventListener('click', (() => {
-              const t = d.find((t => t.Id == e.id));
-              console.log(t), u.show((t => {
+              const t = u.find((t => t.Id == e.id));
+              console.log(t), p.show((t => {
                 if ('picked' == t.action) {
                   const n = e.querySelector('.UploadedFiles');
                   t.docs.forEach((async e => {
@@ -395,75 +401,95 @@
                 }
               }));
             })), e.querySelector('.FileFormSubmit').addEventListener('click', (async () => {
-              const t = await Promise.all([ ...e.querySelector('.UploadedFiles').children ].map((async e => {
-                const t = e.getAttribute('documentid');
-                return await u.export(t);
-              }))), n = e.querySelector('.FileFormDescription').value;
+              const t = (await Promise.all([ ...e.querySelector('.UploadedFiles').children ].map((async e => {
+                const t = e.getAttribute('documentid'), n = await p.export(t).catch((() => null));
+                return 0 == n.status && alert('There was an issue uploading the file'), {
+                  status: n.status,
+                  name: `${e.querySelector('.FileTitle').innerText}.pdf`,
+                  type: 'application/pdf',
+                  body: n.body.body
+                };
+              })))).filter((e => 1 == e.status)).map((e => ({
+                name: e.name,
+                type: e.type,
+                body: e.body
+              }))), a = e.querySelector('.FileFormDescription').value;
               e.querySelector('.UploadedFiles').innerHTML = '', e.querySelector('.FileFormDescription').value = '';
-              const r = {
-                files: t,
-                description: n
-              };
-              console.log(r), alert('Submitted');
+              const s = await fetch(`/d2l/api/le/1.41/${i.cid}/dropbox/folders/${e.id}/submissions/mysubmissions/`, {
+                method: 'POST',
+                headers: {
+                  authorization: `Bearer ${await i.getToken()}`,
+                  'Content-Type': `multipart/mixed;boundary=${n}`
+                },
+                body: r({
+                  Text: a,
+                  Html: ''
+                }, t.length > 0 ? t : [ {
+                  name: 'Comment.txt',
+                  type: 'text/html',
+                  Description: a
+                } ])
+              });
+              await s.text();
             })));
           }));
-          const m = document.getElementById('ChipFilters'), p = document.querySelector('.Filter'), g = e => {
+          const g = document.getElementById('ChipFilters'), f = document.querySelector('.Filter'), v = e => {
             e.classList.toggle('Active', !e.classList.contains('Active'));
-            const t = [ ...m.querySelectorAll('.ChipFilter') ];
-            [ ...p.children ].forEach((e => e.classList.toggle('Filtered', !t.some((t => t.classList.contains('Active') && t.id == e.getAttribute('Category'))))));
+            const t = [ ...g.querySelectorAll('.ChipFilter') ];
+            [ ...f.children ].forEach((e => e.classList.toggle('Filtered', !t.some((t => t.classList.contains('Active') && t.id == e.getAttribute('Category'))))));
           };
-          return [ ...m.children ].forEach((e => {
-            e.addEventListener('click', (() => g(e)));
+          return [ ...g.children ].forEach((e => {
+            e.addEventListener('click', (() => v(e)));
           })), () => {
-            [ ...r.querySelector('section.StreamCards').children ].forEach((e => {
-              e.removeEventListener('click', (() => h(e)));
-            })), [ ...m.children ].forEach((e => {
-              e.removeEventListener('click', (() => g(e)));
+            [ ...a.querySelector('section.StreamCards').children ].forEach((e => {
+              e.removeEventListener('click', (() => m(e)));
+            })), [ ...g.children ].forEach((e => {
+              e.removeEventListener('click', (() => v(e)));
             }));
           };
-        })(this); a.length > 0; ) a.remove(a.item(0));
-        a.add('Stream');
+        })(this); o.length > 0; ) o.remove(o.item(0));
+        o.add('Stream');
         break;
 
        default:
-        return void console.log(`Unknown location: ${i}`);
+        return void console.log(`Unknown location: ${s}`);
       }
-      this.location = i;
+      this.location = s;
     }
   };
-  function a(e) {
-    return Array.isArray ? Array.isArray(e) : '[object Array]' === u(e);
-  }
-  function s(e) {
-    return 'string' == typeof e;
-  }
   function o(e) {
-    return 'number' == typeof e;
+    return Array.isArray ? Array.isArray(e) : '[object Array]' === p(e);
   }
   function c(e) {
-    return !0 === e || !1 === e || function(e) {
-      return l(e) && null !== e;
-    }(e) && '[object Boolean]' == u(e);
+    return 'string' == typeof e;
   }
   function l(e) {
-    return 'object' == typeof e;
+    return 'number' == typeof e;
   }
   function d(e) {
-    return null != e;
+    return !0 === e || !1 === e || function(e) {
+      return h(e) && null !== e;
+    }(e) && '[object Boolean]' == p(e);
   }
   function h(e) {
-    return !e.trim().length;
+    return 'object' == typeof e;
   }
   function u(e) {
+    return null != e;
+  }
+  function m(e) {
+    return !e.trim().length;
+  }
+  function p(e) {
     return null == e ? void 0 === e ? '[object Undefined]' : '[object Null]' : Object.prototype.toString.call(e);
   }
-  const m = Object.prototype.hasOwnProperty;
-  class p {
+  const g = Object.prototype.hasOwnProperty;
+  class f {
     constructor(e) {
       this._keys = [], this._keyMap = {};
       let t = 0;
       e.forEach((e => {
-        let n = g(e);
+        let n = v(e);
         t += n.weight, this._keys.push(n), this._keyMap[n.id] = n, t += n.weight;
       })), this._keys.forEach((e => {
         e.weight /= t;
@@ -479,13 +505,13 @@
       return JSON.stringify(this._keys);
     }
   }
-  function g(e) {
+  function v(e) {
     let t = null, n = null, r = null, i = 1;
-    if (s(e) || a(e)) r = e, t = f(e), n = v(e); else {
-      if (!m.call(e, 'name')) throw new Error('Missing name property in key');
+    if (c(e) || o(e)) r = e, t = y(e), n = w(e); else {
+      if (!g.call(e, 'name')) throw new Error('Missing name property in key');
       const a = e.name;
-      if (r = a, m.call(e, 'weight') && (i = e.weight, i <= 0)) throw new Error((e => `Property 'weight' in key '${e}' must be a positive integer`)(a));
-      t = f(a), n = v(a);
+      if (r = a, g.call(e, 'weight') && (i = e.weight, i <= 0)) throw new Error((e => `Property 'weight' in key '${e}' must be a positive integer`)(a));
+      t = y(a), n = w(a);
     }
     return {
       path: t,
@@ -494,13 +520,13 @@
       src: r
     };
   }
-  function f(e) {
-    return a(e) ? e : e.split('.');
+  function y(e) {
+    return o(e) ? e : e.split('.');
   }
-  function v(e) {
-    return a(e) ? e.join('.') : e;
+  function w(e) {
+    return o(e) ? e.join('.') : e;
   }
-  var y = {
+  var b = {
     isCaseSensitive: !1,
     includeScore: !1,
     keys: [],
@@ -515,35 +541,35 @@
     useExtendedSearch: !1,
     getFn: function(e, t) {
       let n = [], r = !1;
-      const i = (e, t, l) => {
-        if (d(e)) if (t[l]) {
-          const h = e[t[l]];
-          if (!d(h)) return;
-          if (l === t.length - 1 && (s(h) || o(h) || c(h))) n.push(function(e) {
+      const i = (e, t, a) => {
+        if (u(e)) if (t[a]) {
+          const s = e[t[a]];
+          if (!u(s)) return;
+          if (a === t.length - 1 && (c(s) || l(s) || d(s))) n.push(function(e) {
             return null == e ? '' : function(e) {
               if ('string' == typeof e) return e;
               let t = e + '';
               return '0' == t && 1 / e == -1 / 0 ? '-0' : t;
             }(e);
-          }(h)); else if (a(h)) {
+          }(s)); else if (o(s)) {
             r = !0;
-            for (let e = 0, n = h.length; e < n; e += 1) i(h[e], t, l + 1);
-          } else t.length && i(h, t, l + 1);
+            for (let e = 0, n = s.length; e < n; e += 1) i(s[e], t, a + 1);
+          } else t.length && i(s, t, a + 1);
         } else n.push(e);
       };
-      return i(e, s(t) ? t.split('.') : t, 0), r ? n : n[0];
+      return i(e, c(t) ? t.split('.') : t, 0), r ? n : n[0];
     },
     ignoreLocation: !1,
     ignoreFieldNorm: !1
   };
-  const w = /[^ ]+/g;
-  class b {
-    constructor({getFn: e = y.getFn} = {}) {
+  const x = /[^ ]+/g;
+  class S {
+    constructor({getFn: e = b.getFn} = {}) {
       this.norm = function(e = 3) {
         const t = new Map, n = Math.pow(10, e);
         return {
           get(e) {
-            const r = e.match(w).length;
+            const r = e.match(x).length;
             if (t.has(r)) return t.get(r);
             const i = 1 / Math.sqrt(r), a = parseFloat(Math.round(i * n) / n);
             return t.set(r, a), a;
@@ -566,7 +592,7 @@
       }));
     }
     create() {
-      !this.isCreated && this.docs.length && (this.isCreated = !0, s(this.docs[0]) ? this.docs.forEach(((e, t) => {
+      !this.isCreated && this.docs.length && (this.isCreated = !0, c(this.docs[0]) ? this.docs.forEach(((e, t) => {
         this._addString(e, t);
       })) : this.docs.forEach(((e, t) => {
         this._addObject(e, t);
@@ -574,7 +600,7 @@
     }
     add(e) {
       const t = this.size();
-      s(e) ? this._addString(e, t) : this._addObject(e, t);
+      c(e) ? this._addString(e, t) : this._addObject(e, t);
     }
     removeAt(e) {
       this.records.splice(e, 1);
@@ -587,7 +613,7 @@
       return this.records.length;
     }
     _addString(e, t) {
-      if (!d(e) || h(e)) return;
+      if (!u(e) || m(e)) return;
       let n = {
         v: e,
         i: t,
@@ -602,7 +628,7 @@
       };
       this.keys.forEach(((t, r) => {
         let i = this.getFn(e, t.path);
-        if (d(i)) if (a(i)) {
+        if (u(i)) if (o(i)) {
           let e = [];
           const t = [ {
             nestedArrIndex: -1,
@@ -610,14 +636,14 @@
           } ];
           for (;t.length; ) {
             const {nestedArrIndex: n, value: r} = t.pop();
-            if (d(r)) if (s(r) && !h(r)) {
+            if (u(r)) if (c(r) && !m(r)) {
               let t = {
                 v: r,
                 i: n,
                 n: this.norm.get(r)
               };
               e.push(t);
-            } else a(r) && r.forEach(((e, n) => {
+            } else o(r) && r.forEach(((e, n) => {
               t.push({
                 nestedArrIndex: n,
                 value: e
@@ -625,7 +651,7 @@
             }));
           }
           n.$[r] = e;
-        } else if (!h(i)) {
+        } else if (!m(i)) {
           let e = {
             v: i,
             n: this.norm.get(i)
@@ -641,26 +667,26 @@
       };
     }
   }
-  function x(e, t, {getFn: n = y.getFn} = {}) {
-    const r = new b({
+  function C(e, t, {getFn: n = b.getFn} = {}) {
+    const r = new S({
       getFn: n
     });
-    return r.setKeys(e.map(g)), r.setSources(t), r.create(), r;
+    return r.setKeys(e.map(v)), r.setSources(t), r.create(), r;
   }
-  function S(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: r = 0, distance: i = y.distance, ignoreLocation: a = y.ignoreLocation} = {}) {
+  function k(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: r = 0, distance: i = b.distance, ignoreLocation: a = b.ignoreLocation} = {}) {
     const s = t / e.length;
     if (a) return s;
     const o = Math.abs(r - n);
     return i ? s + o / i : o ? 1 : s;
   }
-  function C(e, t, n, {location: r = y.location, distance: i = y.distance, threshold: a = y.threshold, findAllMatches: s = y.findAllMatches, minMatchCharLength: o = y.minMatchCharLength, includeMatches: c = y.includeMatches, ignoreLocation: l = y.ignoreLocation} = {}) {
+  function M(e, t, n, {location: r = b.location, distance: i = b.distance, threshold: a = b.threshold, findAllMatches: s = b.findAllMatches, minMatchCharLength: o = b.minMatchCharLength, includeMatches: c = b.includeMatches, ignoreLocation: l = b.ignoreLocation} = {}) {
     if (t.length > 32) throw new Error('Pattern length exceeds max of 32.');
     const d = t.length, h = e.length, u = Math.max(0, Math.min(r, h));
     let m = a, p = u;
     const g = o > 1 || c, f = g ? Array(h) : [];
     let v;
     for (;(v = e.indexOf(t, p)) > -1; ) {
-      let e = S(t, {
+      let e = k(t, {
         currentLocation: v,
         expectedLocation: u,
         distance: i,
@@ -672,11 +698,11 @@
       }
     }
     p = -1;
-    let w = [], b = 1, x = d + h;
-    const C = 1 << d - 1;
+    let y = [], w = 1, x = d + h;
+    const S = 1 << d - 1;
     for (let r = 0; r < d; r += 1) {
       let a = 0, o = x;
-      for (;a < o; ) S(t, {
+      for (;a < o; ) k(t, {
         errors: r,
         currentLocation: u + o,
         expectedLocation: u,
@@ -684,37 +710,37 @@
         ignoreLocation: l
       }) <= m ? a = o : x = o, o = Math.floor((x - a) / 2 + a);
       x = o;
-      let c = Math.max(1, u - o + 1), v = s ? h : Math.min(u + o, h) + d, y = Array(v + 2);
-      y[v + 1] = (1 << r) - 1;
+      let c = Math.max(1, u - o + 1), v = s ? h : Math.min(u + o, h) + d, b = Array(v + 2);
+      b[v + 1] = (1 << r) - 1;
       for (let a = v; a >= c; a -= 1) {
         let s = a - 1, o = n[e.charAt(s)];
-        if (g && (f[s] = +!!o), y[a] = (y[a + 1] << 1 | 1) & o, r && (y[a] |= (w[a + 1] | w[a]) << 1 | 1 | w[a + 1]), 
-        y[a] & C && (b = S(t, {
+        if (g && (f[s] = +!!o), b[a] = (b[a + 1] << 1 | 1) & o, r && (b[a] |= (y[a + 1] | y[a]) << 1 | 1 | y[a + 1]), 
+        b[a] & S && (w = k(t, {
           errors: r,
           currentLocation: s,
           expectedLocation: u,
           distance: i,
           ignoreLocation: l
-        }), b <= m)) {
-          if (m = b, p = s, p <= u) break;
+        }), w <= m)) {
+          if (m = w, p = s, p <= u) break;
           c = Math.max(1, 2 * u - p);
         }
       }
-      if (S(t, {
+      if (k(t, {
         errors: r + 1,
         currentLocation: u,
         expectedLocation: u,
         distance: i,
         ignoreLocation: l
       }) > m) break;
-      w = y;
+      y = b;
     }
-    const k = {
+    const C = {
       isMatch: p >= 0,
-      score: Math.max(.001, b)
+      score: Math.max(.001, w)
     };
     if (g) {
-      const e = function(e = [], t = y.minMatchCharLength) {
+      const e = function(e = [], t = b.minMatchCharLength) {
         let n = [], r = -1, i = -1, a = 0;
         for (let s = e.length; a < s; a += 1) {
           let s = e[a];
@@ -723,11 +749,11 @@
         }
         return e[a - 1] && a - r >= t && n.push([ r, a - 1 ]), n;
       }(f, o);
-      e.length ? c && (k.indices = e) : k.isMatch = !1;
+      e.length ? c && (C.indices = e) : C.isMatch = !1;
     }
-    return k;
+    return C;
   }
-  function k(e) {
+  function B(e) {
     let t = {};
     for (let n = 0, r = e.length; n < r; n += 1) {
       const i = e.charAt(n);
@@ -735,8 +761,8 @@
     }
     return t;
   }
-  class M {
-    constructor(e, {location: t = y.location, threshold: n = y.threshold, distance: r = y.distance, includeMatches: i = y.includeMatches, findAllMatches: a = y.findAllMatches, minMatchCharLength: s = y.minMatchCharLength, isCaseSensitive: o = y.isCaseSensitive, ignoreLocation: c = y.ignoreLocation} = {}) {
+  class I {
+    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: r = b.distance, includeMatches: i = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
       if (this.options = {
         location: t,
         threshold: n,
@@ -750,7 +776,7 @@
       const l = (e, t) => {
         this.chunks.push({
           pattern: e,
-          alphabet: k(e),
+          alphabet: B(e),
           startIndex: t
         });
       }, d = this.pattern.length;
@@ -776,7 +802,7 @@
       const {location: r, distance: i, threshold: a, findAllMatches: s, minMatchCharLength: o, ignoreLocation: c} = this.options;
       let l = [], d = 0, h = !1;
       this.chunks.forEach((({pattern: t, alphabet: u, startIndex: m}) => {
-        const {isMatch: p, score: g, indices: f} = C(e, t, u, {
+        const {isMatch: p, score: g, indices: f} = M(e, t, u, {
           location: r + m,
           distance: i,
           threshold: a,
@@ -794,25 +820,25 @@
       return h && n && (u.indices = l), u;
     }
   }
-  class B {
+  class L {
     constructor(e) {
       this.pattern = e;
     }
     static isMultiMatch(e) {
-      return I(e, this.multiRegex);
+      return F(e, this.multiRegex);
     }
     static isSingleMatch(e) {
-      return I(e, this.singleRegex);
+      return F(e, this.singleRegex);
     }
     search() {}
   }
-  function I(e, t) {
+  function F(e, t) {
     const n = e.match(t);
     return n ? n[1] : null;
   }
-  class L extends B {
-    constructor(e, {location: t = y.location, threshold: n = y.threshold, distance: r = y.distance, includeMatches: i = y.includeMatches, findAllMatches: a = y.findAllMatches, minMatchCharLength: s = y.minMatchCharLength, isCaseSensitive: o = y.isCaseSensitive, ignoreLocation: c = y.ignoreLocation} = {}) {
-      super(e), this._bitapSearch = new M(e, {
+  class A extends L {
+    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: r = b.distance, includeMatches: i = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
+      super(e), this._bitapSearch = new I(e, {
         location: t,
         threshold: n,
         distance: r,
@@ -836,7 +862,7 @@
       return this._bitapSearch.searchIn(e);
     }
   }
-  class F extends B {
+  class E extends L {
     constructor(e) {
       super(e);
     }
@@ -861,7 +887,7 @@
       };
     }
   }
-  const A = [ class extends B {
+  const $ = [ class extends L {
     constructor(e) {
       super(e);
     }
@@ -882,7 +908,7 @@
         indices: [ 0, this.pattern.length - 1 ]
       };
     }
-  }, F, class extends B {
+  }, E, class extends L {
     constructor(e) {
       super(e);
     }
@@ -903,7 +929,7 @@
         indices: [ 0, this.pattern.length - 1 ]
       };
     }
-  }, class extends B {
+  }, class extends L {
     constructor(e) {
       super(e);
     }
@@ -924,7 +950,7 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, class extends B {
+  }, class extends L {
     constructor(e) {
       super(e);
     }
@@ -945,7 +971,7 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, class extends B {
+  }, class extends L {
     constructor(e) {
       super(e);
     }
@@ -966,7 +992,7 @@
         indices: [ e.length - this.pattern.length, e.length - 1 ]
       };
     }
-  }, class extends B {
+  }, class extends L {
     constructor(e) {
       super(e);
     }
@@ -987,50 +1013,50 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, L ], E = A.length, $ = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, T = new Set([ L.type, F.type ]), _ = [];
-  function D(e, t) {
-    for (let n = 0, r = _.length; n < r; n += 1) {
-      let r = _[n];
+  }, A ], T = $.length, D = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, _ = new Set([ A.type, E.type ]), z = [];
+  function O(e, t) {
+    for (let n = 0, r = z.length; n < r; n += 1) {
+      let r = z[n];
       if (r.condition(e, t)) return new r(e, t);
     }
-    return new M(e, t);
+    return new I(e, t);
   }
-  const z = '$and', O = '$path', N = e => !(!e[z] && !e.$or), j = e => ({
-    [z]: Object.keys(e).map((t => ({
+  const N = '$and', j = '$path', P = e => !(!e[N] && !e.$or), R = e => ({
+    [N]: Object.keys(e).map((t => ({
       [t]: e[t]
     })))
   });
-  function P(e, t, {auto: n = !0} = {}) {
+  function H(e, t, {auto: n = !0} = {}) {
     const r = e => {
       let i = Object.keys(e);
-      const o = (e => !!e[O])(e);
-      if (!o && i.length > 1 && !N(e)) return r(j(e));
-      if ((e => !a(e) && l(e) && !N(e))(e)) {
-        const r = o ? e[O] : i[0], a = o ? e.$val : e[r];
-        if (!s(a)) throw new Error((e => 'Invalid value for key ' + e)(r));
-        const c = {
-          keyId: v(r),
-          pattern: a
+      const a = (e => !!e[j])(e);
+      if (!a && i.length > 1 && !P(e)) return r(R(e));
+      if ((e => !o(e) && h(e) && !P(e))(e)) {
+        const r = a ? e[j] : i[0], s = a ? e.$val : e[r];
+        if (!c(s)) throw new Error((e => 'Invalid value for key ' + e)(r));
+        const o = {
+          keyId: w(r),
+          pattern: s
         };
-        return n && (c.searcher = D(a, t)), c;
+        return n && (o.searcher = O(s, t)), o;
       }
-      let c = {
+      let s = {
         children: [],
         operator: i[0]
       };
       return i.forEach((t => {
         const n = e[t];
-        a(n) && n.forEach((e => {
-          c.children.push(r(e));
+        o(n) && n.forEach((e => {
+          s.children.push(r(e));
         }));
-      })), c;
+      })), s;
     };
-    return N(e) || (e = j(e)), r(e);
+    return P(e) || (e = R(e)), r(e);
   }
-  function R(e, t) {
+  function q(e, t) {
     const n = e.matches;
-    t.matches = [], d(n) && n.forEach((e => {
-      if (!d(e.indices) || !e.indices.length) return;
+    t.matches = [], u(n) && n.forEach((e => {
+      if (!u(e.indices) || !e.indices.length) return;
       const {indices: n, value: r} = e;
       let i = {
         indices: n,
@@ -1039,24 +1065,24 @@
       e.key && (i.key = e.key.src), e.idx > -1 && (i.refIndex = e.idx), t.matches.push(i);
     }));
   }
-  function H(e, t) {
+  function U(e, t) {
     t.score = e.score;
   }
-  class q {
+  class G {
     constructor(e, t = {}, n) {
       this.options = {
-        ...y,
+        ...b,
         ...t
-      }, this.options.useExtendedSearch, this._keyStore = new p(this.options.keys), this.setCollection(e, n);
+      }, this.options.useExtendedSearch, this._keyStore = new f(this.options.keys), this.setCollection(e, n);
     }
     setCollection(e, t) {
-      if (this._docs = e, t && !(t instanceof b)) throw new Error('Incorrect \'index\' type');
-      this._myIndex = t || x(this.options.keys, this._docs, {
+      if (this._docs = e, t && !(t instanceof S)) throw new Error('Incorrect \'index\' type');
+      this._myIndex = t || C(this.options.keys, this._docs, {
         getFn: this.options.getFn
       });
     }
     add(e) {
-      d(e) && (this._docs.push(e), this._myIndex.add(e));
+      u(e) && (this._docs.push(e), this._myIndex.add(e));
     }
     remove(e = (() => !1)) {
       const t = [];
@@ -1073,9 +1099,9 @@
       return this._myIndex;
     }
     search(e, {limit: t = -1} = {}) {
-      const {includeMatches: n, includeScore: r, shouldSort: i, sortFn: a, ignoreFieldNorm: c} = this.options;
-      let l = s(e) ? s(this._docs[0]) ? this._searchStringList(e) : this._searchObjectList(e) : this._searchLogical(e);
-      return function(e, {ignoreFieldNorm: t = y.ignoreFieldNorm}) {
+      const {includeMatches: n, includeScore: r, shouldSort: i, sortFn: a, ignoreFieldNorm: s} = this.options;
+      let o = c(e) ? c(this._docs[0]) ? this._searchStringList(e) : this._searchObjectList(e) : this._searchLogical(e);
+      return function(e, {ignoreFieldNorm: t = b.ignoreFieldNorm}) {
         e.forEach((e => {
           let n = 1;
           e.matches.forEach((({key: e, norm: r, score: i}) => {
@@ -1083,11 +1109,11 @@
             n *= Math.pow(0 === i && a ? Number.EPSILON : i, (a || 1) * (t ? 1 : r));
           })), e.score = n;
         }));
-      }(l, {
-        ignoreFieldNorm: c
-      }), i && l.sort(a), o(t) && t > -1 && (l = l.slice(0, t)), function(e, t, {includeMatches: n = y.includeMatches, includeScore: r = y.includeScore} = {}) {
+      }(o, {
+        ignoreFieldNorm: s
+      }), i && o.sort(a), l(t) && t > -1 && (o = o.slice(0, t)), function(e, t, {includeMatches: n = b.includeMatches, includeScore: r = b.includeScore} = {}) {
         const i = [];
-        return n && i.push(R), r && i.push(H), e.map((e => {
+        return n && i.push(q), r && i.push(U), e.map((e => {
           const {idx: n} = e, r = {
             item: t[n],
             refIndex: n
@@ -1096,15 +1122,15 @@
             t(e, r);
           })), r;
         }));
-      }(l, this._docs, {
+      }(o, this._docs, {
         includeMatches: n,
         includeScore: r
       });
     }
     _searchStringList(e) {
-      const t = D(e, this.options), {records: n} = this._myIndex, r = [];
+      const t = O(e, this.options), {records: n} = this._myIndex, r = [];
       return n.forEach((({v: e, i: n, n: i}) => {
-        if (!d(e)) return;
+        if (!u(e)) return;
         const {isMatch: a, score: s, indices: o} = t.searchIn(e);
         a && r.push({
           item: e,
@@ -1119,7 +1145,7 @@
       })), r;
     }
     _searchLogical(e) {
-      const t = P(e, this.options), n = (e, t, r) => {
+      const t = H(e, this.options), n = (e, t, r) => {
         if (!e.children) {
           const {keyId: n, searcher: i} = e, a = this._findMatches({
             key: this._keyStore.get(n),
@@ -1133,7 +1159,7 @@
           } ] : [];
         }
         switch (e.operator) {
-         case z:
+         case N:
           {
             const i = [];
             for (let a = 0, s = e.children.length; a < s; a += 1) {
@@ -1159,7 +1185,7 @@
         }
       }, r = this._myIndex.records, i = {}, a = [];
       return r.forEach((({$: e, i: r}) => {
-        if (d(e)) {
+        if (u(e)) {
           let s = n(t, e, r);
           s.length && (i[r] || (i[r] = {
             idx: r,
@@ -1172,9 +1198,9 @@
       })), a;
     }
     _searchObjectList(e) {
-      const t = D(e, this.options), {keys: n, records: r} = this._myIndex, i = [];
+      const t = O(e, this.options), {keys: n, records: r} = this._myIndex, i = [];
       return r.forEach((({$: e, i: r}) => {
-        if (!d(e)) return;
+        if (!u(e)) return;
         let a = [];
         n.forEach(((n, r) => {
           a.push(...this._findMatches({
@@ -1190,10 +1216,10 @@
       })), i;
     }
     _findMatches({key: e, value: t, searcher: n}) {
-      if (!d(t)) return [];
+      if (!u(t)) return [];
       let r = [];
-      if (a(t)) t.forEach((({v: t, i: i, n: a}) => {
-        if (!d(t)) return;
+      if (o(t)) t.forEach((({v: t, i: i, n: a}) => {
+        if (!u(t)) return;
         const {isMatch: s, score: o, indices: c} = n.searchIn(t);
         s && r.push({
           score: o,
@@ -1216,15 +1242,15 @@
       return r;
     }
   }
-  q.version = '6.4.6', q.createIndex = x, q.parseIndex = function(e, {getFn: t = y.getFn} = {}) {
-    const {keys: n, records: r} = e, i = new b({
+  G.version = '6.4.6', G.createIndex = C, G.parseIndex = function(e, {getFn: t = b.getFn} = {}) {
+    const {keys: n, records: r} = e, i = new S({
       getFn: t
     });
     return i.setKeys(n), i.setIndexRecords(r), i;
-  }, q.config = y, function(...e) {
-    _.push(...e);
+  }, G.config = b, function(...e) {
+    z.push(...e);
   }(class {
-    constructor(e, {isCaseSensitive: t = y.isCaseSensitive, includeMatches: n = y.includeMatches, minMatchCharLength: r = y.minMatchCharLength, ignoreLocation: i = y.ignoreLocation, findAllMatches: a = y.findAllMatches, location: s = y.location, threshold: o = y.threshold, distance: c = y.distance} = {}) {
+    constructor(e, {isCaseSensitive: t = b.isCaseSensitive, includeMatches: n = b.includeMatches, minMatchCharLength: r = b.minMatchCharLength, ignoreLocation: i = b.ignoreLocation, findAllMatches: a = b.findAllMatches, location: s = b.location, threshold: o = b.threshold, distance: c = b.distance} = {}) {
       this.query = null, this.options = {
         isCaseSensitive: t,
         includeMatches: n,
@@ -1236,17 +1262,17 @@
         distance: c
       }, this.pattern = t ? e : e.toLowerCase(), this.query = function(e, t = {}) {
         return e.split('|').map((e => {
-          let n = e.trim().split($).filter((e => e && !!e.trim())), r = [];
+          let n = e.trim().split(D).filter((e => e && !!e.trim())), r = [];
           for (let e = 0, i = n.length; e < i; e += 1) {
             const i = n[e];
             let a = !1, s = -1;
-            for (;!a && ++s < E; ) {
-              const e = A[s];
+            for (;!a && ++s < T; ) {
+              const e = $[s];
               let n = e.isMultiMatch(i);
               n && (r.push(new e(n, t)), a = !0);
             }
-            if (!a) for (s = -1; ++s < E; ) {
-              const e = A[s];
+            if (!a) for (s = -1; ++s < T; ) {
+              const e = $[s];
               let n = e.isSingleMatch(i);
               if (n) {
                 r.push(new e(n, t));
@@ -1281,7 +1307,7 @@
           }
           if (i += 1, s += d, n) {
             const e = r.constructor.type;
-            T.has(e) ? a = [ ...a, ...l ] : a.push(l);
+            _.has(e) ? a = [ ...a, ...l ] : a.push(l);
           }
         }
         if (i) {
@@ -1298,12 +1324,12 @@
       };
     }
   });
-  const U = async e => JSON.parse((await e.text()).trim().substr(9));
+  const V = async e => JSON.parse((await e.text()).trim().substr(9));
   document.head.innerHTML = `<title>${document.title}</title>`, document.body.innerHTML = '', 
   (async () => {
     const e = JSON.parse(document.documentElement.getAttribute('data-he-context'));
     var t;
-    i.uid = localStorage.getItem('Session.UserId'), document.head.innerHTML = function(e, t, n, r) {
+    s.uid = localStorage.getItem('Session.UserId'), document.head.innerHTML = function(e, t, n, r) {
       t = t || function(e) {
         return null == e ? '' : String(e).replace(a, s);
       };
@@ -1352,7 +1378,7 @@
           Teacher: e.querySelector('h2')?.innerText || '',
           child: e,
           id: t
-        }))), r = (i = t, s = a.value, new q(i, {
+        }))), r = (i = t, s = a.value, new G(i, {
           isCaseSensitive: !1,
           includeScore: !0,
           shouldSort: !0,
@@ -1366,7 +1392,7 @@
         }));
       }));
       const l = async () => {
-        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), t = await U(e);
+        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), t = await V(e);
         t.Payload && [ 'Messages', 'Grades' ].forEach((e => {
           const n = t.Payload.includes(e);
           switch (e) {
@@ -1396,7 +1422,7 @@
             const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=2&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
               method: 'GET'
             });
-            s = (await U(e)).Payload.Html;
+            s = (await V(e)).Payload.Html;
             break;
           }
 
@@ -1408,7 +1434,7 @@
             const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=1&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
               method: 'GET'
             });
-            s = (await U(e)).Payload.Html;
+            s = (await V(e)).Payload.Html;
             break;
           }
         }
@@ -1421,7 +1447,7 @@
         const e = document.getElementById('DropDown');
         e && e.remove(), r.classList.contains('Active') && r.classList.remove('Active');
       }));
-    })(document.getElementById('NavBar'), i), (async (e, t) => {
+    })(document.getElementById('NavBar'), s), (async (e, t) => {
       const n = (new Date).valueOf(), r = await fetch(`https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${t.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
         headers: {
           authorization: `Bearer ${await t.getToken()}`
@@ -1474,6 +1500,6 @@
       }), document.getElementById('SideBarClassesBtn').addEventListener('click', (() => {
         t.setPage('HOME');
       }));
-    })(document.getElementById('SideBar'), i), await i.start(e);
+    })(document.getElementById('SideBar'), s), await s.start(e);
   })();
 }();
