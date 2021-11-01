@@ -75,6 +75,7 @@ const ClassCard = ({
       <input type="checkbox" id={`${Id}-ExpandState`} />
       {/* Expanded Content */}
       <div className={styles.expandContainer}>
+        <hr />
         {currentContent}
       </div>
     </label>

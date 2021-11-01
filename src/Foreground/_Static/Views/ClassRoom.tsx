@@ -12,7 +12,9 @@ import {
 import { StreamType, CompletionType } from '../Classes/Types';
 // Components
 import React, { useState, useEffect } from 'react';
+import Loader from './Loader';
 import NavBar from '../Components/NavBar';
+import IdleTimer from 'react-idle-timer';
 import ClassHeader from '../Components/ClassHeader';
 import StreamCard from '../Components/StreamCard';
 import StreamChip from '../Components/StreamChip';
@@ -24,10 +26,12 @@ interface props {
 }
 // Loader Function
 const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
-  const [_streamContent, setStreamContent] = useState(<></>);
-  const [_headerContent, setHeaderContent] = useState(<></>);
+  const [_refreshRate, setRefreshRate] = useState(1000*30);
+  const [_streamContent, setStreamContent] = useState(<Loader />);
+  const [_headerContent, setHeaderContent] = useState(<Loader />);
   // Fetch the classList
   useEffect(() => {
+    let timeout;
     const fetchStreamData = async () => {
       // Fetch Stuff For Header
       const { properties, entities } = await brightSpace._fetch(
@@ -70,6 +74,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         stream.push({
           date: new Date(newsItem.StartDate).getTime(),
           elm: <StreamCard
+            key={newsItem.Id}
             Id={newsItem.Id}
             Title={newsItem.Title}
             Progress={CompletionType.Complete}
@@ -95,7 +100,6 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
           content.map(async (contentElement) => {
             switch (contentElement.Type) {
               case ContentType.Module: {
-                // TODO: I am pretty sure that this fetch is a little useless
                 // Module
                 const moduleContent: (Module | Topic)[] =
                   await brightSpace._fetch(
@@ -125,6 +129,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         stream.push({
           date: new Date(contentItem.LastModifiedDate).getTime(),
           elm: <StreamCard
+            key={contentItem.Id}
             Id={contentItem.Id}
             Title={contentItem.Title}
             Progress={
@@ -144,14 +149,21 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       // TODO: Fetch Quizzes
       // Set Page Content
       setStreamContent(<>{stream.sort((a, b) => b.date - a.date).map(a => a.elm)}</>);
+      timeout = setTimeout(fetchStreamData, _refreshRate);
     };
     fetchStreamData();
-    // const interval = setInterval(fetchStreamData, 10000);
-    // return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, []);
   // Render the classes
   return (
     <section className={styles.container}>
+      {/* Idle Timer */}
+      <IdleTimer
+        timeout={1000 * 30}
+        onActive={() => setRefreshRate(1000*30)}
+        onIdle={() => setRefreshRate(1000*60*15)}
+        debounce={250}
+      />
       {/* NavBar */}
       <NavBar brightSpace={brightSpace} />
       {/* Page Content */}

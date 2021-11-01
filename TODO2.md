@@ -1,16 +1,21 @@
 - [ ] Stream
-  - [ ] Sort Stream By Date's
-  - [ ] Content Filters
+  - [x] Sort Stream By Date's
+  - [x] Content Filters
     - [x] Get Content Filters Working
-    - [ ] Move Content Filters to work on css instead of react state
+    - [x] Move Content Filters to work on css instead of react state
   - [x] News Card
   - [ ] Content Card
     - [ ] File Viewer
       - [ ] Use Office viewer, if it is supported. If brave then we need to find an alternative viewer
         - [x] Detect Browser Support
         - [x] Render if on a browser that supports the viewer extension
-        - [ ] Styling
+        - [x] Styling
         - [ ] Alternative renderer
+          - [ ] Excel
+          - [ ] Word
+          - [ ] PowerPoint
+          - [ ] Publisher
+          - [ ] Access
       - [x] Use Image Viewer
         - [x] Image Detection
         - [x] Styling
@@ -51,13 +56,13 @@
   - [ ] Aside
   - [ ] Settings
 - [ ] Routing with the filters
-- [ ] Move card open from being a react state to a css thing
+- [x] Move card open from being a react state to a css thing
 - [x] Font's
-- [ ] Stream Update Cycle
+- [x] Stream Update Cycle
   - [x] Stream Update Cycle
-  - [ ] Detect User Inactivity and slow refresh rate
+  - [x] Detect User Inactivity and slow refresh rate
 - [ ] Rewrite the brightspace api, client so we have types and are not just using a fetch method from it
 - [ ] Create a script to generate types from the documentation
-- [ ] Move All Colors and repeated stuff to be variables
 - [ ] Fix All TODO's
 - [ ] Go over style with a fine tooth comb
+  - [ ] Move All Colors and repeated stuff to be variables
