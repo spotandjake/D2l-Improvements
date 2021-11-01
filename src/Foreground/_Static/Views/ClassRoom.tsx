@@ -31,39 +31,8 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
   const [_headerContent, setHeaderContent] = useState(<Loader />);
   // Fetch the classList
   useEffect(() => {
-    let timeout;
+    let timeout: NodeJS.Timeout;
     const fetchStreamData = async () => {
-      // Fetch Stuff For Header
-      const { properties, entities } = await brightSpace._fetch(
-        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${ClassId}`,
-        {
-          headers: {
-            authorization: `Bearer ${await brightSpace._getToken()}`,
-          },
-        }
-      );
-      const imageInfo = await window
-        .fetch(entities[2].href)
-        .then((res) => res.json())
-        .catch(async () => {
-          return await brightSpace
-            ._fetch(entities[2].href, {
-              headers: {
-                authorization: `Bearer ${await brightSpace._getToken()}`,
-              },
-            })
-            .catch(
-              () =>
-                'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
-            );
-        });
-      setHeaderContent(
-        <ClassHeader
-          Name={properties.name}
-          Picture={imageInfo.links ? imageInfo.links[2].href : imageInfo}
-          StartDate={properties.startDate}
-        />
-      );
       // Stream
       const stream: { date: number, elm: JSX.Element}[] = [];
       // fetch News
@@ -151,7 +120,40 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       setStreamContent(<>{stream.sort((a, b) => b.date - a.date).map(a => a.elm)}</>);
       timeout = setTimeout(fetchStreamData, _refreshRate);
     };
-    fetchStreamData();
+    (async () => {
+      // Fetch Stuff For Header
+      const { properties, entities } = await brightSpace._fetch(
+        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${ClassId}`,
+        {
+          headers: {
+            authorization: `Bearer ${await brightSpace._getToken()}`,
+          },
+        }
+      );
+      const imageInfo = await window
+        .fetch(entities[2].href)
+        .then((res) => res.json())
+        .catch(async () => {
+          return await brightSpace
+            ._fetch(entities[2].href, {
+              headers: {
+                authorization: `Bearer ${await brightSpace._getToken()}`,
+              },
+            })
+            .catch(
+              () =>
+                'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
+            );
+        });
+      setHeaderContent(
+        <ClassHeader
+          Name={properties.name}
+          Picture={imageInfo.links ? imageInfo.links[2].href : imageInfo}
+          StartDate={properties.startDate}
+        />
+      );
+      fetchStreamData();
+    })();
     return () => clearTimeout(timeout);
   }, []);
   // Render the classes
