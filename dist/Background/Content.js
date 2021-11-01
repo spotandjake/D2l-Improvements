@@ -46,4 +46,4 @@ fetch(chrome.runtime.getURL('./Foreground/index.html'), { credentials: 'include'
         document.body.appendChild(rebuildNode(node));
     });
     // Make Sure Our Content Loads
-}).catch(e => console.log(e));}());
+}).catch(e => console.log(e));})();

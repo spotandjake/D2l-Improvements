@@ -4,16 +4,12 @@ import { StreamType } from '../Classes/Types';
 // Loader Function
 interface ChipProps {
   Type: StreamType;
-  ToggleType: Function;
 }
-const FilterChip = ({ Type, ToggleType }: ChipProps) => {
+const FilterChip = ({ Type }: ChipProps) => {
   return (
-    <div
-      className={[styles.container, styles[Type]].join(' ')}
-      onClick={() => ToggleType(Type)}
-    >
+    <label className={[styles.container, styles[Type]].join(' ')} htmlFor={`${Type}-ExpandState`}>
       {Type}
-    </div>
+    </label>
   );
 };
 

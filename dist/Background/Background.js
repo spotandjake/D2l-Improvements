@@ -14,4 +14,4 @@
                 return { redirectUrl: 'data:text/css;charset=utf-8;base64,LyogcnVuICov' };
         }
     }
-}, { urls: ['<all_urls>'] }, ['blocking']);}());
+}, { urls: ['<all_urls>'] }, ['blocking']);})();

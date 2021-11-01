@@ -23,6 +23,9 @@
   }
   .stream {
     grid-area: Stream;
+    input {
+      display: none;
+    }
   }
 }
 .chipContainer {

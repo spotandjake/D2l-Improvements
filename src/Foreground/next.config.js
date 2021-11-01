@@ -1,6 +1,6 @@
 // next.config.js
 module.exports = {
-  webpack5: true,
+  swcMinify: true,
   modern: true,
   basePath: '/_extension/Foreground',
   optimizeFonts: true,
@@ -8,7 +8,6 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    workerThreads: true,
-    concurrentFeatures: true
+    workerThreads: true
   }
 };

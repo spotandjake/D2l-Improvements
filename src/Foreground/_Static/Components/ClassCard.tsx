@@ -25,5 +25,4 @@ const ClassCard = ({ Name, Active, Href, Picture, StartDate, Route }: ClassCardP
     </div>
   );
 };
-
 export default ClassCard;

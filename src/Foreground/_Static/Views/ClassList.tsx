@@ -1,6 +1,6 @@
 import styles from '../css/Views/ClassList.module.scss';
 // Components
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import NavBar from '../Components/NavBar';
 import Brightspace from '../Classes/Brightspace';
 import ClassCard from '../Components/ClassCard';
@@ -85,4 +85,4 @@ const ClassList = ({ brightSpace, Route }: props) => {
   );
 };
 
-export default ClassList;
+export default memo(ClassList);

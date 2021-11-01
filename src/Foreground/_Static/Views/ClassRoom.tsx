@@ -61,14 +61,15 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         />
       );
       // Stream
-      const stream: JSX.Element[] = [];
+      const stream: { date: number, elm: JSX.Element}[] = [];
       // fetch News
       const streamNews: NewsItem[] = await brightSpace._fetch(
         `/api/le/${brightSpace.version.le}/${ClassId}/news/`
       );
       streamNews.forEach((newsItem: NewsItem) => {
-        stream.push(
-          <StreamCard
+        stream.push({
+          date: new Date(newsItem.StartDate).getTime(),
+          elm: <StreamCard
             Id={newsItem.Id}
             Title={newsItem.Title}
             Progress={CompletionType.Complete}
@@ -77,7 +78,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
             Content={newsItem.Body}
             Route={Route}
           />
-        );
+        });
       });
       // Fetch Content
       // TODO: Figure out how to make this run faster
@@ -121,8 +122,9 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       );
       const contentStream = await parseContent(rootContent);
       for (const contentItem of contentStream) {
-        stream.push(
-          <StreamCard
+        stream.push({
+          date: new Date(contentItem.LastModifiedDate).getTime(),
+          elm: <StreamCard
             Id={contentItem.Id}
             Title={contentItem.Title}
             Progress={
@@ -135,19 +137,18 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
             Content={contentItem.Url}
             Route={Route}
           />
-        );
+        });
       }
       // TODO: Fetch Discussions
       // TODO: Fetch Assignments
       // TODO: Fetch Quizzes
       // Set Page Content
-      setStreamContent(<>{stream}</>);
+      setStreamContent(<>{stream.sort((a, b) => b.date - a.date).map(a => a.elm)}</>);
     };
     fetchStreamData();
     // const interval = setInterval(fetchStreamData, 10000);
     // return () => clearInterval(interval);
   }, []);
-  const ToggleType = (type: StreamType) => {};
   // Render the classes
   return (
     <section className={styles.container}>
@@ -159,13 +160,18 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         {_headerContent}
         {/* ClassStream */}
         <section className={styles.stream}>
+          <input type="checkbox" id={`${StreamType.News}-ExpandState`} defaultChecked={true} />
+          <input type="checkbox" id={`${StreamType.Content}-ExpandState`} defaultChecked={true} />
+          <input type="checkbox" id={`${StreamType.Discussions}-ExpandState`} defaultChecked={true} />
+          <input type="checkbox" id={`${StreamType.Assignments}-ExpandState`} defaultChecked={true} />
+          <input type="checkbox" id={`${StreamType.Quizzes}-ExpandState`} defaultChecked={true} />
           {/* Class Filter Chips */}
           <div className={styles.chipContainer}>
-            <StreamChip Type={StreamType.News} ToggleType={ToggleType} />
-            <StreamChip Type={StreamType.Content} ToggleType={ToggleType} />
-            <StreamChip Type={StreamType.Discussions} ToggleType={ToggleType} />
-            <StreamChip Type={StreamType.Assignments} ToggleType={ToggleType} />
-            <StreamChip Type={StreamType.Quizzes} ToggleType={ToggleType} />
+            <StreamChip Type={StreamType.News} />
+            <StreamChip Type={StreamType.Content} />
+            <StreamChip Type={StreamType.Discussions} />
+            <StreamChip Type={StreamType.Assignments} />
+            <StreamChip Type={StreamType.Quizzes} />
           </div>
           {/* Stream Content */}
           {_streamContent}
