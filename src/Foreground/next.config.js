@@ -2,7 +2,7 @@
 module.exports = {
   swcMinify: true,
   modern: true,
-  basePath: '/_extension/Foreground',
+  basePath: '/_ext/Foreground',
   optimizeFonts: true,
   eslint: {
     ignoreDuringBuilds: true,

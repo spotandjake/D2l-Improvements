@@ -63,6 +63,7 @@ const ContentViewer = ({ Content }: Props) => {
         // TODO: Support this
         // Use an alternative rendering method
         console.log('Office Viewer Unsupported');
+        console.log(Content);
         return <Loader />;
       }
     case /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)/i.test(
@@ -108,7 +109,7 @@ const ContentViewer = ({ Content }: Props) => {
       console.log(
         `rendering is not yet implemented for content at url: ${Content}`
       );
-      break;
+      return <Loader/>;
   }
 };
 const ContentBody = ({ Content }: Props) => {
