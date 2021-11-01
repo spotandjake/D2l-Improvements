@@ -52,6 +52,8 @@
   - [ ] Design
   - [ ] Search
     - [ ] fuse.js
+    - [ ] Search Suggestions / autocomplete
+    - [ ] make a full search framework
   - [ ] Notifications
   - [ ] Aside
   - [ ] Settings
@@ -66,3 +68,7 @@
 - [ ] Fix All TODO's
 - [ ] Go over style with a fine tooth comb
   - [ ] Move All Colors and repeated stuff to be variables
+  - [ ] Fix scaling on my second monitor
+  - [ ] improve navbar hovers
+  - [ ] improve filter chips
+  - [ ] improve news items
