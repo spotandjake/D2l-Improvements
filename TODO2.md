@@ -1,3 +1,4 @@
+- [ ] Fix Page Title
 - [ ] Stream
   - [x] Sort Stream By Date's
   - [x] Content Filters
