@@ -1,5 +1,5 @@
 .container {
-  $searchSize: calc(100% - 80rem);
+  $searchSize: calc(100% - 60rem);
   background-color: var(--Foreground);
   height: 3.5rem;
   width: 100%;
@@ -16,6 +16,7 @@
   }
   .rightSide {
     justify-content: end;
+    position: relative;
   }
 }
 // Search Bar
@@ -44,4 +45,44 @@
 }
 .IconButton {
   margin: 0 0.5rem !important;
+}
+.alertArea {
+  display: none;
+  min-height: 30rem;
+  width: 25rem;
+  padding: 1rem;
+  margin: -0.25rem 0.5rem;
+  top: 100%;
+  position: absolute;
+  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--Border);
+  z-index: 1;
+  overflow-y: scroll;
+  background: var(--Foreground);
+  .NotificationShade {
+    list-style: none;
+    padding-inline-start: 0;
+    li {
+      border-bottom: 1px solid white;
+      padding-top: 1rem;
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      img {
+        display: none;
+      }
+    }
+  }
+}
+.alertArea.open {
+  display: block;
+}
+.Active path {
+  color: #3367d6;
 }

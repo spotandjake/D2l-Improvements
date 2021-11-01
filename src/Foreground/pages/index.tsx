@@ -18,6 +18,7 @@ const Application = () => {
       case /\/d2l\/home\/([^/]*)$/.test(pathname): {
         const id =
           pathname.match(/\/d2l\/home\/(?<id>[^/]*)$/)?.groups?.id || '';
+        brightSpace.cid = id;
         setContent(
           <ClassRoom brightSpace={brightSpace} Route={route} ClassId={id} />
         );
@@ -26,6 +27,7 @@ const Application = () => {
       }
       case pathname == '/d2l/home':
       default:
+        brightSpace.cid = '';
         setContent(<ClassList brightSpace={brightSpace} Route={route} />);
         console.log(window.location.pathname);
         setPageTitle('Homepage - ClassList');

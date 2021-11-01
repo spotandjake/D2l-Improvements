@@ -1,4 +1,4 @@
-- [ ] Fix Page Title
+- [x] Fix Page Title
 - [ ] Stream
   - [x] Sort Stream By Date's
   - [x] Content Filters
@@ -56,6 +56,11 @@
     - [ ] Search Suggestions / autocomplete
     - [ ] make a full search framework
   - [ ] Notifications
+    - [x] Make Watcher to watch for new notifications
+    - [x] make shade
+    - [x] Style Shade
+    - [ ] Find the data for messages
+    - [ ] find some way to fetch the notifications as not html
   - [ ] Aside
   - [ ] Settings
 - [ ] Routing with the filters

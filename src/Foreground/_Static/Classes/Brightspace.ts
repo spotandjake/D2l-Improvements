@@ -10,7 +10,8 @@ class BrightSpace {
     le: '1.0.0',
     lp: '1.0.0',
     lr: '1.0.0'
-  }
+  };
+  public cid = '';
   public token = '';
   public uid = '';
   constructor() {
@@ -36,7 +37,7 @@ class BrightSpace {
     // TODO: Initialize Sub Api's
   }
   // TODO: Fetch Override
-  async _fetch(route: string, options: RequestInit={}) {
+  async _fetch(route: string, options: RequestInit = {}) {
     if (route.startsWith('/')) route = `https://durham.elearningontario.ca/d2l${route}`; // Testing
     options.headers = {
       'content-type': 'application/x-www-form-urlencoded, application/json',
@@ -47,7 +48,7 @@ class BrightSpace {
     return response.json();
   }
   // TODO: Routes
-  async _getToken(refresh=false) {
+  async _getToken(refresh = false) {
     if (refresh || this.token == '') {
       const response = await this._fetch('/lp/auth/oauth2/token', {
         headers: {

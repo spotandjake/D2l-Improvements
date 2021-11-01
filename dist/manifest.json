@@ -26,18 +26,18 @@
   "web_accessible_resources": [
     "Foreground/404.html",
     "Foreground/index.html",
-    "Foreground/_next/static/chunks/671-6c927d6d845ae87c.js",
+    "Foreground/_next/static/chunks/869-b39d5f7e67d4c976.js",
     "Foreground/_next/static/chunks/framework-3daaec8ba18710c1.js",
     "Foreground/_next/static/chunks/main-96629e201d13f0a3.js",
-    "Foreground/_next/static/chunks/pages/index-8b3658035af69375.js",
+    "Foreground/_next/static/chunks/pages/index-fbff74a4838726ff.js",
     "Foreground/_next/static/chunks/pages/_app-18afb629f4d79264.js",
     "Foreground/_next/static/chunks/pages/_error-9ec226e1e9b3ed2c.js",
     "Foreground/_next/static/chunks/polyfills-a40ef1678bae11e696dba45124eadd70.js",
     "Foreground/_next/static/chunks/webpack-c8b64a93ca452ddc.js",
     "Foreground/_next/static/css/03154faab8951e50.css",
-    "Foreground/_next/static/css/c657f1d782030bd2.css",
-    "Foreground/_next/static/nCZ5wFK5n_9LKdr9bIq8j/_buildManifest.js",
-    "Foreground/_next/static/nCZ5wFK5n_9LKdr9bIq8j/_middlewareManifest.js",
-    "Foreground/_next/static/nCZ5wFK5n_9LKdr9bIq8j/_ssgManifest.js"
+    "Foreground/_next/static/css/13dbe9203c45ad90.css",
+    "Foreground/_next/static/gXWK9Dz8fZl2myh4NnzN2/_buildManifest.js",
+    "Foreground/_next/static/gXWK9Dz8fZl2myh4NnzN2/_middlewareManifest.js",
+    "Foreground/_next/static/gXWK9Dz8fZl2myh4NnzN2/_ssgManifest.js"
   ]
 }
