@@ -63,6 +63,8 @@
     - [ ] find some way to fetch the notifications as not html
   - [ ] Aside
   - [ ] Settings
+    - [ ] Dropdown
+    - [ ] 
 - [ ] Routing with the filters
 - [x] Move card open from being a react state to a css thing
 - [x] Font's

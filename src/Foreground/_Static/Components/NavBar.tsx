@@ -87,6 +87,7 @@ const NavBar = ({ brightSpace }: props) => {
         );
       } else if (viewType == AlertShadeState.Profile) {
         // Add the settings ui
+        // TODO: make all of these work
         setAlertContent(
           <ul className={styles.dropDown}>
             <li><button>Disable Extension</button></li>
