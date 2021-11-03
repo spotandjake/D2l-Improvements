@@ -48,8 +48,6 @@
 }
 .alertArea {
   display: none;
-  min-height: 30rem;
-  width: 25rem;
   padding: 1rem;
   margin: -0.25rem 0.5rem;
   top: 100%;
@@ -59,6 +57,9 @@
   z-index: 1;
   overflow-y: scroll;
   background: var(--Foreground);
+  section, .NotificationShade {
+    width: 20rem;
+  }
   .NotificationShade {
     list-style: none;
     padding-inline-start: 0;
@@ -76,6 +77,33 @@
       }
       img {
         display: none;
+      }
+    }
+  }
+  .dropDown {
+    padding: 0;
+    list-style-type: none;
+    li {
+      padding: .5rem 0;
+    }
+    button, a {
+      padding: 0;
+      display: inline-block;
+      border: none;
+      margin: 0;
+      text-decoration: none;
+      background: none;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: background 250ms ease-in-out, 
+                  transform 150ms ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      &:hover {
+        color: #3367d6;
       }
     }
   }

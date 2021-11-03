@@ -18,10 +18,10 @@ const enum AlertShadeState {
   Mail = 'Mail',
   Message = 'Message',
   Notification = 'Alert',
+  Profile = 'Profile',
   Closed = 'Closed'
 }
 // Loader Function
-// TODO: add toggle for notification viewers
 // TODO: add search
 // TODO: make aside button work
 const parseResponse = async (response) => JSON.parse((await response.text()).trim().substr(9));
@@ -76,8 +76,34 @@ const NavBar = ({ brightSpace }: props) => {
         // Parse the html content
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(res.Payload.Html, 'text/html');
-        setAlertContent(<div className={styles.NotificationShade} dangerouslySetInnerHTML={{__html: htmlDoc.querySelector('.vui-list').innerHTML }}></div>);
-      } else setAlertContent(<Loader />);
+        setAlertContent(
+          <>
+            <h2>{alertState}</h2>
+            <hr />
+            <div>
+              <div className={styles.NotificationShade} dangerouslySetInnerHTML={{__html: htmlDoc.querySelector('.vui-list').innerHTML }}></div>
+            </div>
+          </>
+        );
+      } else if (viewType == AlertShadeState.Profile) {
+        // Add the settings ui
+        setAlertContent(
+          <ul className={styles.dropDown}>
+            <li><button>Disable Extension</button></li>
+            <li><button>Profile</button></li>
+            <li><button>Settings</button></li>
+            <li><a href='https://durham.elearningontario.ca/d2l/logout'>Log Out</a></li>
+          </ul>
+        );
+      } else {
+        setAlertContent(<>
+          <h2>{alertState}</h2>
+          <hr />
+          <div>
+            <Loader />
+          </div>
+        </>);
+      }
     }
   };
   // Stuff
@@ -125,7 +151,7 @@ const NavBar = ({ brightSpace }: props) => {
               viewBox="0 0 24 24"
             />
           </IconButton>
-          <IconButton aria-label="Profile" className={styles.IconButton}>
+          <IconButton aria-label="Profile" className={styles.IconButton} onClick={() => click(AlertShadeState.Profile)}>
             <picture className={styles.Icon}>
               <img
                 src={
@@ -135,9 +161,7 @@ const NavBar = ({ brightSpace }: props) => {
             </picture>
           </IconButton>
           <div className={[ styles.alertArea, alertState == AlertShadeState.Closed ? '' : styles.open ].join(' ')}>
-            <h2>{alertState}</h2>
-            <hr />
-            <div>{alertContent}</div>
+            {alertContent}
           </div>
         </div>
       </ClickAwayListener>
