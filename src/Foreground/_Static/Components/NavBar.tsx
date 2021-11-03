@@ -90,7 +90,7 @@ const NavBar = ({ brightSpace }: props) => {
         // TODO: make all of these work
         setAlertContent(
           <ul className={styles.dropDown}>
-            <li><button>Disable Extension</button></li>
+            <li><button onClick={() => { localStorage.setItem('Extension-Disabled', 'true');location.reload()}}>Disable Extension</button></li>
             <li><button>Profile</button></li>
             <li><button>Settings</button></li>
             <li><a href='https://durham.elearningontario.ca/d2l/logout'>Log Out</a></li>
