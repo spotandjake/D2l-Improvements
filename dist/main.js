@@ -1,9 +1,9 @@
 !function() {
-  function e(e, t, n, r) {
+  function e(e, t, n, i) {
     t = t || function(e) {
       return null == e ? '' : String(e).replace(a, s);
     };
-    var i = {
+    var r = {
       '&': '&amp;',
       '<': '&lt;',
       '>': '&gt;',
@@ -11,24 +11,28 @@
       '\'': '&#39;'
     }, a = /[&<>'"]/g;
     function s(e) {
-      return i[e] || e;
+      return r[e] || e;
     }
     var o = '';
     function c(e) {
       null != e && (o += e);
     }
-    return c('<div class="StreamCard" id="'), c(e.Id), c('" Category="'), c(e.Category), 
-    c('" _url="'), c(e._url), c('">\r\n  <div class="StreamCardIcon '), c(e.CompletionType), 
-    c('">\r\n    <span class="material-icons">\r\n      '), 'Info' == e.type ? c('\r\n        account_circle\r\n      ') : 'Content' == e.type ? c('\r\n        class\r\n      ') : 'Assignment' == e.type ? c('\r\n        assignment\r\n      ') : c('\r\n        article\r\n      '), 
-    c('\r\n    </span>\r\n  </div>\r\n  <div class="StreamCardTitle">\r\n    <h1>'), 
-    c(t(e.Title)), c('</h1>\r\n    <h3>'), c(t(e.StartDate)), c('</h3>\r\n  </div>\r\n  <div class="StreamCardBody">\r\n    '), 
-    'Assignment' == e.type ? c('\r\n      <div class="FileSubmit">\r\n        <div class="UploadedFiles"></div>\r\n        <div class="FileForm">\r\n          <textarea class="FileFormDescription"></textarea>\r\n          <button class="FileFormAdd">Add or create</button>\r\n          <button class="FileFormSubmit">Submit</button>\r\n        </div>\r\n      </div>\r\n    ') : 'Quiz' == e.type ? (c('\r\n      <div>\r\n        <div>\r\n          '), 
-    c(e.Body.Html), c('\r\n        </div>\r\n        <div>\r\n          <a class="btn" href="'), 
-    c(e._url), c('">Start Quiz</a>\r\n        </div>\r\n      </div>\r\n    ')) : 'Content' == e.type ? c('\r\n      <div class="Loader">\r\n        <div class="lds-grid">\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n          <div></div>\r\n        </div>\r\n      </div>\r\n    ') : (c('\r\n      '), 
-    c(e.Body.Html), c('\r\n    ')), c('\r\n  </div>\r\n</div>'), o;
+    if (c('<div class="StreamCard" id="'), c(e.Id), c('" Category="'), c(e.Category), 
+    c('" _url="'), c(e._url), c('">\n  <div class="StreamCardIcon '), c(e.CompletionType), 
+    c('">\n    <span class="material-icons">\n      '), 'Info' == e.type ? c('\n        account_circle\n      ') : 'Content' == e.type ? c('\n        class\n      ') : 'Assignment' == e.type ? c('\n        assignment\n      ') : c('\n        article\n      '), 
+    c('\n    </span>\n  </div>\n  <div class="StreamCardTitle">\n    <h1>'), c(t(e.Title)), 
+    c('</h1>\n    <h3>'), c(t(e.StartDate)), c('</h3>\n  </div>\n  <div class="StreamCardBody">\n    '), 
+    'Assignment' == e.type) c('\n      <div class="FileSubmit">\n        <div class="UploadedFiles"></div>\n        <div class="FileForm">\n          <span>10/10</span>\n          <hr />\n          <textarea class="FileFormDescription"></textarea>\n          <button class="FileFormAdd">Add or create</button>\n          <button class="FileFormSubmit">Submit</button>\n        </div>\n      </div>\n    '); else if ('Quiz' == e.type) c('\n      <div>\n        <div>\n          '), 
+    c(e.Body.Html), c('\n        </div>\n        <div>\n          <a class="btn" href="'), 
+    c(e._url), c('">Start Quiz</a>\n        </div>\n      </div>\n    '); else if ('Content' == e.type) {
+      c('\n      <div class="Loader">\n        <div class="lds-grid">\n          ');
+      for (let e = 0; e < 9; e++) c('\n            <div></div>\n          ');
+      c('\n        </div>\n      </div>\n    ');
+    } else c('\n      '), c(e.Body.Html), c('\n    ');
+    return c('\n  </div>\n</div>\n'), o;
   }
   class t {
-    constructor(e, t, n, r, i) {
+    constructor(e, t, n, i, r) {
       this.Handler = new Map, window.postMessage({
         type: 'FROM_EXTENSION',
         action: 'LOAD',
@@ -36,8 +40,8 @@
           developerKey: e,
           clientId: t,
           appId: n,
-          scope: r,
-          mimeTypes: i
+          scope: i,
+          mimeTypes: r
         }
       }, '*'), window.addEventListener('message', (e => {
         if (e.source == window && e.data.type && 'FROM_PAGE' == e.data.type) switch (e.data.action) {
@@ -74,21 +78,20 @@
       }));
     }
   }
-  const n = 'xxBOUNDARYxx', r = (e, t) => {
-    const r = `--${n}--\r\n`, i = `--${n}\r\n`;
-    let a = `${i}Content-Type: application/json\r\n\r\n${JSON.stringify(e)}\r\n`;
+  const n = 'xxBOUNDARYxx', i = (e, t) => {
+    const i = `--${n}--\r\n`, r = `--${n}\r\n`;
+    let a = `${r}Content-Type: application/json\r\n\r\n${JSON.stringify(e)}\r\n`;
     return t.forEach((({fileName: e, fileType: t, fileContent: n}) => {
-      a += `${i}Content-Disposition: form-data; name=""; filename="${e}"\r\nContent-Type: ${t}\r\n\r\n${n}\r\n${r}`;
+      a += `${r}Content-Disposition: form-data; name=""; filename="${e}"\r\nContent-Type: ${t}\r\n\r\n${n}\r\n${i}`;
     })), a;
-  }, i = 'HOME', a = 'STREAM', s = new class {
+  }, r = 'HOME', a = 'STREAM', s = new class {
     constructor() {
-      this.organizationURL = 'https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/', 
-      this.location = i, this.token, this.data = {}, this.uid, this.cid, this.cancel, 
-      this.apiVersion = {};
+      this.orgID = 'bc59e98c-eabc-4d42-98e1-edfe93518966', this.location = r, this.token, 
+      this.data = {}, this.uid, this.cid, this.cancel, this.apiVersion = {};
     }
     async start(e) {
       this.data = e, this.cid = e.orgUnitId, await this._apiVersion(), setInterval((() => this.getToken(!0)), 3e5);
-      let t = i;
+      let t = r;
       switch (!0) {
        case /\/d2l\/home\/[^/]+$/.test(window.location.pathname):
         t = a, this.cid = window.location.pathname.replace('/d2l/home/', '');
@@ -96,7 +99,7 @@
 
        case '/d2l/home' == window.location.pathname:
        default:
-        t = i;
+        t = r;
       }
       this.setPage(t);
     }
@@ -125,23 +128,21 @@
     setPage(s) {
       const o = document.getElementById('Content').classList;
       switch ('function' == typeof this.cancel && this.cancel(), s) {
-       case i:
+       case r:
         for (this.cid = null, this.cancel = (async e => {
-          const t = (new Date).valueOf(), n = document.getElementById('main'), r = await fetch(`https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${e.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
+          const t = (new Date).valueOf(), n = document.getElementById('main'), i = await fetch(`https://${e.orgID}.enrollments.api.brightspace.com/users/${e.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
             headers: {
               authorization: `Bearer ${await e.getToken()}`
             }
-          }).then((e => e.json())), i = await Promise.all(r.entities.map((async ({href: n}) => {
-            const r = await fetch(n, {
+          }).then((e => e.json())), r = await Promise.all(i.entities.map((async ({href: n}) => {
+            const i = await fetch(n, {
               headers: {
                 authorization: `Bearer ${await e.getToken()}`
-              },
-              method: 'GET'
-            }), i = await r.json(), a = await fetch(i.links[1].href, {
+              }
+            }), r = await i.json(), a = await fetch(r.links[1].href, {
               headers: {
                 authorization: `Bearer ${await e.getToken()}`
-              },
-              method: 'GET'
+              }
             }), s = await a.json(), o = await fetch(s.entities[2].href).then((e => e.json())).catch((async () => await fetch(s.entities[2].href, {
               headers: {
                 authorization: `Bearer ${await e.getToken()}`
@@ -150,16 +151,16 @@
             return {
               name: l,
               disabled: new Date(c).valueOf() < t,
-              href: s.links[0].href.replace('https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/'),
+              href: s.links[0].href.replace(`https://${e.orgID}.folio.api.brightspace.com/organizations/`, 'https://durham.elearningontario.ca/d2l/home/'),
               picture: o.links ? o.links[2].href : o,
               Text: `Closes | ${new Date(c).toDateString()}`
             };
           })));
-          n.innerHTML = function(e, t, n, r) {
+          n.innerHTML = function(e, t, n, i) {
             t = t || function(e) {
               return null == e ? '' : String(e).replace(a, s);
             };
-            var i = {
+            var r = {
               '&': '&amp;',
               '<': '&lt;',
               '>': '&gt;',
@@ -167,20 +168,19 @@
               '\'': '&#39;'
             }, a = /[&<>'"]/g;
             function s(e) {
-              return i[e] || e;
+              return r[e] || e;
             }
             var o = '';
             function c(e) {
               null != e && (o += e);
             }
-            return c('<section class="ClassContainer Search" id="ClassContainer">\r\n  '), e.classes.forEach((e => {
-              c('\r\n    <div class="classCard" '), c(t(e.disabled ? 'disabled' : '')), c(' class_link="'), 
-              c(t(e.href)), c('">\r\n      <picture>\r\n        <img src="'), c(e.picture), c('">\r\n      </picture>\r\n      <div class="classCardContent">\r\n        <h4>'), 
-              c(t(e.name)), c('</h4>\r\n        <h6>'), c(t(e.disabled ? 'Closed' : e.Text)), 
-              c('</h6>\r\n      </div>\r\n    </div>\r\n  ');
-            })), c('\r\n</section>'), o;
+            return c('<section class="ClassContainer Search" id="ClassContainer">\n  '), e.classes.forEach((e => {
+              c('\n    <div class="classCard" '), c(t(e.disabled ? 'disabled' : '')), c(' class_link="'), 
+              c(t(e.href)), c('">\n      <picture>\n        <img src="'), c(e.picture), c('">\n      </picture>\n      <div class="classCardContent">\n        <h4>'), 
+              c(t(e.name)), c('</h4>\n        <h6>'), c(t(e.disabled ? 'Closed' : e.Text)), c('</h6>\n      </div>\n    </div>\n  ');
+            })), c('\n</section>'), o;
           }({
-            classes: i
+            classes: r
           });
           const a = e => {
             window.location.href = e.getAttribute('class_link');
@@ -197,23 +197,19 @@
         break;
 
        case a:
-        for (this.cancel = (async i => {
-          const a = document.getElementById('main'), s = await fetch(`${i.organizationURL}${i.cid}`, {
+        for (this.cancel = (async r => {
+          const a = document.getElementById('main'), s = await fetch(`https://${r.orgID}.organizations.api.brightspace.com/${r.cid}`, {
             headers: {
               Accept: 'application/vnd.siren+json',
-              authorization: `Bearer ${await i.getToken()}`
+              authorization: `Bearer ${await r.getToken()}`
             }
           }), o = await s.json(), c = await fetch(o.entities[2].href), l = await c.json().catch((() => 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658')), d = {
             name: o.properties.name,
             description: o.properties.description,
-            picture: l.links ? l.links[2].href : l,
-            teacher: {
-              name: 'TODO',
-              picture: 'https://durham.elearningontario.ca/d2l/img/0/Framework.UserProfileBadge.actProfileDaylight100.png?v=20.21.8.31658'
-            }
+            picture: l.links ? l.links[2].href : l
           }, {html: h, assignments: u} = await (async t => {
-            const n = [], r = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/news/`);
-            (await r.json()).forEach((t => {
+            const n = [], i = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/news/`);
+            (await i.json()).forEach((t => {
               t.StartDate = new Date(t.StartDate).toDateString(), t.Category = 'ChipFilterHome', 
               t.type = 'Info', n.push({
                 date: new Date(t.StartDate).valueOf(),
@@ -223,7 +219,7 @@
                 })
               });
             }));
-            const i = await fetch(`/d2l/api/le/unstable/${t.cid}/content/userprogress/?pageSize=99999`), a = await i.json(), s = async e => {
+            const r = await fetch(`/d2l/api/le/unstable/${t.cid}/content/userprogress/?pageSize=99999`), a = await r.json(), s = async e => {
               const n = [];
               return await Promise.all(e.map((async e => {
                 switch (e.Type) {
@@ -236,15 +232,15 @@
 
                  case 0:
                   {
-                    const r = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/content/modules/${e.Id}/structure/`), i = await r.json();
-                    n.push(...await s(i));
+                    const i = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/content/modules/${e.Id}/structure/`), r = await i.json();
+                    n.push(...await s(r));
                     break;
                   }
                 }
               }))), n;
             }, o = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/content/root/`), c = await o.json(), l = await s(c);
             for (const t of l) {
-              const r = 1 == t.ActivityType ? `${window.location.origin}${t.Url}` : t.Url;
+              const i = 1 == t.ActivityType ? `${window.location.origin}${t.Url}` : t.Url;
               n.push({
                 date: new Date(t.LastModifiedDate).valueOf(),
                 element: e({
@@ -254,41 +250,42 @@
                   Title: t.Title,
                   CompletionType: t.isRead ? 'OnSubmission' : 'Unread',
                   StartDate: new Date(t.LastModifiedDate).toDateString(),
-                  _url: r
+                  _url: i
                 })
               });
             }
             const d = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/dropbox/folders/`), h = await d.json();
-            h.forEach((t => {
-              n.push({
-                date: new Date(t.DueDate).valueOf(),
+            for (const i of h) {
+              const r = i.GradeItemId ? await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/grades/${i.GradeItemId}/values/${t.uid}`).then((e => e.json())).catch((() => 'Mark could not be retrieved')) : 'Not Yet Marked';
+              console.log(r), n.push({
+                date: new Date(i.DueDate).valueOf(),
                 element: e({
-                  Id: t.Id,
+                  Id: i.Id,
                   Category: 'ChipFilterAssignments',
                   type: 'Assignment',
-                  Title: t.Name,
-                  CompletionType: [ 'OnSubmission', 'DueDate', 'OnSubmission', 'OnSubmission' ][t.CompletionType],
-                  StartDate: new Date(t.DueDate).toDateString(),
+                  Title: i.Name,
+                  CompletionType: [ 'OnSubmission', 'DueDate', 'OnSubmission', 'OnSubmission' ][i.CompletionType],
+                  StartDate: new Date(i.DueDate).toDateString(),
                   Body: {
                     Html: ''
                   }
                 })
               });
-            }));
+            }
             const u = await fetch(`/d2l/api/le/${t.apiVersion.le}/${t.cid}/quizzes/`), m = await u.json();
-            for (const r of m.Objects) n.push({
-              date: new Date(r.DueDate).valueOf(),
+            for (const i of m.Objects) n.push({
+              date: new Date(i.DueDate).valueOf(),
               element: e({
-                Id: r.QuizId,
+                Id: i.QuizId,
                 Category: 'ChipFilterQuizzes',
                 type: 'Quiz',
-                Title: r.Name,
+                Title: i.Name,
                 CompletionType: 'OnSubmission',
-                StartDate: new Date(r.DueDate).toDateString(),
+                StartDate: new Date(i.DueDate).toDateString(),
                 Body: {
-                  Html: r.Description.Text.Html
+                  Html: i.Description.Text.Html
                 },
-                _url: `/d2l/lms/quizzing/user/quiz_summary.d2l?qi=${r.QuizId}&ou=${t.cid}`
+                _url: `/d2l/lms/quizzing/user/quiz_summary.d2l?qi=${i.QuizId}&ou=${t.cid}`
               })
             });
             return {
@@ -296,12 +293,12 @@
               assignments: h,
               content: l
             };
-          })(i);
-          a.innerHTML = function(e, t, n, r) {
+          })(r);
+          a.innerHTML = function(e, t, n, i) {
             t = t || function(e) {
               return null == e ? '' : String(e).replace(a, s);
             };
-            var i = {
+            var r = {
               '&': '&amp;',
               '<': '&lt;',
               '>': '&gt;',
@@ -309,15 +306,16 @@
               '\'': '&#39;'
             }, a = /[&<>'"]/g;
             function s(e) {
-              return i[e] || e;
+              return r[e] || e;
             }
             var o = '';
             function c(e) {
               null != e && (o += e);
             }
-            return c('\x3c!-- Top --\x3e\r\n<section class="ClassPicture">\r\n  <picture>\r\n    <img src="https://s.brightspace.com/course-images/images/590cea69-f3f4-47aa-88c1-e69b9c5fd86f/banner-wide-low-density-max-size.jpg" />\r\n  </picture>\r\n  <div class="ClassPictureContent">\r\n    <h1>'), 
-            c(t(e.classData.name)), c('</h1>\r\n    <h2>'), c(t(e.classData.description)), c('</h2>\r\n    <h4>Meet Link: <a>Link</a></h4>\r\n  </div>\r\n</section>\r\n<div class="StreamFilter" id="ChipFilters">\r\n  <div class="ChipFilter Active" id="ChipFilterHome"><span class="material-icons chipIcon">home</span><p>Stream</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterContent"><span class="material-icons chipIcon">source</span><p>Content</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterDiscussions"><span class="material-icons chipIcon">chat</span><p>Discussions</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterAssignments"><span class="material-icons chipIcon">assignment</span><p>Assignments</p></div>\r\n  <div class="ChipFilter Active" id="ChipFilterQuizzes"><span class="material-icons chipIcon">quiz</span><p>Quizzes</p></div>\r\n</div>\r\n\x3c!-- Stream Announcements --\x3e\r\n<section class="StreamCards Search Filter">'), 
-            c(e.announcements), c('</section>'), o;
+            return c('\x3c!-- Top --\x3e\n<section class="ClassPicture">\n  <picture>\n    <img src="'), 
+            c(t(e.classData.picture)), c('" />\n  </picture>\n  <div class="ClassPictureContent">\n    <h1>'), 
+            c(t(e.classData.name)), c('</h1>\n    <h2>'), c(t(e.classData.description)), c('</h2>\n  </div>\n</section>\n<div class="StreamFilter" id="ChipFilters">\n  <div class="ChipFilter Active" id="ChipFilterHome"><span class="material-icons chipIcon">home</span><p>Stream</p></div>\n  <div class="ChipFilter Active" id="ChipFilterContent"><span class="material-icons chipIcon">source</span><p>Content</p></div>\n  <div class="ChipFilter Active" id="ChipFilterDiscussions"><span class="material-icons chipIcon">chat</span><p>Discussions</p></div>\n  <div class="ChipFilter Active" id="ChipFilterAssignments"><span class="material-icons chipIcon">assignment</span><p>Assignments</p></div>\n  <div class="ChipFilter Active" id="ChipFilterQuizzes"><span class="material-icons chipIcon">quiz</span><p>Quizzes</p></div>\n</div>\n\x3c!-- Stream Announcements --\x3e\n<section class="StreamCards Search Filter">'), 
+            c(e.announcements), c('</section>\n'), o;
           }({
             announcements: h,
             classData: d
@@ -325,38 +323,36 @@
           const m = async e => {
             if (e.classList.contains('Active')) e.classList.remove('Active'); else if (e.classList.add('Active'), 
             'ChipFilterContent' == e.getAttribute('Category')) {
-              e.querySelector('.StreamCardIcon').classList.contains('Unread') && (await fetch(`/d2l/api/le/unstable/${i.cid}/content/topics/${e.id}/view`, {
+              e.querySelector('.StreamCardIcon').classList.contains('Unread') && (await fetch(`/d2l/api/le/unstable/${r.cid}/content/topics/${e.id}/view`, {
                 headers: {
-                  authorization: `Bearer ${await i.getToken()}`
+                  authorization: `Bearer ${await r.getToken()}`
                 },
                 method: 'POST'
               }), e.querySelector('.StreamCardIcon').classList.remove('Unread'), e.querySelector('.StreamCardIcon').classList.add('OnSubmission')), 
               e.classList.add('Active');
               const t = e.getAttribute('_url');
               let n = `<a class="btn" href="${t}">View Content</a>`;
-              if (/\.(docx|jpg|mp4|pdf|png|gif|doc|xlsm|xlsx|xls|DOC|ppt|pptx|xlw)$/i.test(t) || /docs\.google\.com/.test(t)) if (/\.(jpg)/i.test(t)) n = `<img width="100%" src="/d2l/api/le/${i.apiVersion.le}/${i.cid}/content/topics/${e.id}/file?stream=true">`; else if (/\.(mp4)/i.test(t)) n = `\n            <video width="100%" height="auto" controls="">\n              <source src="${t}">\n              Your browser does not support the video tag.\n            </video>`; else if (/\.(xlsm|xlsx|xls|pptx|xlw)/i.test(t) || /docs\.google\.com/.test(t)) n = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${t}">${n}</iframe>`; else {
-                const t = await fetch(`/d2l/le/content/${i.cid}/topics/files/download/${e.id}/DirectFileTopicDownload`);
-                n = `<iframe class="StreamIframe" allow="encrypted-media *;" width="100%" scrolling="no" src="${URL.createObjectURL(await t.blob())}">${n}</iframe>`;
-              } else if (t.includes('www.youtube.com')) {
-                const e = new URL(t).searchParams.get('v');
-                n = `<object data="https://www.youtube.com/embed/${e}" width="100%" height="auto">\n            <embed src="https://www.youtube.com/embed/${e}" width="100%" height="auto"> </embed>\n            Error: Embedded data could not be displayed.\n          </object>`;
-              } else try {
-                const e = await fetch(t), r = await e.blob();
-                switch (r.type) {
-                 case 'text/html':
-                  n = `<object data="${t}" width="100%" height="auto">\n                  <embed src="${t}" width="100%" height="auto"> </embed>\n                  Error: Embedded data could not be displayed.\n                </object>`;
-                  break;
+              switch (!0) {
+               case /docs\.google\.com/i.test(t):
+                n = `<iframe allow="encrypted-media *;" width="100%" scrolling="no" src="${t}"></iframe>`;
+                break;
 
-                 case 'application/octet-stream':
-                 case 'application/x-msaccess':
-                  n = `<a class="btn" href="${t}">Dowload Content</a>`;
-                  break;
+               case /www\.youtube\.com/i.test(t):
+                n = `<object data="https://www.youtube.com/embed/${new URL(t).searchParams.get('v')}" type="application/pdf" width="100%" height="auto">\n            <embed src="https://www.youtube.com/embed/${new URL(t).searchParams.get('v')} type="application/pdf"></embed></object>`;
+                break;
 
-                 default:
-                  console.log(r), console.log(t), console.log('================================================================');
-                }
-              } catch (e) {
-                console.log('There was an error opening this');
+               case /\.(doc|docm|docm|docx|docx|dotx|potx|ppt|pptm|pptm|pptx|xlw|xls|xlsm|xlsm|xlsx|xltx)/i.test(t):
+                break;
+
+               case /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)/i.test(t):
+                n = `<picture class="contentMedia"><img src="${t}" /></picture>`;
+                break;
+
+               case /\.(3gp|aac|flac|mpg|mpeg|mp3|mp4|m4a|m4v|m4p|oga|ogg|ogv|ogg|mov|wav|webm)/i.test(t):
+                n = `<video class="contentMedia" controls><source src="${t}" /></video>`;
+
+               case /\.(pdf)/i.test(t):
+               case _content.startsWith('/') && /\.(html|htm)/i.test(t):
               }
               e.querySelector('.StreamCardBody').innerHTML = n;
             }
@@ -369,11 +365,11 @@
                 if ('picked' == t.action) {
                   const n = e.querySelector('.UploadedFiles');
                   t.docs.forEach((async e => {
-                    n.insertAdjacentHTML('beforeend', function(e, t, n, r) {
+                    n.insertAdjacentHTML('beforeend', function(e, t, n, i) {
                       t = t || function(e) {
                         return null == e ? '' : String(e).replace(a, s);
                       };
-                      var i = {
+                      var r = {
                         '&': '&amp;',
                         '<': '&lt;',
                         '>': '&gt;',
@@ -381,15 +377,15 @@
                         '\'': '&#39;'
                       }, a = /[&<>'"]/g;
                       function s(e) {
-                        return i[e] || e;
+                        return r[e] || e;
                       }
                       var o = '';
                       function c(e) {
                         null != e && (o += e);
                       }
                       return c('<div class="UploadedFile" onClick="window.open(\''), c(e.href), c('\');" documentId="'), 
-                      c(e.documentId), c('">\r\n  <picture>\r\n    <img src="'), c(e.thumbnail), c('" />\r\n  </picture>\r\n  <span class="FileTitle">'), 
-                      c(t(e.name)), c('</span>\r\n  <span class="FileRemove material-icons" onClick="this.parentNode.remove();event.stopPropagation();">close</span>\r\n</div>'), 
+                      c(e.documentId), c('">\n  <picture>\n    <img src="'), c(e.thumbnail), c('" />\n  </picture>\n  <span class="FileTitle">'), 
+                      c(t(e.name)), c('</span>\n  <span class="FileRemove material-icons" onClick="this.parentNode.remove();event.stopPropagation();">close</span>\n</div>'), 
                       o;
                     }({
                       name: e.name,
@@ -415,13 +411,13 @@
                 body: e.body
               }))), a = e.querySelector('.FileFormDescription').value;
               e.querySelector('.UploadedFiles').innerHTML = '', e.querySelector('.FileFormDescription').value = '';
-              const s = await fetch(`/d2l/api/le/1.41/${i.cid}/dropbox/folders/${e.id}/submissions/mysubmissions/`, {
+              const s = await fetch(`/d2l/api/le/1.41/${r.cid}/dropbox/folders/${e.id}/submissions/mysubmissions/`, {
                 method: 'POST',
                 headers: {
-                  authorization: `Bearer ${await i.getToken()}`,
+                  authorization: `Bearer ${await r.getToken()}`,
                   'Content-Type': `multipart/mixed;boundary=${n}`
                 },
-                body: r({
+                body: i({
                   Text: a,
                   Html: ''
                 }, t.length > 0 ? t : [ {
@@ -506,18 +502,18 @@
     }
   }
   function v(e) {
-    let t = null, n = null, r = null, i = 1;
-    if (c(e) || o(e)) r = e, t = y(e), n = w(e); else {
+    let t = null, n = null, i = null, r = 1;
+    if (c(e) || o(e)) i = e, t = y(e), n = w(e); else {
       if (!g.call(e, 'name')) throw new Error('Missing name property in key');
       const a = e.name;
-      if (r = a, g.call(e, 'weight') && (i = e.weight, i <= 0)) throw new Error((e => `Property 'weight' in key '${e}' must be a positive integer`)(a));
+      if (i = a, g.call(e, 'weight') && (r = e.weight, r <= 0)) throw new Error((e => `Property 'weight' in key '${e}' must be a positive integer`)(a));
       t = y(a), n = w(a);
     }
     return {
       path: t,
       id: n,
-      weight: i,
-      src: r
+      weight: r,
+      src: i
     };
   }
   function y(e) {
@@ -540,8 +536,8 @@
     distance: 100,
     useExtendedSearch: !1,
     getFn: function(e, t) {
-      let n = [], r = !1;
-      const i = (e, t, a) => {
+      let n = [], i = !1;
+      const r = (e, t, a) => {
         if (u(e)) if (t[a]) {
           const s = e[t[a]];
           if (!u(s)) return;
@@ -552,12 +548,12 @@
               return '0' == t && 1 / e == -1 / 0 ? '-0' : t;
             }(e);
           }(s)); else if (o(s)) {
-            r = !0;
-            for (let e = 0, n = s.length; e < n; e += 1) i(s[e], t, a + 1);
-          } else t.length && i(s, t, a + 1);
+            i = !0;
+            for (let e = 0, n = s.length; e < n; e += 1) r(s[e], t, a + 1);
+          } else t.length && r(s, t, a + 1);
         } else n.push(e);
       };
-      return i(e, c(t) ? t.split('.') : t, 0), r ? n : n[0];
+      return r(e, c(t) ? t.split('.') : t, 0), i ? n : n[0];
     },
     ignoreLocation: !1,
     ignoreFieldNorm: !1
@@ -569,10 +565,10 @@
         const t = new Map, n = Math.pow(10, e);
         return {
           get(e) {
-            const r = e.match(x).length;
-            if (t.has(r)) return t.get(r);
-            const i = 1 / Math.sqrt(r), a = parseFloat(Math.round(i * n) / n);
-            return t.set(r, a), a;
+            const i = e.match(x).length;
+            if (t.has(i)) return t.get(i);
+            const r = 1 / Math.sqrt(i), a = parseFloat(Math.round(r * n) / n);
+            return t.set(i, a), a;
           },
           clear() {
             t.clear();
@@ -626,37 +622,37 @@
         i: t,
         $: {}
       };
-      this.keys.forEach(((t, r) => {
-        let i = this.getFn(e, t.path);
-        if (u(i)) if (o(i)) {
+      this.keys.forEach(((t, i) => {
+        let r = this.getFn(e, t.path);
+        if (u(r)) if (o(r)) {
           let e = [];
           const t = [ {
             nestedArrIndex: -1,
-            value: i
+            value: r
           } ];
           for (;t.length; ) {
-            const {nestedArrIndex: n, value: r} = t.pop();
-            if (u(r)) if (c(r) && !m(r)) {
+            const {nestedArrIndex: n, value: i} = t.pop();
+            if (u(i)) if (c(i) && !m(i)) {
               let t = {
-                v: r,
+                v: i,
                 i: n,
-                n: this.norm.get(r)
+                n: this.norm.get(i)
               };
               e.push(t);
-            } else o(r) && r.forEach(((e, n) => {
+            } else o(i) && i.forEach(((e, n) => {
               t.push({
                 nestedArrIndex: n,
                 value: e
               });
             }));
           }
-          n.$[r] = e;
-        } else if (!m(i)) {
+          n.$[i] = e;
+        } else if (!m(r)) {
           let e = {
-            v: i,
-            n: this.norm.get(i)
+            v: r,
+            n: this.norm.get(r)
           };
-          n.$[r] = e;
+          n.$[i] = e;
         }
       })), this.records.push(n);
     }
@@ -668,20 +664,20 @@
     }
   }
   function C(e, t, {getFn: n = b.getFn} = {}) {
-    const r = new S({
+    const i = new S({
       getFn: n
     });
-    return r.setKeys(e.map(v)), r.setSources(t), r.create(), r;
+    return i.setKeys(e.map(v)), i.setSources(t), i.create(), i;
   }
-  function k(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: r = 0, distance: i = b.distance, ignoreLocation: a = b.ignoreLocation} = {}) {
+  function k(e, {errors: t = 0, currentLocation: n = 0, expectedLocation: i = 0, distance: r = b.distance, ignoreLocation: a = b.ignoreLocation} = {}) {
     const s = t / e.length;
     if (a) return s;
-    const o = Math.abs(r - n);
-    return i ? s + o / i : o ? 1 : s;
+    const o = Math.abs(i - n);
+    return r ? s + o / r : o ? 1 : s;
   }
-  function M(e, t, n, {location: r = b.location, distance: i = b.distance, threshold: a = b.threshold, findAllMatches: s = b.findAllMatches, minMatchCharLength: o = b.minMatchCharLength, includeMatches: c = b.includeMatches, ignoreLocation: l = b.ignoreLocation} = {}) {
+  function M(e, t, n, {location: i = b.location, distance: r = b.distance, threshold: a = b.threshold, findAllMatches: s = b.findAllMatches, minMatchCharLength: o = b.minMatchCharLength, includeMatches: c = b.includeMatches, ignoreLocation: l = b.ignoreLocation} = {}) {
     if (t.length > 32) throw new Error('Pattern length exceeds max of 32.');
-    const d = t.length, h = e.length, u = Math.max(0, Math.min(r, h));
+    const d = t.length, h = e.length, u = Math.max(0, Math.min(i, h));
     let m = a, p = u;
     const g = o > 1 || c, f = g ? Array(h) : [];
     let v;
@@ -689,7 +685,7 @@
       let e = k(t, {
         currentLocation: v,
         expectedLocation: u,
-        distance: i,
+        distance: r,
         ignoreLocation: l
       });
       if (m = Math.min(e, m), p = v + d, g) {
@@ -700,26 +696,26 @@
     p = -1;
     let y = [], w = 1, x = d + h;
     const S = 1 << d - 1;
-    for (let r = 0; r < d; r += 1) {
+    for (let i = 0; i < d; i += 1) {
       let a = 0, o = x;
       for (;a < o; ) k(t, {
-        errors: r,
+        errors: i,
         currentLocation: u + o,
         expectedLocation: u,
-        distance: i,
+        distance: r,
         ignoreLocation: l
       }) <= m ? a = o : x = o, o = Math.floor((x - a) / 2 + a);
       x = o;
       let c = Math.max(1, u - o + 1), v = s ? h : Math.min(u + o, h) + d, b = Array(v + 2);
-      b[v + 1] = (1 << r) - 1;
+      b[v + 1] = (1 << i) - 1;
       for (let a = v; a >= c; a -= 1) {
         let s = a - 1, o = n[e.charAt(s)];
-        if (g && (f[s] = +!!o), b[a] = (b[a + 1] << 1 | 1) & o, r && (b[a] |= (y[a + 1] | y[a]) << 1 | 1 | y[a + 1]), 
+        if (g && (f[s] = +!!o), b[a] = (b[a + 1] << 1 | 1) & o, i && (b[a] |= (y[a + 1] | y[a]) << 1 | 1 | y[a + 1]), 
         b[a] & S && (w = k(t, {
-          errors: r,
+          errors: i,
           currentLocation: s,
           expectedLocation: u,
-          distance: i,
+          distance: r,
           ignoreLocation: l
         }), w <= m)) {
           if (m = w, p = s, p <= u) break;
@@ -727,10 +723,10 @@
         }
       }
       if (k(t, {
-        errors: r + 1,
+        errors: i + 1,
         currentLocation: u,
         expectedLocation: u,
-        distance: i,
+        distance: r,
         ignoreLocation: l
       }) > m) break;
       y = b;
@@ -741,33 +737,33 @@
     };
     if (g) {
       const e = function(e = [], t = b.minMatchCharLength) {
-        let n = [], r = -1, i = -1, a = 0;
+        let n = [], i = -1, r = -1, a = 0;
         for (let s = e.length; a < s; a += 1) {
           let s = e[a];
-          s && -1 === r ? r = a : s || -1 === r || (i = a - 1, i - r + 1 >= t && n.push([ r, i ]), 
-          r = -1);
+          s && -1 === i ? i = a : s || -1 === i || (r = a - 1, r - i + 1 >= t && n.push([ i, r ]), 
+          i = -1);
         }
-        return e[a - 1] && a - r >= t && n.push([ r, a - 1 ]), n;
+        return e[a - 1] && a - i >= t && n.push([ i, a - 1 ]), n;
       }(f, o);
       e.length ? c && (C.indices = e) : C.isMatch = !1;
     }
     return C;
   }
-  function B(e) {
+  function I(e) {
     let t = {};
-    for (let n = 0, r = e.length; n < r; n += 1) {
-      const i = e.charAt(n);
-      t[i] = (t[i] || 0) | 1 << r - n - 1;
+    for (let n = 0, i = e.length; n < i; n += 1) {
+      const r = e.charAt(n);
+      t[r] = (t[r] || 0) | 1 << i - n - 1;
     }
     return t;
   }
-  class I {
-    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: r = b.distance, includeMatches: i = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
+  class B {
+    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: i = b.distance, includeMatches: r = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
       if (this.options = {
         location: t,
         threshold: n,
-        distance: r,
-        includeMatches: i,
+        distance: i,
+        includeMatches: r,
         findAllMatches: a,
         minMatchCharLength: s,
         isCaseSensitive: o,
@@ -776,7 +772,7 @@
       const l = (e, t) => {
         this.chunks.push({
           pattern: e,
-          alphabet: B(e),
+          alphabet: I(e),
           startIndex: t
         });
       }, d = this.pattern.length;
@@ -799,12 +795,12 @@
         };
         return n && (t.indices = [ [ 0, e.length - 1 ] ]), t;
       }
-      const {location: r, distance: i, threshold: a, findAllMatches: s, minMatchCharLength: o, ignoreLocation: c} = this.options;
+      const {location: i, distance: r, threshold: a, findAllMatches: s, minMatchCharLength: o, ignoreLocation: c} = this.options;
       let l = [], d = 0, h = !1;
       this.chunks.forEach((({pattern: t, alphabet: u, startIndex: m}) => {
         const {isMatch: p, score: g, indices: f} = M(e, t, u, {
-          location: r + m,
-          distance: i,
+          location: i + m,
+          distance: r,
           threshold: a,
           findAllMatches: s,
           minMatchCharLength: o,
@@ -837,12 +833,12 @@
     return n ? n[1] : null;
   }
   class A extends L {
-    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: r = b.distance, includeMatches: i = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
-      super(e), this._bitapSearch = new I(e, {
+    constructor(e, {location: t = b.location, threshold: n = b.threshold, distance: i = b.distance, includeMatches: r = b.includeMatches, findAllMatches: a = b.findAllMatches, minMatchCharLength: s = b.minMatchCharLength, isCaseSensitive: o = b.isCaseSensitive, ignoreLocation: c = b.ignoreLocation} = {}) {
+      super(e), this._bitapSearch = new B(e, {
         location: t,
         threshold: n,
-        distance: r,
-        includeMatches: i,
+        distance: i,
+        includeMatches: r,
         findAllMatches: a,
         minMatchCharLength: s,
         isCaseSensitive: o,
@@ -877,13 +873,13 @@
     }
     search(e) {
       let t, n = 0;
-      const r = [], i = this.pattern.length;
-      for (;(t = e.indexOf(this.pattern, n)) > -1; ) n = t + i, r.push([ t, n - 1 ]);
-      const a = !!r.length;
+      const i = [], r = this.pattern.length;
+      for (;(t = e.indexOf(this.pattern, n)) > -1; ) n = t + r, i.push([ t, n - 1 ]);
+      const a = !!i.length;
       return {
         isMatch: a,
         score: a ? 0 : 1,
-        indices: r
+        indices: i
       };
     }
   }
@@ -1013,62 +1009,62 @@
         indices: [ 0, e.length - 1 ]
       };
     }
-  }, A ], T = $.length, D = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, _ = new Set([ A.type, E.type ]), z = [];
-  function O(e, t) {
-    for (let n = 0, r = z.length; n < r; n += 1) {
-      let r = z[n];
-      if (r.condition(e, t)) return new r(e, t);
+  }, A ], D = $.length, T = / +(?=([^\"]*\"[^\"]*\")*[^\"]*$)/, _ = new Set([ A.type, E.type ]), z = [];
+  function N(e, t) {
+    for (let n = 0, i = z.length; n < i; n += 1) {
+      let i = z[n];
+      if (i.condition(e, t)) return new i(e, t);
     }
-    return new I(e, t);
+    return new B(e, t);
   }
-  const N = '$and', j = '$path', P = e => !(!e[N] && !e.$or), R = e => ({
-    [N]: Object.keys(e).map((t => ({
+  const O = '$and', j = '$path', P = e => !(!e[O] && !e.$or), R = e => ({
+    [O]: Object.keys(e).map((t => ({
       [t]: e[t]
     })))
   });
   function H(e, t, {auto: n = !0} = {}) {
-    const r = e => {
-      let i = Object.keys(e);
+    const i = e => {
+      let r = Object.keys(e);
       const a = (e => !!e[j])(e);
-      if (!a && i.length > 1 && !P(e)) return r(R(e));
+      if (!a && r.length > 1 && !P(e)) return i(R(e));
       if ((e => !o(e) && h(e) && !P(e))(e)) {
-        const r = a ? e[j] : i[0], s = a ? e.$val : e[r];
-        if (!c(s)) throw new Error((e => 'Invalid value for key ' + e)(r));
+        const i = a ? e[j] : r[0], s = a ? e.$val : e[i];
+        if (!c(s)) throw new Error((e => 'Invalid value for key ' + e)(i));
         const o = {
-          keyId: w(r),
+          keyId: w(i),
           pattern: s
         };
-        return n && (o.searcher = O(s, t)), o;
+        return n && (o.searcher = N(s, t)), o;
       }
       let s = {
         children: [],
-        operator: i[0]
+        operator: r[0]
       };
-      return i.forEach((t => {
+      return r.forEach((t => {
         const n = e[t];
         o(n) && n.forEach((e => {
-          s.children.push(r(e));
+          s.children.push(i(e));
         }));
       })), s;
     };
-    return P(e) || (e = R(e)), r(e);
+    return P(e) || (e = R(e)), i(e);
   }
   function q(e, t) {
     const n = e.matches;
     t.matches = [], u(n) && n.forEach((e => {
       if (!u(e.indices) || !e.indices.length) return;
-      const {indices: n, value: r} = e;
-      let i = {
+      const {indices: n, value: i} = e;
+      let r = {
         indices: n,
-        value: r
+        value: i
       };
-      e.key && (i.key = e.key.src), e.idx > -1 && (i.refIndex = e.idx), t.matches.push(i);
+      e.key && (r.key = e.key.src), e.idx > -1 && (r.refIndex = e.idx), t.matches.push(r);
     }));
   }
   function U(e, t) {
     t.score = e.score;
   }
-  class G {
+  class V {
     constructor(e, t = {}, n) {
       this.options = {
         ...b,
@@ -1086,9 +1082,9 @@
     }
     remove(e = (() => !1)) {
       const t = [];
-      for (let n = 0, r = this._docs.length; n < r; n += 1) {
-        const i = this._docs[n];
-        e(i, n) && (this.removeAt(n), n -= 1, r -= 1, t.push(i));
+      for (let n = 0, i = this._docs.length; n < i; n += 1) {
+        const r = this._docs[n];
+        e(r, n) && (this.removeAt(n), n -= 1, i -= 1, t.push(r));
       }
       return t;
     }
@@ -1099,188 +1095,188 @@
       return this._myIndex;
     }
     search(e, {limit: t = -1} = {}) {
-      const {includeMatches: n, includeScore: r, shouldSort: i, sortFn: a, ignoreFieldNorm: s} = this.options;
+      const {includeMatches: n, includeScore: i, shouldSort: r, sortFn: a, ignoreFieldNorm: s} = this.options;
       let o = c(e) ? c(this._docs[0]) ? this._searchStringList(e) : this._searchObjectList(e) : this._searchLogical(e);
       return function(e, {ignoreFieldNorm: t = b.ignoreFieldNorm}) {
         e.forEach((e => {
           let n = 1;
-          e.matches.forEach((({key: e, norm: r, score: i}) => {
+          e.matches.forEach((({key: e, norm: i, score: r}) => {
             const a = e ? e.weight : null;
-            n *= Math.pow(0 === i && a ? Number.EPSILON : i, (a || 1) * (t ? 1 : r));
+            n *= Math.pow(0 === r && a ? Number.EPSILON : r, (a || 1) * (t ? 1 : i));
           })), e.score = n;
         }));
       }(o, {
         ignoreFieldNorm: s
-      }), i && o.sort(a), l(t) && t > -1 && (o = o.slice(0, t)), function(e, t, {includeMatches: n = b.includeMatches, includeScore: r = b.includeScore} = {}) {
-        const i = [];
-        return n && i.push(q), r && i.push(U), e.map((e => {
-          const {idx: n} = e, r = {
+      }), r && o.sort(a), l(t) && t > -1 && (o = o.slice(0, t)), function(e, t, {includeMatches: n = b.includeMatches, includeScore: i = b.includeScore} = {}) {
+        const r = [];
+        return n && r.push(q), i && r.push(U), e.map((e => {
+          const {idx: n} = e, i = {
             item: t[n],
             refIndex: n
           };
-          return i.length && i.forEach((t => {
-            t(e, r);
-          })), r;
+          return r.length && r.forEach((t => {
+            t(e, i);
+          })), i;
         }));
       }(o, this._docs, {
         includeMatches: n,
-        includeScore: r
+        includeScore: i
       });
     }
     _searchStringList(e) {
-      const t = O(e, this.options), {records: n} = this._myIndex, r = [];
-      return n.forEach((({v: e, i: n, n: i}) => {
+      const t = N(e, this.options), {records: n} = this._myIndex, i = [];
+      return n.forEach((({v: e, i: n, n: r}) => {
         if (!u(e)) return;
         const {isMatch: a, score: s, indices: o} = t.searchIn(e);
-        a && r.push({
+        a && i.push({
           item: e,
           idx: n,
           matches: [ {
             score: s,
             value: e,
-            norm: i,
+            norm: r,
             indices: o
           } ]
         });
-      })), r;
+      })), i;
     }
     _searchLogical(e) {
-      const t = H(e, this.options), n = (e, t, r) => {
+      const t = H(e, this.options), n = (e, t, i) => {
         if (!e.children) {
-          const {keyId: n, searcher: i} = e, a = this._findMatches({
+          const {keyId: n, searcher: r} = e, a = this._findMatches({
             key: this._keyStore.get(n),
             value: this._myIndex.getValueForItemAtKeyId(t, n),
-            searcher: i
+            searcher: r
           });
           return a && a.length ? [ {
-            idx: r,
+            idx: i,
             item: t,
             matches: a
           } ] : [];
         }
         switch (e.operator) {
-         case N:
+         case O:
           {
-            const i = [];
+            const r = [];
             for (let a = 0, s = e.children.length; a < s; a += 1) {
-              const s = e.children[a], o = n(s, t, r);
+              const s = e.children[a], o = n(s, t, i);
               if (!o.length) return [];
-              i.push(...o);
+              r.push(...o);
             }
-            return i;
+            return r;
           }
 
          case '$or':
           {
-            const i = [];
+            const r = [];
             for (let a = 0, s = e.children.length; a < s; a += 1) {
-              const s = e.children[a], o = n(s, t, r);
+              const s = e.children[a], o = n(s, t, i);
               if (o.length) {
-                i.push(...o);
+                r.push(...o);
                 break;
               }
             }
-            return i;
+            return r;
           }
         }
-      }, r = this._myIndex.records, i = {}, a = [];
-      return r.forEach((({$: e, i: r}) => {
+      }, i = this._myIndex.records, r = {}, a = [];
+      return i.forEach((({$: e, i: i}) => {
         if (u(e)) {
-          let s = n(t, e, r);
-          s.length && (i[r] || (i[r] = {
-            idx: r,
+          let s = n(t, e, i);
+          s.length && (r[i] || (r[i] = {
+            idx: i,
             item: e,
             matches: []
-          }, a.push(i[r])), s.forEach((({matches: e}) => {
-            i[r].matches.push(...e);
+          }, a.push(r[i])), s.forEach((({matches: e}) => {
+            r[i].matches.push(...e);
           })));
         }
       })), a;
     }
     _searchObjectList(e) {
-      const t = O(e, this.options), {keys: n, records: r} = this._myIndex, i = [];
-      return r.forEach((({$: e, i: r}) => {
+      const t = N(e, this.options), {keys: n, records: i} = this._myIndex, r = [];
+      return i.forEach((({$: e, i: i}) => {
         if (!u(e)) return;
         let a = [];
-        n.forEach(((n, r) => {
+        n.forEach(((n, i) => {
           a.push(...this._findMatches({
             key: n,
-            value: e[r],
+            value: e[i],
             searcher: t
           }));
-        })), a.length && i.push({
-          idx: r,
+        })), a.length && r.push({
+          idx: i,
           item: e,
           matches: a
         });
-      })), i;
+      })), r;
     }
     _findMatches({key: e, value: t, searcher: n}) {
       if (!u(t)) return [];
-      let r = [];
-      if (o(t)) t.forEach((({v: t, i: i, n: a}) => {
+      let i = [];
+      if (o(t)) t.forEach((({v: t, i: r, n: a}) => {
         if (!u(t)) return;
         const {isMatch: s, score: o, indices: c} = n.searchIn(t);
-        s && r.push({
+        s && i.push({
           score: o,
           key: e,
           value: t,
-          idx: i,
+          idx: r,
           norm: a,
           indices: c
         });
       })); else {
-        const {v: i, n: a} = t, {isMatch: s, score: o, indices: c} = n.searchIn(i);
-        s && r.push({
+        const {v: r, n: a} = t, {isMatch: s, score: o, indices: c} = n.searchIn(r);
+        s && i.push({
           score: o,
           key: e,
-          value: i,
+          value: r,
           norm: a,
           indices: c
         });
       }
-      return r;
+      return i;
     }
   }
-  G.version = '6.4.6', G.createIndex = C, G.parseIndex = function(e, {getFn: t = b.getFn} = {}) {
-    const {keys: n, records: r} = e, i = new S({
+  V.version = '6.4.6', V.createIndex = C, V.parseIndex = function(e, {getFn: t = b.getFn} = {}) {
+    const {keys: n, records: i} = e, r = new S({
       getFn: t
     });
-    return i.setKeys(n), i.setIndexRecords(r), i;
-  }, G.config = b, function(...e) {
+    return r.setKeys(n), r.setIndexRecords(i), r;
+  }, V.config = b, function(...e) {
     z.push(...e);
   }(class {
-    constructor(e, {isCaseSensitive: t = b.isCaseSensitive, includeMatches: n = b.includeMatches, minMatchCharLength: r = b.minMatchCharLength, ignoreLocation: i = b.ignoreLocation, findAllMatches: a = b.findAllMatches, location: s = b.location, threshold: o = b.threshold, distance: c = b.distance} = {}) {
+    constructor(e, {isCaseSensitive: t = b.isCaseSensitive, includeMatches: n = b.includeMatches, minMatchCharLength: i = b.minMatchCharLength, ignoreLocation: r = b.ignoreLocation, findAllMatches: a = b.findAllMatches, location: s = b.location, threshold: o = b.threshold, distance: c = b.distance} = {}) {
       this.query = null, this.options = {
         isCaseSensitive: t,
         includeMatches: n,
-        minMatchCharLength: r,
+        minMatchCharLength: i,
         findAllMatches: a,
-        ignoreLocation: i,
+        ignoreLocation: r,
         location: s,
         threshold: o,
         distance: c
       }, this.pattern = t ? e : e.toLowerCase(), this.query = function(e, t = {}) {
         return e.split('|').map((e => {
-          let n = e.trim().split(D).filter((e => e && !!e.trim())), r = [];
-          for (let e = 0, i = n.length; e < i; e += 1) {
-            const i = n[e];
+          let n = e.trim().split(T).filter((e => e && !!e.trim())), i = [];
+          for (let e = 0, r = n.length; e < r; e += 1) {
+            const r = n[e];
             let a = !1, s = -1;
-            for (;!a && ++s < T; ) {
+            for (;!a && ++s < D; ) {
               const e = $[s];
-              let n = e.isMultiMatch(i);
-              n && (r.push(new e(n, t)), a = !0);
+              let n = e.isMultiMatch(r);
+              n && (i.push(new e(n, t)), a = !0);
             }
-            if (!a) for (s = -1; ++s < T; ) {
+            if (!a) for (s = -1; ++s < D; ) {
               const e = $[s];
-              let n = e.isSingleMatch(i);
+              let n = e.isSingleMatch(r);
               if (n) {
-                r.push(new e(n, t));
+                i.push(new e(n, t));
                 break;
               }
             }
           }
-          return r;
+          return i;
         }));
       }(this.pattern, this.options);
     }
@@ -1293,27 +1289,27 @@
         isMatch: !1,
         score: 1
       };
-      const {includeMatches: n, isCaseSensitive: r} = this.options;
-      e = r ? e : e.toLowerCase();
-      let i = 0, a = [], s = 0;
-      for (let r = 0, o = t.length; r < o; r += 1) {
-        const o = t[r];
-        a.length = 0, i = 0;
-        for (let t = 0, r = o.length; t < r; t += 1) {
-          const r = o[t], {isMatch: c, indices: l, score: d} = r.search(e);
+      const {includeMatches: n, isCaseSensitive: i} = this.options;
+      e = i ? e : e.toLowerCase();
+      let r = 0, a = [], s = 0;
+      for (let i = 0, o = t.length; i < o; i += 1) {
+        const o = t[i];
+        a.length = 0, r = 0;
+        for (let t = 0, i = o.length; t < i; t += 1) {
+          const i = o[t], {isMatch: c, indices: l, score: d} = i.search(e);
           if (!c) {
-            s = 0, i = 0, a.length = 0;
+            s = 0, r = 0, a.length = 0;
             break;
           }
-          if (i += 1, s += d, n) {
-            const e = r.constructor.type;
+          if (r += 1, s += d, n) {
+            const e = i.constructor.type;
             _.has(e) ? a = [ ...a, ...l ] : a.push(l);
           }
         }
-        if (i) {
+        if (r) {
           let e = {
             isMatch: !0,
-            score: s / i
+            score: s / r
           };
           return n && (e.indices = a), e;
         }
@@ -1324,16 +1320,16 @@
       };
     }
   });
-  const V = async e => JSON.parse((await e.text()).trim().substr(9));
+  const G = async e => JSON.parse((await e.text()).trim().substr(9));
   document.head.innerHTML = `<title>${document.title}</title>`, document.body.innerHTML = '', 
   (async () => {
     const e = JSON.parse(document.documentElement.getAttribute('data-he-context'));
     var t;
-    s.uid = localStorage.getItem('Session.UserId'), document.head.innerHTML = function(e, t, n, r) {
+    s.uid = localStorage.getItem('Session.UserId'), document.head.innerHTML = function(e, t, n, i) {
       t = t || function(e) {
         return null == e ? '' : String(e).replace(a, s);
       };
-      var i = {
+      var r = {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
@@ -1341,35 +1337,36 @@
         '\'': '&#39;'
       }, a = /[&<>'"]/g;
       function s(e) {
-        return i[e] || e;
+        return r[e] || e;
       }
       var o = '';
       function c(e) {
         null != e && (o += e);
       }
-      return c('<meta charset="utf-8">\r\n<link rel="icon" href="https://s.brightspace.com/lib/favicon/2.0.0/favicon.ico">\r\n<title>'), 
-      c(t(e.title)), c('</title>\r\n<meta name="description" content="D2l Overhaul">\r\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\r\n\x3c!-- FONT --\x3e\r\n<style>/* fallback */\r\n@font-face {\r\n  font-family: \'Material Icons\';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\r\n}\r\n\r\n.material-icons {\r\n  font-family: \'Material Icons\';\r\n  font-weight: normal;\r\n  font-style: normal;\r\n  font-size: 24px;  /* Preferred icon size */\r\n  display: inline-block;\r\n  line-height: 1;\r\n  text-transform: none;\r\n  letter-spacing: normal;\r\n  word-wrap: normal;\r\n  white-space: nowrap;\r\n  direction: ltr;\r\n  user-select: none;\r\n\r\n  /* Support for all WebKit browsers. */\r\n  -webkit-font-smoothing: antialiased;\r\n  /* Support for Safari and Chrome. */\r\n  text-rendering: optimizeLegibility;\r\n\r\n  /* Support for Firefox. */\r\n  -moz-osx-font-smoothing: grayscale;\r\n\r\n  /* Support for IE. */\r\n  font-feature-settings: \'liga\';\r\n}\r\n/* Rules for sizing the icon. */\r\n.material-icons.md-18 { font-size: 18px; }\r\n.material-icons.md-24 { font-size: 24px; }\r\n.material-icons.md-36 { font-size: 36px; }\r\n.material-icons.md-48 { font-size: 48px; }\r\n\r\n/* Rules for using icons as black on a light background. */\r\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\r\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\r\n\r\n/* Rules for using icons as white on a dark background. */\r\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\r\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\r\n\r\n/* Rules for using icons as orange on a dark background. */\r\n.material-icons.orange600 { color: #FB8C00; }</style>\r\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\r\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\r\n\x3c!-- CSS --\x3e\r\n<style>:root {\r\n  --Background: #0c0c0c;\r\n  --Foreground: #18181b;\r\n  --Border: #252525;\r\n  --Text-Main: #fff;\r\n\r\n  --Active: #3367d6;\r\n}\r\n</style>\r\n<style>/* General Page Stuff */\nhtml,\nbody {\n  height: 100%;\n  width: 100%;\n  font-family: \'Roboto\', Helvetica, Arial, sans-serif;\n  color: var(--Text-Main); }\n\nbody {\n  margin: 0;\n  background-color: var(--Background);\n  position: relative; }\n\n* {\n  box-sizing: border-box; }\n\npicture,\npicture img {\n  display: block;\n  height: 100%;\n  width: 100%; }\n\n*::-webkit-scrollbar {\n  width: 16px; }\n\n*::-webkit-scrollbar-thumb {\n  background: #dadce0;\n  background-clip: padding-box;\n  border: 4px solid transparent;\n  border-radius: 8px;\n  box-shadow: none;\n  min-height: 50px; }\n\n*::-webkit-scrollbar-track {\n  background: none;\n  border: none; }\n\n/* Text */\nh1,\nh2 {\n  color: var(--Text-Main); }\n\nh1 {\n  font-size: 1.375rem;\n  font-weight: 500;\n  line-height: 1.75rem;\n  font-family: \'Google Sans\', Roboto, Arial, sans-serif; }\n\nh2 {\n  font-size: 1rem;\n  font-weight: 400;\n  line-height: 1.25rem;\n  margin: 0; }\n\n/* Aside */\n.SideBar {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n  width: 19rem;\n  padding: 0.5rem 0;\n  z-index: 990;\n  box-shadow: 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f,\r 0 5px 5px -3px #00000033;\n  background-color: var(--Foreground);\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  overflow-y: scroll;\n  max-width: 0;\n  transition: max-width 0.5s; }\n  .SideBar.Active {\n    max-width: 100%; }\n  .SideBar hr {\n    border-top: 0.0625rem solid var(--Border);\n    margin: 0.5rem; }\n\n.SideBarSection {\n  flex-grow: 1;\n  min-height: max-content; }\n\n.SideBarHeader {\n  padding: 0 1rem;\n  letter-spacing: 0.01785714em;\n  font-family: \'Google Sans\', Roboto, Arial, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  line-height: 1.25rem; }\n\n.SideBarItem {\n  display: flex;\n  align-content: center;\n  border-radius: 0 2rem 2rem 0;\n  height: 3.5rem;\n  padding-left: 1.5rem;\n  margin-right: 1rem;\n  cursor: pointer;\n  text-decoration: none;\n  color: #fff; }\n  .SideBarItem .SideBarItemText {\n    margin-left: 1rem;\n    font-family: \'Google Sans\', Roboto, Arial, sans-serif;\n    letter-spacing: 0.01785714em;\n    font-size: 0.875rem;\n    font-weight: 500;\n    overflow: hidden;\n    white-space: nowrap;\n    margin-right: 4rem;\n    text-overflow: ellipsis; }\n  .SideBarItem span {\n    line-height: 3.5rem; }\n  .SideBarItem:hover {\n    background-color: #343434; }\n\n/* Content */\n#Content {\n  min-height: 100%;\n  height: min-content;\n  width: 100%;\n  display: flex;\n  flex-direction: column; }\n\n#Content > * {\n  padding: 1rem; }\n\nmain {\n  height: 100%;\n  width: 100%; }\n\n/* Home Page */\n.Home > main {\n  max-width: 70rem;\n  margin: auto;\n  display: grid; }\n\n/* Loader Page */\n.Loader {\n  display: flex;\n  align-content: center;\n  flex-direction: column; }\n\n.lds-grid {\n  margin: auto;\n  display: grid;\n  grid-template-columns: repeat(3, 16px);\n  grid-template-rows: repeat(3, 16px);\n  grid-gap: 8px; }\n\n.lds-grid div {\n  border-radius: 50%;\n  background: #fff;\n  animation: lds-grid 1.2s linear infinite; }\n\n.lds-grid div:nth-child(1) {\n  animation-delay: 0s; }\n\n.lds-grid div:nth-child(2),\n.lds-grid div:nth-child(4) {\n  animation-delay: -0.4s; }\n\n.lds-grid div:nth-child(3),\n.lds-grid div:nth-child(5),\n.lds-grid div:nth-child(7) {\n  animation-delay: -0.8s; }\n\n.lds-grid div:nth-child(6),\n.lds-grid div:nth-child(8) {\n  animation-delay: -1.2s; }\n\n.lds-grid div:nth-child(9) {\n  animation-delay: -1.6s; }\n\n@keyframes lds-grid {\n  0%,\n  100% {\n    opacity: 1; }\n  50% {\n    opacity: 0.5; } }\n\n/* General */\n.Hidden,\n.Filtered {\n  display: none !important; }\n\n/* Hovers */\n.StreamCard {\n  cursor: pointer; }\n\n.StreamCard:hover {\n  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\n  border-radius: 0.75rem; }\n\n/* Components */\n.NavBar {\n  padding: 0.75rem 1rem !important;\n  height: 4rem;\n  width: 100%;\n  background: var(--Foreground);\n  display: grid;\n  grid-template-columns: 2.5rem auto max-content;\n  position: relative; }\n  .NavBar .AsideButton {\n    display: flex;\n    align-content: center;\n    border-radius: 50%; }\n    .NavBar .AsideButton:hover {\n      background: var(--Background); }\n    .NavBar .AsideButton svg {\n      margin: auto;\n      width: 2rem;\n      height: 2rem; }\n  .NavBar input {\n    height: 2.5rem;\n    width: 50%;\n    margin: auto;\n    display: block;\n    background-color: #212121;\n    outline: none;\n    border: none;\n    border-radius: 0.5rem;\n    padding: 0.5rem;\n    color: #fff; }\n  .NavBar .Account {\n    display: grid;\n    grid-template-columns: repeat(4, 2.5rem);\n    grid-gap: 0.25rem; }\n    .NavBar .Account span {\n      width: 2.5rem;\n      height: 2.5rem;\n      text-align: center;\n      line-height: 2.5rem; }\n      .NavBar .Account span.Active {\n        color: #fb8c00; }\n    .NavBar .Account .Profile picture {\n      padding: 0.25rem; }\n    .NavBar .Account span,\n    .NavBar .Account div {\n      cursor: pointer;\n      border-radius: 0.5rem; }\n    .NavBar .Account span:hover,\n    .NavBar .Account div:hover {\n      background-color: #2f3033; }\n\n.ClassContainer {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  grid-gap: 2rem;\n  margin: 1rem auto;\n  width: 100%; }\n\n.classCard {\n  width: 100%;\n  aspect-ratio: 16 / 7;\n  position: relative;\n  border-radius: 1rem;\n  overflow: hidden;\n  cursor: pointer; }\n  .classCard img {\n    min-height: 100%;\n    width: 100%; }\n  .classCard picture {\n    display: block;\n    height: 100%;\n    width: 100%;\n    position: absolute;\n    top: 0;\n    left: 0; }\n  .classCard .classCardContent {\n    position: absolute;\n    width: 100%;\n    padding: 1rem 2rem;\n    bottom: 0;\n    left: 0; }\n    .classCard .classCardContent h4,\n    .classCard .classCardContent h6 {\n      color: #f2f2f2;\n      font-style: normal;\n      margin-bottom: 1rem;\n      margin-top: 0; }\n    .classCard .classCardContent h4 {\n      font-weight: bold;\n      font-size: 1.6rem;\n      overflow: hidden;\n      text-overflow: ellipsis;\n      white-space: nowrap; }\n    .classCard .classCardContent h6 {\n      font-weight: 500;\n      font-size: 0.9rem; }\n  .classCard[disabled] img {\n    filter: brightness(0.5) blur(10px); }\n  .classCard:hover {\n    transform: scale(1.05); }\n\n.Profile {\n  height: 100%;\n  aspect-ratio: 1 / 1;\n  border-radius: 50%; }\n\n/* Stream */\n.Stream > main {\n  flex-grow: 1;\n  min-height: max-content;\n  width: calc(100% - 2 * 1.5rem);\n  max-width: 62.5rem;\n  margin: 0 auto;\n  padding: 0 !important; }\n\n.ClassPicture {\n  margin: 1.5rem 0;\n  overflow: hidden;\n  border-radius: 1rem;\n  position: relative; }\n\n.ClassPictureContent {\n  display: flex;\n  flex-direction: column;\n  padding: 1.5rem;\n  margin: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%; }\n  .ClassPictureContent h1,\n  .ClassPictureContent h2 {\n    margin: 0; }\n  .ClassPictureContent h4 {\n    margin-top: 0.4rem;\n    font-weight: 500;\n    font-style: normal; }\n\n.ChipFilter {\n  display: inline-flex;\n  height: max-content;\n  width: max-content;\n  padding: 0.25rem 0.5rem;\n  border: 0.0625rem solid var(--Border);\n  border-radius: 2rem;\n  font-size: 0.75rem;\n  cursor: pointer;\n  user-select: none;\n  background-color: var(--Foreground); }\n  .ChipFilter .chipIcon {\n    border-radius: 50%;\n    padding: 0.25rem;\n    font-size: 0.75rem;\n    margin-right: 0.25rem;\n    background-color: var(--Active); }\n  .ChipFilter p {\n    margin: auto;\n    display: inline-block; }\n  .ChipFilter:hover {\n    background-color: #343434; }\n  .ChipFilter.Active {\n    background-color: var(--Active); }\n\n/* Stream Cards */\n.StreamCard {\n  width: 100%;\n  height: 4rem;\n  background-color: var(--Foreground);\n  border: 0.0625rem solid var(--Border);\n  border-radius: 0.5rem;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  grid-template-rows: 3rem max-content;\n  grid-template-areas: \'Icon Title\'\r \'Content Content\';\n  padding: 0.5rem;\n  grid-gap: 0.5rem;\n  margin: 1rem 0; }\n  .StreamCard h1,\n  .StreamCard h3 {\n    margin: 0; }\n  .StreamCard h3 {\n    font-size: 0.75rem; }\n  .StreamCard.Active,\n  .StreamCard.Active > .StreamCardBody {\n    height: max-content; }\n\n.StreamCardTitle {\n  grid-area: Title; }\n\n.StreamCardIcon {\n  grid-area: Icon;\n  background-color: var(--Background);\n  width: 3rem;\n  height: 3rem;\n  border-radius: 2rem;\n  display: flex;\n  align-content: center; }\n  .StreamCardIcon.OnSubmission {\n    background-color: var(--Active); }\n  .StreamCardIcon.DueDate {\n    background-color: #e91e63; }\n  .StreamCardIcon.Unread {\n    background-color: #fb8c00; }\n  .StreamCardIcon span {\n    margin: auto; }\n\n.StreamIframe {\n  border: none;\n  overflow: hidden;\n  height: calc(100vh - 64px);\n  width: 100%;\n  background: #fff; }\n\n.StreamCardBody {\n  grid-area: Content;\n  overflow: hidden;\n  width: 100%;\n  height: 0;\n  cursor: auto; }\n  .StreamCardBody img,\n  .StreamCardBody video {\n    border-radius: 0.5rem; }\n  .StreamCardBody .btn {\n    display: block;\n    background-color: var(--Active);\n    padding: 0.75rem 1rem;\n    color: #fff;\n    border-radius: 0.5rem;\n    height: max-content;\n    width: max-content;\n    text-decoration: none; }\n    .StreamCardBody .btn:hover {\n      background-color: #fb8c00; }\n  .StreamCardBody object {\n    aspect-ratio: 16 /9; }\n  .StreamCardBody .Loader {\n    min-height: 20rem; }\n\n.FileSubmit {\n  height: 12.5rem;\n  display: grid;\n  grid-template-columns: 75% 1fr; }\n  .FileSubmit .UploadedFiles {\n    display: flex;\n    flex-wrap: wrap;\n    overflow-y: auto; }\n    .FileSubmit .UploadedFiles .UploadedFile {\n      width: 8rem;\n      height: 4.5rem;\n      background: var(--Background);\n      border-radius: 0.5rem;\n      margin: 0.25rem;\n      position: relative;\n      overflow: hidden; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileTitle {\n        position: absolute;\n        bottom: 0;\n        left: 0;\n        width: 100%;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        white-space: nowrap;\n        text-overflow: ellipsis;\n        padding: 0 0.5rem; }\n      .FileSubmit .UploadedFiles .UploadedFile .FileRemove {\n        position: absolute;\n        top: 0;\n        right: 0;\n        background-color: rgba(0, 0, 0, 0.75);\n        color: #fff;\n        font-size: 0.75rem;\n        padding: 0.25rem;\n        border-radius: 0 0 0 0.5rem; }\n  .FileSubmit .FileForm {\n    display: flex;\n    flex-direction: column; }\n    .FileSubmit .FileForm textarea {\n      background-color: #222222;\n      border: 0.0625rem solid var(--Border);\n      flex-grow: 1;\n      border-radius: 0.5rem;\n      resize: none;\n      outline: none;\n      color: #fff;\n      padding: 0.5rem; }\n    .FileSubmit .FileForm button {\n      background-color: var(--Active);\n      margin-top: 1rem;\n      height: 2rem;\n      border-radius: 0.5rem;\n      border: none;\n      outline: none;\n      cursor: pointer; }\n      .FileSubmit .FileForm button:hover {\n        opacity: 0.75; }\n\n.DropDown {\n  min-height: 30rem;\n  width: 25rem;\n  border-radius: 0.5rem;\n  border: 0.0625rem solid var(--Border);\n  background-color: var(--Foreground);\n  position: absolute;\n  top: 100%;\n  right: 0;\n  z-index: 2;\n  padding: 1rem;\n  margin: -0.25rem 0.5rem;\n  overflow-y: scroll; }\n\n.NotificationShade {\n  list-style: none;\n  padding-inline-start: 0; }\n  .NotificationShade li {\n    border-bottom: 1px solid white;\n    padding-top: 1rem; }\n    .NotificationShade li a {\n      color: #fff;\n      text-decoration: none;\n      font-size: 1.5rem;\n      display: -webkit-box;\n      -webkit-line-clamp: 1;\n      -webkit-box-orient: vertical;\n      overflow: hidden; }\n    .NotificationShade li img {\n      display: none; }\n</style>'), 
+      return c('<meta charset="utf-8">\n<link rel="icon" href="https://s.brightspace.com/lib/favicon/2.0.0/favicon.ico">\n<title>'), 
+      c(t(e.title)), c('</title>\n<meta name="description" content="D2l Overhaul">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\x3c!-- FONT --\x3e\n<style>\n@font-face {\n  font-family: \'Material Icons\';\n  font-style: normal;\n  font-weight: 400;\n  src: url(https://fonts.gstatic.com/s/materialicons/v99/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format(\'woff2\');\n}\n\n.material-icons {\n  font-family: \'Material Icons\';\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;  \n  display: inline-block;\n  line-height: 1;\n  text-transform: none;\n  letter-spacing: normal;\n  word-wrap: normal;\n  white-space: nowrap;\n  direction: ltr;\n  user-select: none;\n\n  \n  -webkit-font-smoothing: antialiased;\n  \n  text-rendering: optimizeLegibility;\n\n  \n  -moz-osx-font-smoothing: grayscale;\n\n  \n  font-feature-settings: \'liga\';\n}\n\n.material-icons.md-18 { font-size: 18px; }\n.material-icons.md-24 { font-size: 24px; }\n.material-icons.md-36 { font-size: 36px; }\n.material-icons.md-48 { font-size: 48px; }\n\n\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }\n.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }\n\n\n.material-icons.md-light { color: rgba(255, 255, 255, 1); }\n.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }\n\n\n.material-icons.orange600 { color: #FB8C00; }</style>\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">\n<link href="https://fonts.googleapis.com/css?family=Google+Sans:300,400,500" rel="stylesheet" type="text/css">\n\x3c!-- CSS --\x3e\n<style>:root {\n  --Background: #0c0c0c;\n  --Foreground: #18181b;\n  --Border: #252525;\n  --Text-Main: #fff;\n\n  --Active: #3367d6;\n}\n</style>\n<style>html,body{height:100%;width:100%;font-family:\'Roboto\', Helvetica, Arial, sans-serif;color:var(--Text-Main)}body{margin:0;background-color:var(--Background);position:relative}*{box-sizing:border-box}picture,picture img{display:block;height:100%;width:100%}*::-webkit-scrollbar{width:16px}*::-webkit-scrollbar-thumb{background:#dadce0;background-clip:padding-box;border:4px solid transparent;border-radius:8px;box-shadow:none;min-height:50px}*::-webkit-scrollbar-track{background:none;border:none}h1,h2{color:var(--Text-Main)}h1{font-size:1.375rem;font-weight:500;line-height:1.75rem;font-family:\'Google Sans\', Roboto, Arial, sans-serif}h2{font-size:1rem;font-weight:400;line-height:1.25rem;margin:0}.SideBar{display:flex;flex-direction:column;height:100vh;width:19rem;padding:0.5rem 0;z-index:990;box-shadow:0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f, 0 5px 5px -3px #00000033;background-color:var(--Foreground);position:fixed;top:0;left:0;bottom:0;overflow-y:scroll;max-width:0;transition:max-width 0.5s}.SideBar.Active{max-width:100%}.SideBar hr{border-top:0.0625rem solid var(--Border);margin:0.5rem}.SideBarSection{flex-grow:1;min-height:max-content}.SideBarHeader{padding:0 1rem;letter-spacing:0.01785714em;font-family:\'Google Sans\', Roboto, Arial, sans-serif;font-size:0.875rem;font-weight:500;line-height:1.25rem}.SideBarItem{display:flex;align-content:center;border-radius:0 2rem 2rem 0;height:3.5rem;padding-left:1.5rem;margin-right:1rem;cursor:pointer;text-decoration:none;color:#fff}.SideBarItem .SideBarItemText{margin-left:1rem;font-family:\'Google Sans\', Roboto, Arial, sans-serif;letter-spacing:0.01785714em;font-size:0.875rem;font-weight:500;overflow:hidden;white-space:nowrap;margin-right:4rem;text-overflow:ellipsis}.SideBarItem span{line-height:3.5rem}.SideBarItem:hover{background-color:#343434}#Content{min-height:100%;height:min-content;width:100%;display:flex;flex-direction:column}#Content>*{padding:1rem}main{height:100%;width:100%}.Home>main{max-width:70rem;margin:auto;display:grid}.Loader{display:flex;align-content:center;flex-direction:column}.lds-grid{margin:auto;display:grid;grid-template-columns:repeat(3, 16px);grid-template-rows:repeat(3, 16px);grid-gap:8px}.lds-grid div{border-radius:50%;background:#fff;animation:lds-grid 1.2s linear infinite}.lds-grid div:nth-child(1){animation-delay:0s}.lds-grid div:nth-child(2),.lds-grid div:nth-child(4){animation-delay:-0.4s}.lds-grid div:nth-child(3),.lds-grid div:nth-child(5),.lds-grid div:nth-child(7){animation-delay:-0.8s}.lds-grid div:nth-child(6),.lds-grid div:nth-child(8){animation-delay:-1.2s}.lds-grid div:nth-child(9){animation-delay:-1.6s}@keyframes lds-grid{0%,100%{opacity:1}50%{opacity:0.5}}.Hidden,.Filtered{display:none !important}.StreamCard{cursor:pointer}.StreamCard:hover{box-shadow:0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.2);border-radius:0.75rem}.NavBar{padding:.75rem 1rem !important;background-color:var(--Foreground);height:4rem;width:100%;display:flex;position:relative}.NavBar .side,.NavBar .center{flex:1 1 0;display:flex;align-content:center;margin:auto 0}.NavBar .center{flex-basis:calc(100% - 80rem)}.NavBar .rightSide{justify-content:end}.NavBar .AsideButton{border-radius:50%;width:2.5rem;height:2.5rem;text-align:center;line-height:2.5rem;cursor:pointer}.NavBar .AsideButton:hover{background:var(--Background)}.NavBar input{height:2.5rem;width:100%;display:block;background-color:var(--Background);outline:none;border:none;border-radius:0.5rem;padding:0.5rem;color:#cccccc}.NavBar .Account{display:grid;grid-template-columns:repeat(4, 2.5rem);grid-gap:0.25rem;margin-left:auto}.NavBar .Account span{width:2.5rem;height:2.5rem;text-align:center;line-height:2.5rem}.NavBar .Account span.Active{color:#fb8c00}.NavBar .Account .Profile picture{padding:0.25rem}.NavBar .Account span,.NavBar .Account div{cursor:pointer;border-radius:0.5rem}.NavBar .Account span:hover,.NavBar .Account div:hover{background-color:#2f3033}.ClassContainer{display:grid;grid-template-columns:repeat(2, 1fr);grid-gap:2rem;margin:1rem auto;width:100%}.classCard{width:100%;aspect-ratio:16 / 7;position:relative;border-radius:1rem;overflow:hidden;cursor:pointer}.classCard img{min-height:100%;width:100%}.classCard picture{height:100%;width:100%;position:absolute;top:0;left:0}.classCard .classCardContent{position:absolute;width:100%;padding:1rem 2rem;bottom:0;left:0}.classCard .classCardContent h4,.classCard .classCardContent h6{color:#f2f2f2;font-style:normal;margin-bottom:1rem;margin-top:0}.classCard .classCardContent h4{font-weight:bold;font-size:1.6rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classCard .classCardContent h6{font-weight:500;font-size:0.9rem}.classCard[disabled] img{filter:brightness(0.5) blur(10px)}.classCard:hover{transform:scale(1.05)}.Profile{height:100%;aspect-ratio:1 / 1;border-radius:50%}.Stream>main{flex-grow:1;min-height:max-content;width:calc(100% - 2 * 1.5rem);max-width:62.5rem;margin:0 auto;padding:0 !important}.ClassPicture{margin:1.5rem 0;overflow:hidden;border-radius:1rem;position:relative;aspect-ratio:4 / 1}.ClassPictureContent{display:flex;flex-direction:column;padding:1.5rem;margin:0;position:absolute;top:0;left:0;width:100%;height:100%}.ClassPictureContent h1,.ClassPictureContent h2{margin:0}.ClassPictureContent h4{margin-top:0.4rem;font-weight:500;font-style:normal}.ChipFilter{display:inline-flex;height:max-content;width:max-content;padding:0.25rem 0.5rem;border:0.0625rem solid var(--Border);border-radius:2rem;font-size:0.75rem;cursor:pointer;user-select:none;background-color:var(--Foreground)}.ChipFilter .chipIcon{border-radius:50%;padding:0.25rem;font-size:0.75rem;margin-right:0.25rem;background-color:var(--Active)}.ChipFilter p{margin:auto;display:inline-block}.ChipFilter:hover{background-color:#343434}.ChipFilter.Active{background-color:var(--Active)}.StreamCard{width:100%;height:4rem;background-color:var(--Foreground);border:0.0625rem solid var(--Border);border-radius:0.5rem;display:grid;grid-template-columns:max-content 1fr;grid-template-rows:3rem max-content;grid-template-areas:\'Icon Title\' \'Content Content\';padding:0.5rem;grid-gap:0.5rem;margin:1rem 0}.StreamCard h1,.StreamCard h3{margin:0}.StreamCard h3{font-size:0.75rem}.StreamCard.Active,.StreamCard.Active>.StreamCardBody{height:max-content}.StreamCardTitle{grid-area:Title}.StreamCardIcon{grid-area:Icon;background-color:var(--Background);width:3rem;height:3rem;border-radius:2rem;display:flex;align-content:center}.StreamCardIcon.OnSubmission{background-color:var(--Active)}.StreamCardIcon.DueDate{background-color:#e91e63}.StreamCardIcon.Unread{background-color:#fb8c00}.StreamCardIcon span{margin:auto}.StreamIframe{border:none;overflow:hidden;height:calc(100vh - 64px);width:100%;background:#fff}.StreamCardBody{grid-area:Content;overflow:hidden;width:100%;height:0;cursor:auto}.StreamCardBody img,.StreamCardBody video{border-radius:0.5rem}.StreamCardBody .btn{display:block;background-color:var(--Active);padding:0.75rem 1rem;color:#fff;border-radius:0.5rem;height:max-content;width:max-content;text-decoration:none}.StreamCardBody .btn:hover{background-color:#fb8c00}.StreamCardBody object{aspect-ratio:16 /9}.StreamCardBody .Loader{min-height:20rem}.FileSubmit{height:12.5rem;display:grid;grid-template-columns:75% 1fr}.FileSubmit .UploadedFiles{display:flex;flex-wrap:wrap;overflow-y:auto}.FileSubmit .UploadedFiles .UploadedFile{width:8rem;height:4.5rem;background:var(--Background);border-radius:0.5rem;margin:0.25rem;position:relative;overflow:hidden}.FileSubmit .UploadedFiles .UploadedFile .FileTitle{position:absolute;bottom:0;left:0;width:100%;background-color:rgba(0,0,0,0.75);color:#fff;font-size:0.75rem;white-space:nowrap;text-overflow:ellipsis;padding:0 0.5rem}.FileSubmit .UploadedFiles .UploadedFile .FileRemove{position:absolute;top:0;right:0;background-color:rgba(0,0,0,0.75);color:#fff;font-size:0.75rem;padding:0.25rem;border-radius:0 0 0 0.5rem}.FileSubmit .FileForm{display:flex;flex-direction:column}.FileSubmit .FileForm textarea{background-color:#222222;border:0.0625rem solid var(--Border);flex-grow:1;border-radius:0.5rem;resize:none;outline:none;color:#fff;padding:0.5rem}.FileSubmit .FileForm button{background-color:var(--Active);margin-top:1rem;height:2rem;border-radius:0.5rem;border:none;outline:none;cursor:pointer}.FileSubmit .FileForm button:hover{opacity:0.75}.DropDown{min-height:30rem;width:25rem;border-radius:0.5rem;border:0.0625rem solid var(--Border);background-color:var(--Foreground);position:absolute;top:100%;right:0;z-index:2;padding:1rem;margin:-0.25rem 0.5rem;overflow-y:scroll}.NotificationShade{list-style:none;padding-inline-start:0}.NotificationShade li{border-bottom:1px solid white;padding-top:1rem}.NotificationShade li a{color:#fff;text-decoration:none;font-size:1.5rem;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}.NotificationShade li img{display:none}\n</style>'), 
       o;
     }({
       title: document.title
-    }), document.body.innerHTML = function(e, t, n, r) {
-      var i = '';
+    }), document.body.innerHTML = function(e, t, n, i) {
+      var r = '';
       function a(e) {
-        null != e && (i += e);
+        null != e && (r += e);
       }
-      return a('<aside class="SideBar" id="SideBar"></aside>\r\n<section id="Content">\r\n  \x3c!-- NavBar --\x3e\r\n  '), 
-      a(e.navBar), a('\r\n  \x3c!-- Main Body --\x3e\r\n  <main id="main" class="Loader">\r\n    <div class="lds-grid">\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n      <div></div>\r\n    </div>\r\n  </main>\r\n</section>'), 
-      i;
+      a('<aside class="SideBar" id="SideBar"></aside>\n<section id="Content">\n  \x3c!-- NavBar --\x3e\n  '), 
+      a(e.navBar), a('\n  \x3c!-- Main Body --\x3e\n  <main id="main" class="Loader">\n    <div class="lds-grid">\n      ');
+      for (let e = 0; e < 9; e++) a('\n        <div></div>\n      ');
+      return a('\n    </div>\n  </main>\n</section>\n'), r;
     }({
       content: null,
-      navBar: (t = '', t += '<nav class="NavBar" id="NavBar">\r\n  <div class="AsideButton" id="AsideButtton">\r\n    <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class=" NMm5M"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>\r\n  </div>\r\n  <div>\r\n    <input id="Search" placeholder="Search" type="text" />\r\n  </div>\r\n  <div class="Account">\r\n    <span class="material-icons" id="MailButton">\r\n      mail\r\n    </span>\r\n    <span class="material-icons" id="MessageButton">\r\n      message\r\n    </span>      \r\n    <span class="material-icons" id="NotificationButton">\r\n      notifications\r\n    </span>\r\n    <div class="Profile" id="AccountButtton">\r\n      <picture>\r\n        <img src="https://durham.elearningontario.ca/d2l/api/lp/1.32/profile/myProfile/image" />\r\n      </picture>\r\n    </div>\r\n  </div>\r\n</nav>', 
+      navBar: (t = '', t += '<nav class="NavBar" id="NavBar">\n  <div class="side">\n    <span class="material-icons AsideButton" id="AsideButton">\n      menu\n    </span>\n  </div>\n  <div class="center">\n    <input id="Search" placeholder="Search" type="text" />\n  </div>\n  <div class="side">\n    <div class="Account">\n      <span class="material-icons" id="MailButton">\n        mail\n      </span>\n      <span class="material-icons" id="MessageButton">\n        message\n      </span>      \n      <span class="material-icons" id="NotificationButton">\n        notifications\n      </span>\n      <div class="Profile" id="AccountButtton">\n        <picture>\n          <img src="/d2l/api/lp/1.32/profile/myProfile/image" />\n        </picture>\n      </div>\n    </div>\n  </div>\n</nav>\n', 
       t)
     });
     const n = document.createElement('script');
     n.src = chrome.runtime.getURL('./client.js'), document.body.appendChild(n), ((e, t) => {
-      const n = document.getElementById('main'), r = document.getElementById('SideBar'), i = document.getElementById('AsideButtton'), a = document.getElementById('Search'), s = document.getElementById('MailButton'), o = document.getElementById('MessageButton'), c = document.getElementById('NotificationButton');
-      i.addEventListener('click', (e => {
-        e.stopPropagation(), r.classList.add('Active');
+      const n = document.getElementById('main'), i = document.getElementById('SideBar'), r = document.getElementById('AsideButton'), a = document.getElementById('Search'), s = document.getElementById('MailButton'), o = document.getElementById('MessageButton'), c = document.getElementById('NotificationButton');
+      r.addEventListener('click', (e => {
+        e.stopPropagation(), i.classList.add('Active');
       })), a.addEventListener('keyup', (() => {
         const e = [];
         if (n.querySelectorAll('.Search').forEach((t => e.push(...t.children))), '' == a.value.trim()) return void e.forEach((e => e.classList.toggle('Hidden', !1)));
@@ -1378,7 +1375,7 @@
           Teacher: e.querySelector('h2')?.innerText || '',
           child: e,
           id: t
-        }))), r = (i = t, s = a.value, new G(i, {
+        }))), i = (r = t, s = a.value, new V(r, {
           isCaseSensitive: !1,
           includeScore: !0,
           shouldSort: !0,
@@ -1386,15 +1383,15 @@
           ignoreLocation: !0,
           keys: [ 'Name', 'Teacher' ]
         }).search(s));
-        var i, s;
+        var r, s;
         t.forEach((e => {
-          e.child.classList.toggle('Hidden', !r.some((t => t.item.id == e.id && t.score < .5)));
+          e.child.classList.toggle('Hidden', !i.some((t => t.item.id == e.id && t.score < .5)));
         }));
       }));
       const l = async () => {
-        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), t = await V(e);
-        t.Payload && [ 'Messages', 'Grades' ].forEach((e => {
-          const n = t.Payload.includes(e);
+        const e = await fetch('/d2l/activityFeed/checkForNewAlerts?isXhr=true&requestId=3&X-D2L-Session=no-keep-alive'), t = await G(e);
+        [ 'Messages', 'Grades' ].forEach((e => {
+          const n = (t.Payload || []).includes(e);
           switch (e) {
            case 'Messages':
             s.classList.toggle('Active', n);
@@ -1410,19 +1407,17 @@
         }));
       };
       l(), setInterval((() => l()), 5e3);
-      const d = async (n, r) => {
+      const d = async (n, i) => {
         n.stopPropagation();
-        const i = document.getElementById('DropDown');
+        const r = document.getElementById('DropDown');
         var a;
-        i && i.remove(), e.insertAdjacentHTML('beforeend', (a = '', a += '<div class="DropDown" id="DropDown">\r\n  <h3>Notifications</h3>\r\n  <hr />\r\n  <ul class="NotificationShade">\r\n  </ul>\r\n</div>'));
-        let s = '';
-        switch (r) {
+        r && r.remove(), e.insertAdjacentHTML('beforeend', (a = '', a += '<div class="DropDown" id="DropDown">\n  <h3>Notifications</h3>\n  <hr />\n  <ul class="NotificationShade">\n  </ul>\n</div>'));
+        let o = '';
+        switch (i) {
          case 'MailButton':
           {
-            const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=2&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
-              method: 'GET'
-            });
-            s = (await V(e)).Payload.Html;
+            const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=2&requestId=3`);
+            o = (await G(e)).Payload.Html, s.classList.toggle('Active', !1);
             break;
           }
 
@@ -1431,50 +1426,46 @@
 
          case 'NotificationButton':
           {
-            const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=1&_d2l_prc$headingLevel=2&_d2l_prc$scope=&_d2l_prc$hasActiveForm=false&isXhr=true&requestId=3`, {
-              method: 'GET'
-            });
-            s = (await V(e)).Payload.Html;
+            const e = await fetch(`/d2l/MiniBar/${t.cid}/ActivityFeed/GetAlertsDaylight?Category=1&requestId=3`);
+            o = (await G(e)).Payload.Html, c.classList.toggle('Active', !1);
             break;
           }
         }
-        const o = document.getElementById('DropDown'), c = (new DOMParser).parseFromString(s, 'text/html');
-        o.querySelector('.NotificationShade').innerHTML = c.querySelector('.vui-list').innerHTML, 
-        o.addEventListener('click', (e => e.stopPropagation()));
+        const l = document.getElementById('DropDown'), d = (new DOMParser).parseFromString(o, 'text/html');
+        l.querySelector('.NotificationShade').innerHTML = d.querySelector('.vui-list').innerHTML, 
+        l.addEventListener('click', (e => e.stopPropagation()));
       };
       s.addEventListener('click', (e => d(e, 'MailButton'))), o.addEventListener('click', (e => d(e, 'MessageButton'))), 
       c.addEventListener('click', (e => d(e, 'NotificationButton'))), document.addEventListener('click', (() => {
         const e = document.getElementById('DropDown');
-        e && e.remove(), r.classList.contains('Active') && r.classList.remove('Active');
+        e && e.remove(), i.classList.contains('Active') && i.classList.remove('Active');
       }));
     })(document.getElementById('NavBar'), s), (async (e, t) => {
-      const n = (new Date).valueOf(), r = await fetch(`https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${t.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
+      const n = (new Date).valueOf(), i = await fetch(`https://${t.orgID}.enrollments.api.brightspace.com/users/${t.uid}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`, {
         headers: {
           authorization: `Bearer ${await t.getToken()}`
         }
-      }).then((e => e.json())), i = await Promise.all(r.entities.map((async ({href: e}) => {
-        const r = await fetch(e, {
+      }).then((e => e.json())), r = await Promise.all(i.entities.map((async ({href: e}) => {
+        const i = await fetch(e, {
           headers: {
             authorization: `Bearer ${await t.getToken()}`
-          },
-          method: 'GET'
-        }), i = await r.json(), a = await fetch(i.links[1].href, {
+          }
+        }), r = await i.json(), a = await fetch(r.links[1].href, {
           headers: {
             authorization: `Bearer ${await t.getToken()}`
-          },
-          method: 'GET'
-        }), s = await a.json(), {endDate: o, name: c} = s.properties;
+          }
+        }), {properties: {endDate: s, name: o}, links: c} = await a.json();
         return {
-          name: c,
-          disabled: new Date(o).valueOf() < n,
-          href: s.links[0].href.replace('https://bc59e98c-eabc-4d42-98e1-edfe93518966.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/')
+          name: o,
+          disabled: new Date(s).valueOf() < n,
+          href: c[0].href.replace(`https://${t.orgID}.folio.api.brightspace.com/organizations/', 'https://durham.elearningontario.ca/d2l/home/`)
         };
       })));
-      e.innerHTML = function(e, t, n, r) {
+      e.innerHTML = function(e, t, n, i) {
         t = t || function(e) {
           return null == e ? '' : String(e).replace(a, s);
         };
-        var i = {
+        var r = {
           '&': '&amp;',
           '<': '&lt;',
           '>': '&gt;',
@@ -1482,24 +1473,22 @@
           '\'': '&#39;'
         }, a = /[&<>'"]/g;
         function s(e) {
-          return i[e] || e;
+          return r[e] || e;
         }
         var o = '';
         function c(e) {
           null != e && (o += e);
         }
-        return c('<a class="SideBarItem" id="SideBarClassesBtn"><span class="material-icons">home</span><span class="SideBarItemText">Classes</span></a>\r\n<a class="SideBarItem" id="SideBarCalenderBtn"><span class="material-icons">calendar_today</span><span class="SideBarItemText">Calender</span></a>\r\n<hr />\r\n<div class="SideBarSection" id="SideBarClasses">\r\n  <div class="SideBarHeader">Enrolled</div>\r\n  '), 
+        return c('<a class="SideBarItem" id="SideBarClassesBtn"><span class="material-icons">home</span><span class="SideBarItemText">Classes</span></a>\n<a class="SideBarItem" id="SideBarCalenderBtn"><span class="material-icons">calendar_today</span><span class="SideBarItemText">Calender</span></a>\n<hr />\n<div class="SideBarSection" id="SideBarClasses">\n  <div class="SideBarHeader">Enrolled</div>\n  '), 
         e.classes.forEach((e => {
-          c('\r\n    '), e.disabled || (c('\r\n      <a class="SideBarItem" id="SideBarCalenderBtn" href="'), 
+          c('\n    '), e.disabled || (c('\n      <a class="SideBarItem" id="SideBarCalenderBtn" href="'), 
           c(t(e.href)), c('"><span class="material-icons">class</span><span class="SideBarItemText">'), 
-          c(t(e.name)), c('</span></a>\r\n    ')), c('\r\n  ');
-        })), c('\r\n</div>\r\n<hr />\r\n<a class="SideBarItem" id="SideBarSettingsBtn"><span class="material-icons">settings</span><span class="SideBarItemText">Settings</span></a>'), 
+          c(t(e.name)), c('</span></a>\n    ')), c('\n  ');
+        })), c('\n</div>\n<hr />\n<a class="SideBarItem" id="SideBarSettingsBtn"><span class="material-icons">settings</span><span class="SideBarItemText">Settings</span></a>'), 
         o;
       }({
-        classes: i
-      }), document.getElementById('SideBarClassesBtn').addEventListener('click', (() => {
-        t.setPage('HOME');
-      }));
+        classes: r
+      }), document.getElementById('SideBarClassesBtn').addEventListener('click', (() => t.setPage('HOME')));
     })(document.getElementById('SideBar'), s), await s.start(e);
   })();
 }();
