@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "D2l Overhaul",
-  "version": "0.2.0",
+  "name": "D2l Overhaul Original Flavouring",
+  "version": "0.1.0",
   "description": "Modify D2L Brightspace",
   "content_scripts": [
     {
@@ -24,11 +24,6 @@
     "https://durham.elearningontario.ca/*",
     "https://s.brightspace.com/*"
   ],
-  "background": {
-    "scripts": [
-      "blocker.js"
-    ]
-  },
   "web_accessible_resources": [
     "client.js"
   ]
