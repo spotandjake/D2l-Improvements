@@ -1,0 +1,36 @@
+@use "sass:color";
+.markDown {
+  margin: .52rem;
+  // Headers
+  h1, h2, h3, h4, h5, h6 {
+    color: #00B2FF;
+    font-weight: bold;
+  }
+  // Lists
+  ul, ol {
+    padding: .25rem 0;
+  }
+  ol {
+    list-style: none;
+    counter-reset: incr;
+    li {
+      counter-increment: incr;
+      &::before {
+        content: counter(incr) ") ";
+      }
+    }
+    ol {
+      list-style: lower-roman;
+      ol {
+        list-style: lower-alpha;
+      }
+    }
+  }
+  // Links
+  a {
+    color: #008685;
+    &:hover {
+      color: color.scale(#008685, $lightness: -30%);
+    }
+  }
+}

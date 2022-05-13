@@ -1,0 +1,35 @@
+.container {
+  height: 100%;
+}
+.content {
+  $pageSize: calc(100% - 30rem);
+  width: $pageSize;
+  margin: 2rem auto;
+  // Grid
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  grid-template-rows: 15rem auto;
+  grid-gap: 0.5rem;
+  // grid-template-areas:
+  //   'Header Header'
+  //   'Widget Stream'
+  // ;
+  grid-template-areas:
+    'Header Header'
+    'Stream Stream';
+  // Grid Layout
+  header {
+    grid-area: Header;
+  }
+  .stream {
+    grid-area: Stream;
+    input {
+      display: none;
+    }
+  }
+}
+.chipContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}

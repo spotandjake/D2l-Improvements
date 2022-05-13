@@ -1,2 +1,4 @@
-/src/js/libs/*
+/src/Foreground/next.config.js
+/src/Foreground/.next/*
 /dist/*
+/temp/*

@@ -3,26 +3,20 @@
   "name": "D2l Overhaul",
   "version": "0.2.0",
   "description": "Modify D2L Brightspace",
-  "content_scripts": [
-    {
-      "css": [],
-      "js": ["./main.js"],
-      "exclude_matches": [
-        "*://durham.elearningontario.ca/d2l/lms/quizzing/user/*"
-      ],
-      "matches": [
-        "*://durham.elearningontario.ca/d2l/*",
-        "https://s.brightspace.com/*"
-      ]
-    }
-  ],
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://durham.elearningontario.ca/*",
-    "https://s.brightspace.com/*"
+    "https://durham.elearningontario.ca/*"
   ],
-  "web_accessible_resources": [
-    "client.js"
-  ]
+  "content_scripts": [
+    {
+      "js": ["./Background/Content.js"],
+      "matches": [
+        "*://durham.elearningontario.ca/d2l/*"
+      ]
+    }
+  ],
+  "background": {
+    "scripts": ["./Background/Background.js"]
+  }
 }

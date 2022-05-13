@@ -1,0 +1,17 @@
+.container {
+  display: block;
+  min-width: max-content;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  border: 0.0625rem solid var(--Border);
+  background-color: var(--Foreground);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+:global(#News-ExpandState:checked) ~ * .News,
+:global(#Content-ExpandState:checked) ~ * .Content,
+:global(#Discussions-ExpandState:checked) ~ * .Discussions,
+:global(#Assignments-ExpandState:checked) ~ * .Assignments,
+:global(#Quizzes-ExpandState:checked) ~ * .Quizzes {
+  background-color: #084d91;
+}

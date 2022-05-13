@@ -48,6 +48,8 @@
 + Fix everything marked with TODO:
 
 # Version 2.0 ideas
++ Move To Using Gulp Completely
++ Figure Out Why Gulp Refuses to Close
 + FrameWorks
   + Use Blocker Script to block all d2l requests that do not start with ?extension_view=0
     + This will allow us to use normal nextjs and avoid need for blocking d2l scripts
@@ -65,3 +67,60 @@
     + Settings
     + Grades
     + Calender
+# Version 2 Checklist
++ [x] Get Nextjs setup
+  + [x] scss
+  + [x] typescript
++ [ ] Get gulp setup
+  + [x] Copy Manifest
+  + [x] Modify Manifest web assets so hey include the assets from our Nextjs app
+  + [ ] Get nextjs working from gulp
+  + [x] Gulp typescript compile Background
+  + [x] Gulp lint
++ [ ] Start Building
+  + [x] Plan A Content Graph
+    + [x] Routes
+    + [x] Information Per Page
+  + [ ] Design in figma
+    + [x] Color Pallette
+    + [ ] Components
+      + [ ] Global
+        + [ ] Aside
+        + [x] NavBar
+          + [x] Search Bar
+          + [ ] Notification Area
+      + [x] Classes Page
+        + [x] Classes
+      + [ ] Stream
+        + [ ] General Stream Card
+          + [ ] File Picker
+            + [ ] Google Picker
+          + [ ] File Preview
+          + [ ] Text Boxes
+          + [ ] Rubrics
+          + [ ] General Markdown
+    + [ ] Styles
+      + [ ] Typography
+      + [ ] Theme's
+      + [ ] Common Effects
+      + [ ] Common css
+      + [ ] convert common styles to mixins
+      + [ ] Create an scss mixin file for common styles
+  + [ ] Build D2L API class
+    + [ ] Look into https://swr.vercel.app/ for faster requests
+    + [ ] Routes
+    + [x] Auth
+    + [ ] Types
+  + [ ] Build figma Components in tsx along with scss
+  + [ ] Handle Routing So it reflects actual d2l routing allowing state to be kept between when the extension is enabled and disabled.
+    + [ ] Create a dynamic router that can handle page changing along with handle the history push api for faster loading.
+  + [ ] Bring it all together to make the application.
+  + [ ] Add Better integration with google products like doc's
+  + [ ] Testing Time
+  + [ ] Add a github push update
+  + [ ] Optimizations To Extension
+    + [x] nextJS Optimizations
+    + [ ] switch from webRequest API to the declarativeNetRequest API, allowing for much faster request handling
+    + [ ] Find a way to load the main page faster and prevent the errors from the original d2l content
++ [x] Stop chrome from closing my tabs when i refresh the extension
++ [x] Fix our output html file links to account for the fact this is a chrome extension

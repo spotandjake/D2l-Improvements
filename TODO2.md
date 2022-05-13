@@ -1,0 +1,84 @@
+- [x] Fix Page Title
+- [ ] Stream
+  - [x] Sort Stream By Date's
+  - [x] Content Filters
+    - [x] Get Content Filters Working
+    - [x] Move Content Filters to work on css instead of react state
+  - [x] News Card
+  - [ ] Content Card
+    - [ ] File Viewer
+      - [ ] Use Office viewer, if it is supported. If brave then we need to find an alternative viewer
+        - [x] Detect Browser Support
+        - [x] Render if on a browser that supports the viewer extension
+        - [x] Styling
+        - [ ] Alternative renderer
+          - [ ] Excel
+          - [ ] Word
+          - [ ] PowerPoint
+          - [ ] Publisher
+          - [ ] Access
+      - [x] Use Image Viewer
+        - [x] Image Detection
+        - [x] Styling
+      - [x] Use Video Viewer
+        - [x] File Type Detection
+        - [x] Styling
+      - [x] Use Google Docs
+        - [x] File Type Detection
+        - [x] Styling
+      - [x] Use PDF Viewer
+        - [x] File Type Detection
+        - [x] Styling
+      - [x] Youtube embed detection
+        - [x] File Type Detection
+        - [x] Styling
+      - [x] Use Embedded
+        - [x] File Type Detection
+        - [x] Styling
+      - [ ] Unknown Download or visit page
+    - [ ] Download Button
+  - [ ] Discussion Card
+  - [ ] Assignment Card
+    - [ ] Submit UI
+      - [ ] Somehow, get the google file viewer ui working, i have no clue how i am gonna do this
+    - [ ] Mark UI
+    - [ ] Previous Submissions UI
+  - [ ] Quiz Card
+    - [ ] Quiz UI
+    - [ ] Mark UI
+- [ ] Widgets
+  - [ ] Calender
+  - [ ] Assignments
+- [ ] NavBar
+  - [ ] Design
+  - [ ] Search
+    - [ ] fuse.js
+    - [ ] Search Suggestions / autocomplete
+    - [ ] make a full search framework
+  - [ ] Notifications
+    - [x] Make Watcher to watch for new notifications
+    - [x] make shade
+    - [x] Style Shade
+    - [ ] Find the data for messages
+    - [ ] find some way to fetch the notifications as not html
+  - [ ] Aside
+  - [ ] Settings
+    - [x] Dropdown
+    - [x] Toggle Extension
+    - [ ] Settings
+    - [ ] Logout
+- [ ] Routing with the filters
+- [x] Move card open from being a react state to a css thing
+- [x] Font's
+- [x] Stream Update Cycle
+  - [x] Stream Update Cycle
+  - [x] Detect User Inactivity and slow refresh rate
+- [ ] Rewrite the brightspace api, client so we have types and are not just using a fetch method from it
+- [ ] Create a script to generate types from the documentation
+- [ ] Fix All TODO's
+- [ ] Go over style with a fine tooth comb
+  - [ ] Move All Colors and repeated stuff to be variables
+  - [ ] Fix scaling on my second monitor
+  - [ ] improve navbar hovers
+  - [ ] improve filter chips
+  - [ ] improve news items

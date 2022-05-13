@@ -1,0 +1,115 @@
+.container {
+  $searchSize: calc(100% - 60rem);
+  background-color: var(--Foreground);
+  height: 3.5rem;
+  width: 100%;
+  display: flex;
+  .side,
+  .center {
+    flex: 1 1 0;
+    display: flex;
+    align-content: center;
+    margin: auto 0;
+  }
+  .center {
+    flex-basis: $searchSize;
+  }
+  .rightSide {
+    justify-content: end;
+    position: relative;
+  }
+}
+// Search Bar
+.SearchBar {
+  height: 2.5rem;
+  width: 100%;
+  display: block;
+  background-color: var(--Background);
+  outline: none;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: #cccccc;
+}
+// Icons
+.Icon {
+  display: block;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  color: #fff;
+  img {
+    height: 100%;
+    width: 100%;
+    border-radius: 25%;
+  }
+}
+.IconButton {
+  margin: 0 0.5rem !important;
+}
+.alertArea {
+  display: none;
+  padding: 1rem;
+  margin: -0.25rem 0.5rem;
+  top: 100%;
+  position: absolute;
+  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--Border);
+  z-index: 1;
+  overflow-y: scroll;
+  background: var(--Foreground);
+  section, .NotificationShade {
+    width: 20rem;
+  }
+  .NotificationShade {
+    list-style: none;
+    padding-inline-start: 0;
+    li {
+      border-bottom: 1px solid white;
+      padding-top: 1rem;
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      img {
+        display: none;
+      }
+    }
+  }
+  .dropDown {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    li {
+      padding: .5rem 0;
+    }
+    button, a {
+      padding: 0;
+      display: inline-block;
+      border: none;
+      margin: 0;
+      text-decoration: none;
+      background: none;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      &:hover {
+        color: #3367d6;
+      }
+    }
+  }
+}
+.alertArea.open {
+  display: block;
+}
+.Active path {
+  color: #3367d6;
+}

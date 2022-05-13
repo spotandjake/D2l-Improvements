@@ -1,0 +1,48 @@
+.container {
+  width: 100%;
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  picture,
+  img {
+    pointer-events: none;
+    user-select: none;
+    width: 100%;
+  }
+  img {
+    min-height: 100%;
+    filter: brightness(0.75) blur(3px);
+  }
+  picture {
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .content {
+    position: absolute;
+    width: 100%;
+    padding: 0.75rem;
+    top: 0;
+    left: 0;
+    h4,
+    h6 {
+      color: #f2f2f2;
+      font-style: normal;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
+    }
+    h4 {
+      font-weight: bold;
+      font-size: 1.6rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    h6 {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+  }
+}

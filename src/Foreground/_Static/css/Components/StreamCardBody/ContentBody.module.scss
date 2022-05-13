@@ -1,0 +1,23 @@
+// Content Styling
+.contentMedia,
+.contentMedia img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+.container {
+  object,
+  embed,
+  iframe,
+  img,
+  picture {
+    border-radius: 0.5rem;
+  }
+  iframe,
+  object,
+  embed {
+    aspect-ratio: 16 / 9;
+    min-height: 40rem;
+    background: #ccc;
+  }
+}

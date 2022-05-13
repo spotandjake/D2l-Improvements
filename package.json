@@ -1,26 +1,37 @@
 {
-  "name": "d2lEnchance",
+  "name": "d2enhancements",
   "version": "0.2.0",
   "description": "Enhance D2l",
-  "main": "./dist/bundle.js",
-  "type": "module",
   "scripts": {
-    "start": "gulp build",
+    "start": "yarn build && yarn export && yarn package",
+    "build": "next build ./src/Foreground/",
+    "export": "next export -o ./dist/Foreground/ ./src/Foreground/",
+    "package": "gulp build",
+    "dev": "next dev ./src/Foreground/",
     "lint": "gulp lint"
   },
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "ejs": "^3.1.6",
-    "eslint": "^8.0.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@next/eslint-plugin-next": "^12.0.2",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@types/chrome": "^0.0.162",
+    "@types/node": "^16.9.0",
+    "@types/react": "^17.0.20",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "eslint": "^8.1.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
-    "html-minifier": "^4.0.0",
-    "node-sass": "^6.0.1",
+    "next": "^12.0.2",
     "prettier": "^2.4.1",
+    "react-idle-timer": "^4.6.4",
     "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2"
+    "sass": "^1.39.0",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "swr": "^1.0.1"
   }
 }

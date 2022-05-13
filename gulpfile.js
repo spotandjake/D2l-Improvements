@@ -1,102 +1,86 @@
-import gulp from 'gulp';
-import eslint from 'gulp-eslint';
-import * as rollup from 'rollup';
-import { terser } from 'rollup-plugin-terser';
-import ejs from './rollup-plugins/rollup-ejs.js';
-import fs from 'fs';
-// Options
-const terserOptions = {
-  compress: {
-    passes: 3,
-    module: true,
-  },
-  format: {
-    beautify: true,
-    // max_line_len: 500,
-    quote_style: 1, //Always Single
-    indent_level: 2,
-  },
-};
-// Generate
-gulp.task('build', async () => {
-  const bundle = await rollup.rollup({
-    input: 'src/js/main.js',
-    plugins: [
-      ejs({
-        include: [/[^\\]*\.ejs$/],
-        compilerOptions: { client: true },
-        loadStyles: true,
-      }),
-      terser(terserOptions),
-    ],
-  });
-  // Get All Assets For Build
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const gulp = require('gulp');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const eslint = require('gulp-eslint');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const path = require('path');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const rollup = require('rollup');
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const rollupTypescript = require('@rollup/plugin-typescript');
+
+async function* walk(dir) {
+  for await (const d of await fs.promises.opendir(dir)) {
+    const entry = path.join(dir, d.name);
+    if (d.isDirectory()) yield* walk(entry);
+    else if (d.isFile()) yield entry;
+  }
+}
+
+gulp.task('build', async (done) => {
+  // TODO: Look into bundling web page with rollup
+  // Make List of all files in the output foreground folder
+  const files = [];
+  for await (const p of walk('./dist/Foreground/')) {
+    const pathList = p.split(path.sep);
+    pathList.shift();
+    files.push(pathList.join('/'));
+  }
+  // Copy Manifest
   const manifest = JSON.parse(
     await fs.promises.readFile('./src/manifest.json', 'utf8')
   );
+  if (manifest['web_accessible_resources'])
+    manifest['web_accessible_resources'].push(...files);
+  else manifest['web_accessible_resources'] = files;
   await fs.promises.writeFile(
     './dist/manifest.json',
-    JSON.stringify(manifest, 2, 2)
+    JSON.stringify(manifest, null, 2)
   );
-  // Bundle Google Picker Library
-  await fs.promises.copyFile('./src/js/libs/client.js', './dist/client.js');
-  // Read Build Size Stuff
-  const oldCode = fs.existsSync('./dist/main.js')
-    ? await fs.promises.readFile('./dist/main.js', 'utf-8')
-    : '';
-  const previousStats = {
-    chars: oldCode.length,
-    lines: oldCode.split('\n').length,
-    blanks: oldCode.split('\n').filter((n) => n.trim() == '').length,
-    comments: oldCode.split('\n').filter((n) => n.trim().startsWith('//'))
-      .length,
-  };
-  // Output
-  await bundle.write({
-    file: 'dist/main.js',
+  // generate our Background Script
+  const a = await rollup.rollup({
+    input: './src/Background/Background.ts',
+    plugins: [
+      rollupTypescript({
+        cacheDir: './dist/cache/',
+      }),
+    ],
+  });
+  await a.write({
+    file: './dist/Background/Background.js',
+    name: 'Background',
     format: 'iife',
+    compact: true,
+    indent: '  ',
+    preferConst: true,
   });
-  const code = fs.existsSync('./dist/main.js')
-    ? await fs.promises.readFile('./dist/main.js', 'utf-8')
-    : '';
-  // Size Stuff
-  const stats = {
-    chars: code.length,
-    lines: code.split('\n').length,
-    blanks: code.split('\n').filter((n) => n.trim() == '').length,
-    comments: code.split('\n').filter((n) => n.trim().startsWith('//')).length,
-  };
-  console.table({
-    previous: {
-      ...previousStats,
-      code: previousStats.lines - previousStats.blanks - previousStats.comments,
-    },
-    current: {
-      ...stats,
-      code: stats.lines - stats.blanks - stats.comments,
-    },
-    reduction: {
-      chars: previousStats.chars - code.length,
-      lines: previousStats.lines - code.split('\n').length,
-      blanks:
-        previousStats.blanks -
-        code.split('\n').filter((n) => n.trim() == '').length,
-      comments:
-        previousStats.comments -
-        code.split('\n').filter((n) => n.trim().startsWith('//')).length,
-      code:
-        previousStats.lines -
-        previousStats.blanks -
-        previousStats.comments -
-        (stats.lines - stats.blanks - stats.comments),
-    },
+  const b = await rollup.rollup({
+    input: './src/Background/Content.ts',
+    plugins: [
+      rollupTypescript({
+        cacheDir: './dist/cache/',
+      }),
+    ],
   });
+  await b.write({
+    file: './dist/Background/Content.js',
+    name: 'Content',
+    format: 'iife',
+    compact: true,
+    indent: '  ',
+    preferConst: true,
+  });
+  done();
+  // eslint-disable-next-line no-undef
+  process.exit(0);
 });
 
 gulp.task('lint', () => {
   return (
     gulp
-      .src(['src/**/*.{js,ts}'])
+      .src(['src/**/*.{js,ts,tsx}'])
       // eslint() attaches the lint output to the "eslint" property
       // of the file object so it can be used by other modules.
       .pipe(eslint())
