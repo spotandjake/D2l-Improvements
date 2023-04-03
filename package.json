@@ -24,7 +24,7 @@
     "eslint": "^8.1.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
-    "next": "^12.0.2",
+    "next": "^13.2.4",
     "prettier": "^2.4.1",
     "react-idle-timer": "^4.6.4",
     "rollup": "^2.56.3",
@@ -32,6 +32,8 @@
     "typescript": "^4.4.2"
   },
   "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "swr": "^1.0.1"
   }
 }

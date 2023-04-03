@@ -45,6 +45,9 @@
 }
 .IconButton {
   margin: 0 0.5rem !important;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+  }
 }
 .alertArea {
   display: none;
@@ -57,7 +60,8 @@
   z-index: 1;
   overflow-y: scroll;
   background: var(--Foreground);
-  section, .NotificationShade {
+  section,
+  .NotificationShade {
     width: 20rem;
   }
   .NotificationShade {
@@ -85,9 +89,10 @@
     padding: 0;
     list-style-type: none;
     li {
-      padding: .5rem 0;
+      padding: 0.5rem 0;
     }
-    button, a {
+    button,
+    a {
       padding: 0;
       display: inline-block;
       border: none;
