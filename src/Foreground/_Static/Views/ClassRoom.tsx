@@ -10,6 +10,8 @@ import {
   Topic,
 } from '../Classes/BrightspaceTypes';
 import { StreamType, CompletionType } from '../Classes/Types';
+// Imports
+import Fuse from '../Classes/Fuse';
 // Components
 import React, { useState, useEffect } from 'react';
 import Loader from './Loader';
@@ -19,6 +21,7 @@ import ClassHeader from '../Components/ClassHeader';
 import StreamCard from '../Components/StreamCard';
 import StreamChip from '../Components/StreamChip';
 import Brightspace from '../Classes/Brightspace';
+import Aside from '../Components/Aside';
 interface props {
   brightSpace: Brightspace;
   Route: Function;
@@ -26,15 +29,22 @@ interface props {
 }
 // Loader Function
 const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
-  const [_refreshRate, setRefreshRate] = useState(1000*30);
-  const [_streamContent, setStreamContent] = useState(<Loader />);
+  const [_refreshRate, setRefreshRate] = useState(1000 * 30);
+  const [_streamContent, setStreamContent] = useState(undefined);
   const [_headerContent, setHeaderContent] = useState(<Loader />);
+  const [_showAside, setShowAside] = useState(false);
+  const [_searchValue, setSearch] = useState('');
   // Fetch the classList
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const fetchStreamData = async () => {
       // Stream
-      const stream: { date: number, elm: JSX.Element}[] = [];
+      const stream: {
+        date: number;
+        title: string;
+        body: string;
+        elm: JSX.Element;
+      }[] = [];
       // fetch News
       const streamNews: NewsItem[] = await brightSpace._fetch(
         `/api/le/${brightSpace.version.le}/${ClassId}/news/`
@@ -42,16 +52,20 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       streamNews.forEach((newsItem: NewsItem) => {
         stream.push({
           date: new Date(newsItem.StartDate).getTime(),
-          elm: <StreamCard
-            key={newsItem.Id}
-            Id={newsItem.Id}
-            Title={newsItem.Title}
-            Progress={CompletionType.Complete}
-            Category={StreamType.News}
-            StartDate={newsItem.StartDate}
-            Content={newsItem.Body}
-            Route={Route}
-          />
+          title: newsItem.Title,
+          body: newsItem.Body.Text || '',
+          elm: (
+            <StreamCard
+              key={newsItem.Id}
+              Id={newsItem.Id}
+              Title={newsItem.Title}
+              Progress={CompletionType.Complete}
+              Category={StreamType.News}
+              StartDate={newsItem.StartDate}
+              Content={newsItem.Body}
+              Route={Route}
+            />
+          ),
         });
       });
       // Fetch Content
@@ -96,28 +110,32 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       const contentStream = await parseContent(rootContent);
       for (const contentItem of contentStream) {
         stream.push({
+          title: contentItem.Title,
+          body: '',
           date: new Date(contentItem.LastModifiedDate).getTime(),
-          elm: <StreamCard
-            key={contentItem.Id}
-            Id={contentItem.Id}
-            Title={contentItem.Title}
-            Progress={
-              [CompletionType.Unread, CompletionType.Complete][
-                contentItem.Read ? 1 : 0
-              ]
-            }
-            Category={StreamType.Content}
-            StartDate={contentItem.LastModifiedDate}
-            Content={contentItem.Url}
-            Route={Route}
-          />
+          elm: (
+            <StreamCard
+              key={contentItem.Id}
+              Id={contentItem.Id}
+              Title={contentItem.Title}
+              Progress={
+                [CompletionType.Unread, CompletionType.Complete][
+                  contentItem.Read ? 1 : 0
+                ]
+              }
+              Category={StreamType.Content}
+              StartDate={contentItem.LastModifiedDate}
+              Content={contentItem.Url}
+              Route={Route}
+            />
+          ),
         });
       }
       // TODO: Fetch Discussions
       // TODO: Fetch Assignments
       // TODO: Fetch Quizzes
       // Set Page Content
-      setStreamContent(<>{stream.sort((a, b) => b.date - a.date).map(a => a.elm)}</>);
+      setStreamContent(stream.sort((a, b) => b.date - a.date));
       timeout = setTimeout(fetchStreamData, _refreshRate);
     };
     (async () => {
@@ -155,30 +173,61 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       fetchStreamData();
     })();
     return () => clearTimeout(timeout);
-  }, []);
+  }, [ClassId]);
   // Render the classes
   return (
     <section className={styles.container}>
       {/* Idle Timer */}
       <IdleTimer
         timeout={1000 * 30}
-        onActive={() => setRefreshRate(1000*30)}
-        onIdle={() => setRefreshRate(1000*60*15)}
+        onActive={() => setRefreshRate(1000 * 30)}
+        onIdle={() => setRefreshRate(1000 * 60 * 15)}
         debounce={250}
       />
       {/* NavBar */}
-      <NavBar brightSpace={brightSpace} />
+      <NavBar
+        brightSpace={brightSpace}
+        showAside={setShowAside}
+        setSearch={setSearch}
+      />
+      {/* Aside */}
+      <Aside
+        brightSpace={brightSpace}
+        Route={Route}
+        Active={_showAside}
+        showAside={setShowAside}
+      />
       {/* Page Content */}
       <section className={styles.content}>
         {/* Class Heading */}
         {_headerContent}
         {/* ClassStream */}
         <section className={styles.stream}>
-          <input type="checkbox" id={`${StreamType.News}-ExpandState`} defaultChecked={true} />
-          <input type="checkbox" id={`${StreamType.Content}-ExpandState`} defaultChecked={true} />
-          <input type="checkbox" id={`${StreamType.Discussions}-ExpandState`} defaultChecked={true} />
-          <input type="checkbox" id={`${StreamType.Assignments}-ExpandState`} defaultChecked={true} />
-          <input type="checkbox" id={`${StreamType.Quizzes}-ExpandState`} defaultChecked={true} />
+          <input
+            type="checkbox"
+            id={`${StreamType.News}-ExpandState`}
+            defaultChecked={true}
+          />
+          <input
+            type="checkbox"
+            id={`${StreamType.Content}-ExpandState`}
+            defaultChecked={true}
+          />
+          <input
+            type="checkbox"
+            id={`${StreamType.Discussions}-ExpandState`}
+            defaultChecked={true}
+          />
+          <input
+            type="checkbox"
+            id={`${StreamType.Assignments}-ExpandState`}
+            defaultChecked={true}
+          />
+          <input
+            type="checkbox"
+            id={`${StreamType.Quizzes}-ExpandState`}
+            defaultChecked={true}
+          />
           {/* Class Filter Chips */}
           <div className={styles.chipContainer}>
             <StreamChip Type={StreamType.News} />
@@ -188,7 +237,24 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
             <StreamChip Type={StreamType.Quizzes} />
           </div>
           {/* Stream Content */}
-          {_streamContent}
+          {(() => {
+            if (_streamContent == undefined) return <Loader />;
+
+            const content = _streamContent;
+            // Filter
+            if (_searchValue != '') {
+              const fuse = new Fuse(_streamContent, {
+                includeScore: true,
+                findAllMatches: true,
+                shouldSort: true,
+                useExtendedSearch: true,
+                // Search in `author` and in `tags` array
+                keys: ['title', 'body'],
+              });
+              const result = fuse.search(_searchValue);
+              return <>{result.map((a) => a.item.elm)}</>;
+            } else return <>{content.map((a) => a.elm)}</>;
+          })()}
         </section>
       </section>
     </section>

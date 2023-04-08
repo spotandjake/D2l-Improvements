@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap');
 /* General Page Stuff */
+:root {
+  --navBar-Size: 3.5rem;
+}
 html,
 body {
   height: 100%;

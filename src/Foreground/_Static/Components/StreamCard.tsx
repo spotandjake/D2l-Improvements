@@ -41,10 +41,10 @@ const ClassCard = ({
   Progress,
   Category,
   StartDate,
-  Content
+  Content,
 }: ClassCardProps) => {
-  const [ currentContent, setCurrentContent ] = useState(<Loader />);
-  const [ loaded, setLoaded ] = useState(false);
+  const [currentContent, setCurrentContent] = useState(<Loader />);
+  const [loaded, setLoaded] = useState(false);
   const renderBody = () => {
     if (!loaded) {
       setCurrentContent(GenerateBody(Category, Content));
@@ -56,7 +56,11 @@ const ClassCard = ({
     [StreamType.Content]: ClassRoundedIcon,
   }[Category];
   return (
-    <label className={[styles.container, styles[Category]].join(' ')} htmlFor={`${Id}-ExpandState`} onClick={() => renderBody()}>
+    <label
+      className={[styles.container, styles[Category]].join(' ')}
+      htmlFor={`${Id}-ExpandState`}
+      onClick={() => renderBody()}
+    >
       {/* Content */}
       <div className={styles.titleBlock}>
         <div className={[styles.titleIcon, Progress].join(' ')}>

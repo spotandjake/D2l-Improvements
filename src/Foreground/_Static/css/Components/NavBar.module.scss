@@ -1,9 +1,12 @@
 .container {
   $searchSize: calc(100% - 60rem);
   background-color: var(--Foreground);
-  height: 3.5rem;
+  height: var(--navBar-Size);
   width: 100%;
   display: flex;
+  position: fixed;
+  z-index: 1;
+  top: 0;
   .side,
   .center {
     flex: 1 1 0;

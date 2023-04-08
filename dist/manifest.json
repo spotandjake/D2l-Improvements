@@ -24,18 +24,18 @@
     ]
   },
   "web_accessible_resources": [
-    "Foreground/_next/static/AGRPy31gBBl7U0Z9q7kvk/_ssgManifest.js",
-    "Foreground/_next/static/AGRPy31gBBl7U0Z9q7kvk/_buildManifest.js",
-    "Foreground/_next/static/css/a2dafb40f8e5f790.css",
-    "Foreground/_next/static/css/c065f75993689a5c.css",
+    "Foreground/_next/static/css/8b779515d2b52e9a.css",
+    "Foreground/_next/static/css/cd6e69e0a00380ff.css",
     "Foreground/_next/static/chunks/framework-19f3649580393c10.js",
     "Foreground/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
     "Foreground/_next/static/chunks/webpack-fc87252e8ee58996.js",
     "Foreground/_next/static/chunks/869-fccc4738739d07d3.js",
     "Foreground/_next/static/chunks/main-410df1897940a3a9.js",
     "Foreground/_next/static/chunks/pages/_app-dec3c613a972920c.js",
+    "Foreground/_next/static/chunks/pages/index-6d66457e88622fc0.js",
     "Foreground/_next/static/chunks/pages/_error-d11cb7facb2c59a4.js",
-    "Foreground/_next/static/chunks/pages/index-d30b125f7edc1e35.js",
+    "Foreground/_next/static/4rhmrQtna-4Qkje5wkZJQ/_ssgManifest.js",
+    "Foreground/_next/static/4rhmrQtna-4Qkje5wkZJQ/_buildManifest.js",
     "Foreground/index.html",
     "Foreground/404.html"
   ]

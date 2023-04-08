@@ -3,7 +3,7 @@ interface LinkProps {
   Href: string;
   Active: boolean;
   Route?: Function;
-  children: JSX.Element[];
+  children: JSX.Element[] | JSX.Element;
 }
 const Link = ({ Title, Href, Active, children, Route }: LinkProps) => {
   const click = (title: string, href: string, active: boolean) => {

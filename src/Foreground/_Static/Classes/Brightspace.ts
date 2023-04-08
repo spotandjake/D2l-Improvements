@@ -1,15 +1,12 @@
 // TODO: Import Api Types
-import {
-  VersionProductVersions,
-  D2LPRODUCT
-} from './BrightspaceTypes';
+import { VersionProductVersions, D2LPRODUCT } from './BrightspaceTypes';
 // TODO: Main Api
 class BrightSpace {
   public version = {
     ep: '1.0.0',
     le: '1.0.0',
     lp: '1.0.0',
-    lr: '1.0.0'
+    lr: '1.0.0',
   };
   public cid = '';
   public token = '';
@@ -29,19 +26,27 @@ class BrightSpace {
         product.ProductCode == D2LPRODUCT.le ||
         product.ProductCode == D2LPRODUCT.lp ||
         product.ProductCode == D2LPRODUCT.lr
-      ) this.version[product.ProductCode] = product.LatestVersion;
+      )
+        this.version[product.ProductCode] = product.LatestVersion;
     });
     // Authenticate
     this._getToken(true);
-    setInterval(() => window.requestIdleCallback(() => this._getToken(true), { timeout: 1000 }), 300000);
+    setInterval(
+      () =>
+        window.requestIdleCallback(() => this._getToken(true), {
+          timeout: 1000,
+        }),
+      300000
+    );
     // TODO: Initialize Sub Api's
   }
   // TODO: Fetch Override
   async _fetch(route: string, options: RequestInit = {}) {
-    if (route.startsWith('/')) route = `https://durham.elearningontario.ca/d2l${route}`; // Testing
+    if (route.startsWith('/'))
+      route = `https://durham.elearningontario.ca/d2l${route}`; // Testing
     options.headers = {
       'content-type': 'application/x-www-form-urlencoded, application/json',
-      ...options.headers
+      ...options.headers,
     };
     // TODO: Error Handling
     const response = await fetch(route, options);
@@ -55,7 +60,7 @@ class BrightSpace {
           'x-csrf-token': localStorage.getItem('XSRF.Token'),
         },
         body: 'scope=*:*:*',
-        method: 'POST'
+        method: 'POST',
       });
       this.token = response.access_token;
     }

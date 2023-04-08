@@ -1,5 +1,8 @@
 .container {
-  height: 100%;
+  margin-top: var(--navBar-Size);
+  padding-top: 1px;
+  overflow-y: auto;
+  height: calc(100% - var(--navBar-Size));
 }
 .content {
   $pageSize: calc(100% - 30rem);

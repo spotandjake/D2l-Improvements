@@ -3,12 +3,16 @@ import styles from '../../css/Components/StreamCardBody/NewsBody.module.scss';
 import { RichText } from '../../Classes/BrightspaceTypes';
 // Loader Function
 interface Props {
-  Content: RichText
+  Content: RichText;
 }
 const NewsBody = ({ Content }: Props) => {
   // TODO: figure out the possible html and style options
+  console.log(Content);
   return (
-    <div className={styles.markDown} dangerouslySetInnerHTML={{ __html: Content.Html || Content.Text }}></div>
+    <div
+      className={styles.markDown}
+      dangerouslySetInnerHTML={{ __html: Content.Html || Content.Text }}
+    ></div>
   );
 };
 
