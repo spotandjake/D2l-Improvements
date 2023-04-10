@@ -47,7 +47,9 @@
     }
   }
   // Input State Holder
-  & > input { display: none; }
+  & > input {
+    display: none;
+  }
   // Expanded Body
   .expandContainer {
     display: none;
@@ -59,6 +61,25 @@
   & > input:checked + .expandContainer {
     display: block;
     max-height: max-content;
+  }
+}
+.inlineButton {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 1rem;
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+  padding: 0 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+  color: var(--Text-Main);
+  border: 0.0625rem solid var(--Border);
+  background-color: var(--button-bg-1);
+  &:hover {
+    opacity: 0.75;
   }
 }
 :global(#News-ExpandState:checked) ~ .News,

@@ -1,5 +1,7 @@
 // TODO: Import Api Types
 import { VersionProductVersions, D2LPRODUCT } from './BrightspaceTypes';
+// Types
+
 // TODO: Main Api
 class BrightSpace {
   public version = {
@@ -70,6 +72,9 @@ class BrightSpace {
     return await this._fetch('/api/versions/');
   }
   // Localized Methods
+  async getAssignments() {
+    return undefined;
+  }
 }
 // Exports
 export default BrightSpace;

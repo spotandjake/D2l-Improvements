@@ -74,6 +74,18 @@ const ClassCard = ({
           <h2>{Title}</h2>
           <h5>{new Date(StartDate).toDateString()}</h5>
         </div>
+        {Category == StreamType.Content ? (
+          <a
+            className={styles.inlineButton}
+            onClick={(evt) => evt.stopPropagation()}
+            href={Content as string}
+            download
+          >
+            <span>Download</span>
+          </a>
+        ) : (
+          <></>
+        )}
       </div>
       {/* Label State */}
       <input type="checkbox" id={`${Id}-ExpandState`} />

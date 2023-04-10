@@ -13,5 +13,5 @@
 :global(#Discussions-ExpandState:checked) ~ * .Discussions,
 :global(#Assignments-ExpandState:checked) ~ * .Assignments,
 :global(#Quizzes-ExpandState:checked) ~ * .Quizzes {
-  background-color: #084d91;
+  background-color: var(--button-bg-1);
 }
