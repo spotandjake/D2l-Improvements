@@ -1,5 +1,6 @@
 @use 'sass:color';
 .markDown {
+  filter: invert(100%) !important;
   margin: 0.52rem;
   // Headers
   h1,
@@ -34,13 +35,14 @@
   }
   // Links
   a {
-    filter: invert(100%) !important;
     color: #008685;
     &:hover {
       color: color.scale(#008685, $lightness: -30%);
     }
   }
-  span {
-    filter: invert(100%) !important;
+  p,
+  span,
+  li {
+    color: #000;
   }
 }

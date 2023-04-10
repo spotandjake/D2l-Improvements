@@ -69,7 +69,7 @@ class BrightSpace {
   async versions(): Promise<VersionProductVersions[]> {
     return await this._fetch('/api/versions/');
   }
+  // Localized Methods
 }
-// TODO: Sub Api's
 // Exports
 export default BrightSpace;
