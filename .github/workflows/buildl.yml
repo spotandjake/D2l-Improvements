@@ -1,0 +1,20 @@
+name: Build Extension
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: yarn & yarn start
+        run: |
+          yarn
+          yarn start
+      - name: Store Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Extension
+          path: |
+            dist
