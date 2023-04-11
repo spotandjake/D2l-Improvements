@@ -10,7 +10,7 @@
 function isArray(value) {
   return !Array.isArray
     ? getTag(value) === '[object Array]'
-    : Array.isArray(value)
+    : Array.isArray(value);
 }
 
 // Adapted from: https://github.com/lodash/lodash/blob/master/.internal/baseToString.js
@@ -18,22 +18,22 @@ const INFINITY = 1 / 0;
 function baseToString(value) {
   // Exit early for strings to avoid a performance hit in some environments.
   if (typeof value == 'string') {
-    return value
+    return value;
   }
   let result = value + '';
-  return result == '0' && 1 / value == -INFINITY ? '-0' : result
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
 }
 
 function toString(value) {
-  return value == null ? '' : baseToString(value)
+  return value == null ? '' : baseToString(value);
 }
 
 function isString(value) {
-  return typeof value === 'string'
+  return typeof value === 'string';
 }
 
 function isNumber(value) {
-  return typeof value === 'number'
+  return typeof value === 'number';
 }
 
 // Adapted from: https://github.com/lodash/lodash/blob/master/isBoolean.js
@@ -42,24 +42,24 @@ function isBoolean(value) {
     value === true ||
     value === false ||
     (isObjectLike(value) && getTag(value) == '[object Boolean]')
-  )
+  );
 }
 
 function isObject(value) {
-  return typeof value === 'object'
+  return typeof value === 'object';
 }
 
 // Checks if `value` is object-like.
 function isObjectLike(value) {
-  return isObject(value) && value !== null
+  return isObject(value) && value !== null;
 }
 
 function isDefined(value) {
-  return value !== undefined && value !== null
+  return value !== undefined && value !== null;
 }
 
 function isBlank(value) {
-  return !value.trim().length
+  return !value.trim().length;
 }
 
 // Gets the `toStringTag` of `value`.
@@ -69,12 +69,12 @@ function getTag(value) {
     ? value === undefined
       ? '[object Undefined]'
       : '[object Null]'
-    : Object.prototype.toString.call(value)
+    : Object.prototype.toString.call(value);
 }
 
 const EXTENDED_SEARCH_UNAVAILABLE = 'Extended search is not available';
 
-const INCORRECT_INDEX_TYPE = "Incorrect 'index' type";
+const INCORRECT_INDEX_TYPE = `Incorrect 'index' type`;
 
 const LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY = (key) =>
   `Invalid value for key ${key}`;
@@ -1240,7 +1240,7 @@ class ExtendedSearch {
   }
 
   static condition(_, options) {
-    return options.useExtendedSearch
+    return options.useExtendedSearch;
   }
 
   searchIn(text) {
@@ -1390,7 +1390,7 @@ function parse(query, options, { auto = true } = {}) {
       return obj
     }
 
-    let node = {
+    const node = {
       children: [],
       operator: keys[0]
     };
@@ -1499,8 +1499,8 @@ function format(
       });
     }
 
-    return data
-  })
+    return data;
+  });
 }
 
 class Fuse {
@@ -1597,7 +1597,7 @@ class Fuse {
     return format(results, this._docs, {
       includeMatches,
       includeScore
-    })
+    });
   }
 
   _searchStringList(query) {
@@ -1608,7 +1608,7 @@ class Fuse {
     // Iterate over every string in the index
     records.forEach(({ v: text, i: idx, n: norm }) => {
       if (!isDefined(text)) {
-        return
+        return;
       }
 
       const { isMatch, score, indices } = searcher.searchIn(text);
@@ -1622,7 +1622,7 @@ class Fuse {
       }
     });
 
-    return results
+    return results;
   }
 
   _searchLogical(query) {
@@ -1646,10 +1646,10 @@ class Fuse {
               item,
               matches
             }
-          ]
+          ];
         }
 
-        return []
+        return [];
       }
 
       const res = [];
@@ -1659,10 +1659,10 @@ class Fuse {
         if (result.length) {
           res.push(...result);
         } else if (node.operator === LogicalOperator.AND) {
-          return []
+          return [];
         }
       }
-      return res
+      return res;
     };
 
     const records = this._myIndex.records;
@@ -1671,7 +1671,7 @@ class Fuse {
 
     records.forEach(({ $: item, i: idx }) => {
       if (isDefined(item)) {
-        let expResults = evaluate(expression, item, idx);
+        const expResults = evaluate(expression, item, idx);
 
         if (expResults.length) {
           // Dedupe when adding
@@ -1686,7 +1686,7 @@ class Fuse {
       }
     });
 
-    return results
+    return results;
   }
 
   _searchObjectList(query) {
@@ -1697,10 +1697,10 @@ class Fuse {
     // List is Array<Object>
     records.forEach(({ $: item, i: idx }) => {
       if (!isDefined(item)) {
-        return
+        return;
       }
 
-      let matches = [];
+      const matches = [];
 
       // Iterate over every key (i.e, path), and fetch the value at that key
       keys.forEach((key, keyIndex) => {
@@ -1722,19 +1722,19 @@ class Fuse {
       }
     });
 
-    return results
+    return results;
   }
   _findMatches({ key, value, searcher }) {
     if (!isDefined(value)) {
-      return []
+      return [];
     }
 
-    let matches = [];
+    const matches = [];
 
     if (isArray(value)) {
       value.forEach(({ v: text, i: idx, n: norm }) => {
         if (!isDefined(text)) {
-          return
+          return;
         }
 
         const { isMatch, score, indices } = searcher.searchIn(text);
@@ -1760,7 +1760,7 @@ class Fuse {
       }
     }
 
-    return matches
+    return matches;
   }
 }
 

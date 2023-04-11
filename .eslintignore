@@ -1,4 +1,5 @@
 /src/Foreground/next.config.js
+/src/Foreground/_static/Classes/Fuse.js
 /src/Foreground/.next/*
 /dist/*
 /temp/*

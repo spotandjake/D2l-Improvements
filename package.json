@@ -24,15 +24,16 @@
     "eslint": "^8.1.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
-    "next": "^13.2.4",
+    "next": "^13.3.0",
     "prettier": "^2.4.1",
     "react-idle-timer": "^4.6.4",
     "rollup": "^2.56.3",
     "sass": "^1.39.0",
-    "typescript": "^4.4.2"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.13.0",
+    "@typescript-eslint/typescript-estree": "^5.58.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "swr": "^1.0.1"
