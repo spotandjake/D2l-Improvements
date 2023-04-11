@@ -1,28 +1,17 @@
+import { Link as RouterLink } from 'react-router-dom';
+import styles from '../css/Components/Link.module.scss';
 interface LinkProps {
-  Title: string;
   Href: string;
   Active: boolean;
-  Route?: Function;
   children: JSX.Element[] | JSX.Element;
 }
-const Link = ({ Title, Href, Active, children, Route }: LinkProps) => {
-  const click = (title: string, href: string, active: boolean) => {
-    if (active) {
-      if (Route) {
-        // Change url
-        history.pushState({ Title: title, Url: href }, title, href);
-        // Change Page
-        Route();
-      } else window.location.href = href;
-    }
-  };
+const Link = ({ Href, Active, children }: LinkProps) => {
+  // TODO: Implement Active
   return (
-    <div
-      onClick={() => {
-        click(Title, Href, Active);
-      }}
-    >
-      {children}
+    <div>
+      <RouterLink to={Href} className={styles.linkBody}>
+        {children}
+      </RouterLink>
     </div>
   );
 };

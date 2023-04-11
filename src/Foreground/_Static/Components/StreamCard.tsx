@@ -10,7 +10,7 @@ import NewsBody from './StreamCardBody/NewsBody';
 import ContentBody from './StreamCardBody/ContentBody';
 // Types
 import { StreamType, CompletionType } from '../Classes/Types';
-import { RichText } from '../Classes/BrightspaceTypes';
+import { type RichText } from '../Classes/BrightSpaceApi';
 // Loader Function
 type ContentType = RichText | string;
 interface ClassCardProps {
@@ -20,7 +20,6 @@ interface ClassCardProps {
   Category: StreamType;
   StartDate: string;
   Content: ContentType;
-  Route: Function;
 }
 
 const GenerateBody = (Category: StreamType, content: ContentType) => {

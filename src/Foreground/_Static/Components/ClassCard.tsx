@@ -8,18 +8,29 @@ interface ClassCardProps {
   Href: string;
   Picture: string;
   StartDate: string;
-  Route: Function;
 }
-const ClassCard = ({ Name, Active, Href, Picture, StartDate, Route }: ClassCardProps) => {
+const ClassCard = ({
+  Name,
+  Active,
+  Href,
+  Picture,
+  StartDate,
+}: ClassCardProps) => {
   return (
-    <div className={[styles.container, !Active ? ' '  : styles.disabled ].join(' ')}>
-      <Link Title={Name} Href={Href} Active={!Active} Route={Route}>
+    <div
+      className={[styles.container, Active ? ' ' : styles.disabled].join(' ')}
+    >
+      <Link Href={Href} Active={Active}>
         <picture>
           <img src={Picture} />
         </picture>
         <div className={styles.content}>
           <h4>{Name}</h4>
-          {!Active ? <h6>Closes | {new Date(StartDate).toDateString()}</h6> : <h6>Closed</h6>}
+          {Active ? (
+            <h6>Closes | {new Date(StartDate).toDateString()}</h6>
+          ) : (
+            <h6>Closed</h6>
+          )}
         </div>
       </Link>
     </div>

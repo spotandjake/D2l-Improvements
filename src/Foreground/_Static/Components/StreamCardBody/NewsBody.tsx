@@ -1,17 +1,16 @@
 import styles from '../../css/Components/StreamCardBody/NewsBody.module.scss';
 
-import { RichText } from '../../Classes/BrightspaceTypes';
+import { type RichText } from '../../Classes/BrightSpaceApi';
 // Loader Function
 interface Props {
   Content: RichText;
 }
 const NewsBody = ({ Content }: Props) => {
-  // TODO: figure out the possible html and style options
-  console.log(Content);
+  // TODO: Parse the html to react, apply better coloring that works with our dark colors
   return (
     <div
       className={styles.markDown}
-      dangerouslySetInnerHTML={{ __html: Content.Html || Content.Text }}
+      dangerouslySetInnerHTML={{ __html: Content.html || Content.text }}
     ></div>
   );
 };

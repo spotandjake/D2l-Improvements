@@ -1,7 +1,6 @@
 import styles from '../css/Views/ClassRoom.module.scss';
 // Types
 import {
-  NewsItem,
   ContentObject,
   ContentType,
   ObjectListPage,
@@ -10,73 +9,68 @@ import {
   Topic,
 } from '../Classes/BrightspaceTypes';
 import { StreamType, CompletionType } from '../Classes/Types';
+import { useParams } from 'react-router-dom';
 // Imports
-import Fuse from '../Classes/Fuse';
+import Fuse from 'fuse.js';
 // Components
 import React, { useState, useEffect } from 'react';
 import Loader from './Loader';
-import NavBar from '../Components/NavBar';
 import IdleTimer from 'react-idle-timer';
 import ClassHeader from '../Components/ClassHeader';
 import StreamCard from '../Components/StreamCard';
 import StreamChip from '../Components/StreamChip';
-import Brightspace from '../Classes/BrightSpaceApi';
-import Aside from '../Components/Aside';
+import Brightspace, { type RichText }  from '../Classes/BrightSpaceApi';
 interface props {
   brightSpace: Brightspace;
-  Route: Function;
-  ClassId: string;
+  searchValue: string;
+}
+interface StreamItem {
+  date: number;
+  title: string;
+  body: string | RichText;
+  elm: JSX.Element;
 }
 // Loader Function
-const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
+const ClassRoom = ({ brightSpace, searchValue }: props) => {
   const [_refreshRate, setRefreshRate] = useState(1000 * 30);
   const [_streamContent, setStreamContent] = useState(undefined);
   const [_headerContent, setHeaderContent] = useState(<Loader />);
-  const [_showAside, setShowAside] = useState(false);
-  const [_searchValue, setSearch] = useState('');
+  const { classID } = useParams();
+  brightSpace.setClassID(classID);
   // TODO: Rewrite this using the new api
   // Fetch the classList
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const fetchStreamData = async () => {
       // Stream
-      const stream: {
-        date: number;
-        title: string;
-        body: string;
-        elm: JSX.Element;
-      }[] = [];
+      const stream: StreamItem[] = [];
       // fetch News
-      //@ts-ignore
-      const streamNews: NewsItem[] = await brightSpace._fetch(
-        `/d2l/api/le/${(await brightSpace.getVersions()).le}/${ClassId}/news/`
-      );
-      streamNews.forEach((newsItem: NewsItem) => {
+      const streamNews = await brightSpace.getClassNews();
+      for (const newsItem of streamNews) {
         stream.push({
-          date: new Date(newsItem.StartDate).getTime(),
-          title: newsItem.Title,
-          body: newsItem.Body.Text || '',
+          date: new Date(newsItem.startDate).getTime(),
+          title: newsItem.title,
+          body: newsItem.body.text || newsItem.body.html,
           elm: (
             <StreamCard
-              key={newsItem.Id}
-              Id={newsItem.Id}
-              Title={newsItem.Title}
+              key={newsItem.itemID}
+              Id={newsItem.itemID}
+              Title={newsItem.title}
               Progress={CompletionType.Complete}
               Category={StreamType.News}
-              StartDate={newsItem.StartDate}
-              Content={newsItem.Body}
-              Route={Route}
+              StartDate={newsItem.startDate}
+              Content={newsItem.body}
             />
           ),
         });
-      });
+      }
       // Fetch Content
       // TODO: Figure out how to make this run faster
       // TODO: We want to fetch smaller lists and make use of the next feature.
       //@ts-ignore
       const readModules: ObjectListPage<UserProgressData> =
         await brightSpace._fetch(
-          `/d2l/api/le/unstable/${ClassId}/content/userprogress/?pageSize=99999`
+          `/d2l/api/le/unstable/${brightSpace.getClassID()}/content/userprogress/?pageSize=99999`
         );
       const parseContent = async (
         content: (ContentObject | Module | Topic)[]
@@ -94,7 +88,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
                       (
                         await brightSpace.getVersions()
                       ).le
-                    }/${ClassId}/content/modules/${
+                    }/${brightSpace.getClassID()}/content/modules/${
                       contentElement.Id
                     }/structure/`
                   );
@@ -120,7 +114,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
           (
             await brightSpace.getVersions()
           ).le
-        }/${ClassId}/content/root/`
+        }/${brightSpace.getClassID()}/content/root/`
       );
       const contentStream = await parseContent(rootContent);
       for (const contentItem of contentStream) {
@@ -141,7 +135,6 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
               Category={StreamType.Content}
               StartDate={contentItem.LastModifiedDate}
               Content={contentItem.Url}
-              Route={Route}
             />
           ),
         });
@@ -157,7 +150,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       // Fetch Stuff For Header
       //@ts-ignore
       const { properties, entities } = await brightSpace._fetch(
-        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${ClassId}`
+        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${brightSpace.getClassID()}`
       );
       const imageInfo = await window
         .fetch(entities[2].href)
@@ -180,7 +173,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       fetchStreamData();
     })();
     return () => clearTimeout(timeout);
-  }, [ClassId]);
+  }, [classID]);
   // Render the classes
   return (
     <section className={styles.container}>
@@ -190,19 +183,6 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         onActive={() => setRefreshRate(1000 * 30)}
         onIdle={() => setRefreshRate(1000 * 60 * 15)}
         debounce={250}
-      />
-      {/* NavBar */}
-      <NavBar
-        brightSpace={brightSpace}
-        showAside={setShowAside}
-        setSearch={setSearch}
-      />
-      {/* Aside */}
-      <Aside
-        brightSpace={brightSpace}
-        Route={Route}
-        Active={_showAside}
-        showAside={setShowAside}
       />
       {/* Page Content */}
       <section className={styles.content}>
@@ -249,8 +229,8 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
 
             const content = _streamContent;
             // Filter
-            if (_searchValue != '') {
-              const fuse = new Fuse(_streamContent, {
+            if (searchValue != '') {
+              const fuse = new Fuse<StreamItem>(_streamContent, {
                 includeScore: true,
                 findAllMatches: true,
                 shouldSort: true,
@@ -258,7 +238,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
                 // Search in `author` and in `tags` array
                 keys: ['title', 'body'],
               });
-              const result = fuse.search(_searchValue);
+              const result = fuse.search(searchValue);
               return <>{result.map((a) => a.item.elm)}</>;
             } else return <>{content.map((a) => a.elm)}</>;
           })()}
