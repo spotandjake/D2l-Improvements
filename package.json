@@ -3,9 +3,8 @@
   "version": "0.2.0",
   "description": "Enhance D2l",
   "scripts": {
-    "start": "yarn build && yarn export && yarn package",
+    "start": "yarn build && yarn package",
     "build": "next build ./src/Foreground/",
-    "export": "next export -o ./dist/Foreground/ ./src/Foreground/",
     "package": "gulp build",
     "dev": "next dev ./src/Foreground/",
     "lint": "gulp lint"

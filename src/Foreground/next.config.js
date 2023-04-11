@@ -2,5 +2,7 @@
 module.exports = {
   swcMinify: true,
   basePath: '/_ext/Foreground',
-  optimizeFonts: true
+  optimizeFonts: true,
+  output: 'export',
+  distDir: '../../dist/Foreground',
 };
