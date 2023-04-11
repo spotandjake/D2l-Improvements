@@ -31,9 +31,14 @@ gulp.task('build', async (done) => {
   const manifest = JSON.parse(
     await fs.promises.readFile('./src/manifest.json', 'utf8')
   );
-  if (manifest['web_accessible_resources'])
-    manifest['web_accessible_resources'].push(...files);
-  else manifest['web_accessible_resources'] = files;
+  if (manifest['web_accessible_resources'] == undefined)
+    manifest['web_accessible_resources'] = [];
+  manifest['web_accessible_resources'].push({
+    resources: files,
+    matches: ['https://durham.elearningontario.ca/*'],
+    use_dynamic_url: true,
+  });
+
   await fs.promises.writeFile(
     './dist/manifest.json',
     JSON.stringify(manifest, null, 2)
