@@ -20,7 +20,6 @@ async function* walk(dir) {
 }
 
 gulp.task('build', async (done) => {
-  // TODO: Look into bundling web page with rollup
   // Make List of all files in the output foreground folder
   const files = [];
   for await (const p of walk('./dist/Foreground/')) {

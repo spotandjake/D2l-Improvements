@@ -2,7 +2,7 @@ export const enum D2LPRODUCT {
   ep = 'ep',
   le = 'le',
   lp = 'lp',
-  lr = 'lr'
+  lr = 'lr',
 }
 // Version
 export type D2LVERSION = string;
@@ -24,7 +24,7 @@ interface FileBlock {
 }
 export const enum ContentType {
   Module,
-  Topic
+  Topic,
 }
 export interface ObjectListPage<Type> {
   Next: string | null;
@@ -95,7 +95,7 @@ export interface Topic {
   Type: ContentType.Topic;
   Description: RichText | null;
   ParentModuleId: number;
-  ActivityId: string | null,
+  ActivityId: string | null;
   Duration: number | null;
   IsExempt: boolean;
   ToolId: number | null;

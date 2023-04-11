@@ -10,7 +10,7 @@ import MailIcon from '@material-ui/icons/MailOutlined';
 import MessageIcon from '@material-ui/icons/CommentOutlined';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Brightspace from '../Classes/Brightspace';
+import Brightspace from '../Classes/BrightSpaceApi';
 interface props {
   brightSpace: Brightspace;
   showAside?: (any) => void;
@@ -81,7 +81,7 @@ const NavBar = ({ brightSpace, showAside, setSearch }: props) => {
       ].indexOf(viewType);
       if (category != -1) {
         const response = await fetch(
-          `/d2l/MiniBar/${brightSpace.cid}/ActivityFeed/GetAlertsDaylight?Category=${category}&requestId=3`
+          `/d2l/MiniBar/${brightSpace.getClassID}/ActivityFeed/GetAlertsDaylight?Category=${category}&requestId=3`
         );
         const res = await parseResponse(response);
         // Parse the html content

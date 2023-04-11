@@ -20,7 +20,7 @@ import IdleTimer from 'react-idle-timer';
 import ClassHeader from '../Components/ClassHeader';
 import StreamCard from '../Components/StreamCard';
 import StreamChip from '../Components/StreamChip';
-import Brightspace from '../Classes/Brightspace';
+import Brightspace from '../Classes/BrightSpaceApi';
 import Aside from '../Components/Aside';
 interface props {
   brightSpace: Brightspace;
@@ -34,6 +34,7 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
   const [_headerContent, setHeaderContent] = useState(<Loader />);
   const [_showAside, setShowAside] = useState(false);
   const [_searchValue, setSearch] = useState('');
+  // TODO: Rewrite this using the new api
   // Fetch the classList
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -46,8 +47,9 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         elm: JSX.Element;
       }[] = [];
       // fetch News
+      //@ts-ignore
       const streamNews: NewsItem[] = await brightSpace._fetch(
-        `/api/le/${brightSpace.version.le}/${ClassId}/news/`
+        `/d2l/api/le/${(await brightSpace.getVersions()).le}/${ClassId}/news/`
       );
       streamNews.forEach((newsItem: NewsItem) => {
         stream.push({
@@ -71,9 +73,10 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
       // Fetch Content
       // TODO: Figure out how to make this run faster
       // TODO: We want to fetch smaller lists and make use of the next feature.
+      //@ts-ignore
       const readModules: ObjectListPage<UserProgressData> =
         await brightSpace._fetch(
-          `/api/le/unstable/${ClassId}/content/userprogress/?pageSize=99999`
+          `/d2l/api/le/unstable/${ClassId}/content/userprogress/?pageSize=99999`
         );
       const parseContent = async (
         content: (ContentObject | Module | Topic)[]
@@ -84,9 +87,16 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
             switch (contentElement.Type) {
               case ContentType.Module: {
                 // Module
+                //@ts-ignore
                 const moduleContent: (Module | Topic)[] =
                   await brightSpace._fetch(
-                    `/api/le/${brightSpace.version.le}/${ClassId}/content/modules/${contentElement.Id}/structure/`
+                    `/d2l/api/le/${
+                      (
+                        await brightSpace.getVersions()
+                      ).le
+                    }/${ClassId}/content/modules/${
+                      contentElement.Id
+                    }/structure/`
                   );
                 _contentItems.push(...(await parseContent(moduleContent)));
                 break;
@@ -104,8 +114,13 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
         );
         return _contentItems;
       };
+      //@ts-ignore
       const rootContent: ContentObject[] = await brightSpace._fetch(
-        `/api/le/${brightSpace.version.le}/${ClassId}/content/root/`
+        `/d2l/api/le/${
+          (
+            await brightSpace.getVersions()
+          ).le
+        }/${ClassId}/content/root/`
       );
       const contentStream = await parseContent(rootContent);
       for (const contentItem of contentStream) {
@@ -140,24 +155,16 @@ const ClassRoom = ({ brightSpace, Route, ClassId }: props) => {
     };
     (async () => {
       // Fetch Stuff For Header
+      //@ts-ignore
       const { properties, entities } = await brightSpace._fetch(
-        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${ClassId}`,
-        {
-          headers: {
-            authorization: `Bearer ${await brightSpace._getToken()}`,
-          },
-        }
+        `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${ClassId}`
       );
       const imageInfo = await window
         .fetch(entities[2].href)
         .then((res) => res.json())
         .catch(async () => {
           return await brightSpace
-            ._fetch(entities[2].href, {
-              headers: {
-                authorization: `Bearer ${await brightSpace._getToken()}`,
-              },
-            })
+            ._fetch(entities[2].href)
             .catch(
               () =>
                 'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'
