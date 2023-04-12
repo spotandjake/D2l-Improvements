@@ -27,6 +27,7 @@ interface props {
 interface StreamItem {
   date: number;
   title: string;
+  isRead: boolean;
   body: string | RichText;
   elm: JSX.Element;
 }
@@ -42,6 +43,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const fetchStreamData = async () => {
+      if (timeout != undefined) clearTimeout(timeout);
       // Stream
       const stream: StreamItem[] = [];
       // fetch News
@@ -51,8 +53,11 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
           date: new Date(newsItem.startDate).getTime(),
           title: newsItem.title,
           body: newsItem.body.text || newsItem.body.html,
+          isRead: true,
           elm: (
             <StreamCard
+              brightSpace={brightSpace}
+              fetchStreamData={fetchStreamData}
               key={newsItem.itemID}
               Id={newsItem.itemID}
               Title={newsItem.title}
@@ -122,8 +127,11 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
           title: contentItem.Title,
           body: '',
           date: new Date(contentItem.LastModifiedDate).getTime(),
+          isRead: contentItem.Read,
           elm: (
             <StreamCard
+              brightSpace={brightSpace}
+              fetchStreamData={fetchStreamData}
               key={contentItem.Id}
               Id={contentItem.Id}
               Title={contentItem.Title}
@@ -226,11 +234,20 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
           {/* Stream Content */}
           {(() => {
             if (_streamContent == undefined) return <Loader />;
-
-            const content = _streamContent;
             // Filter
-            if (searchValue != '') {
-              const fuse = new Fuse<StreamItem>(_streamContent, {
+            let searchString = searchValue.trim();
+            let results = _streamContent;
+            // Handle Special Search
+            if (searchString.startsWith('$read'))  {
+              results = results.filter((r) => r.isRead);
+              searchString = searchString.slice('$read'.length);
+            } else if (searchString.startsWith('$unread')) {
+              results = results.filter((r) => !r.isRead);
+              searchString = searchString.slice('$unread'.length);
+            }
+            if (searchString != '') {
+              // Handle Normal Search
+              const fuse = new Fuse<StreamItem>(results, {
                 includeScore: true,
                 findAllMatches: true,
                 shouldSort: true,
@@ -238,9 +255,10 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
                 // Search in `author` and in `tags` array
                 keys: ['title', 'body'],
               });
-              const result = fuse.search(searchValue);
-              return <>{result.map((a) => a.item.elm)}</>;
-            } else return <>{content.map((a) => a.elm)}</>;
+              const result = fuse.search(searchString);
+              results = result.map((a) => a.item);
+            }
+            return <>{results.map((a) => a.elm)}</>;
           })()}
         </section>
       </section>

@@ -11,9 +11,12 @@ import ContentBody from './StreamCardBody/ContentBody';
 // Types
 import { StreamType, CompletionType } from '../Classes/Types';
 import { type RichText } from '../Classes/BrightSpaceApi';
+import Brightspace from '../Classes/BrightSpaceApi';
 // Loader Function
 type ContentType = RichText | string;
-interface ClassCardProps {
+interface StreamCardProps {
+  brightSpace: Brightspace;
+  fetchStreamData: () => void;
   Id: number;
   Title: string;
   Progress: CompletionType;
@@ -34,18 +37,26 @@ const GenerateBody = (Category: StreamType, content: ContentType) => {
       return <Loader />;
   }
 };
-const ClassCard = ({
+const StreamCard = ({
+  brightSpace,
+  fetchStreamData,
   Id,
   Title,
   Progress,
   Category,
   StartDate,
   Content,
-}: ClassCardProps) => {
+}: StreamCardProps) => {
   const [currentContent, setCurrentContent] = useState(<Loader />);
   const [loaded, setLoaded] = useState(false);
   const renderBody = () => {
     if (!loaded) {
+      // Handle Read
+      if (Progress == CompletionType.Unread && Category == StreamType.Content) {
+        brightSpace.setClassContentRead(Id);
+        fetchStreamData();
+      }
+      // Render The Body
       setCurrentContent(GenerateBody(Category, Content));
       setLoaded(true);
     }
@@ -96,4 +107,4 @@ const ClassCard = ({
     </label>
   );
 };
-export default ClassCard;
+export default StreamCard;

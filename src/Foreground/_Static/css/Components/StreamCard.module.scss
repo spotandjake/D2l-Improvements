@@ -14,9 +14,11 @@
   }
   .titleBlock {
     height: 3rem;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     .titleIcon {
       width: 3rem;
+      height: 3rem;
       border-radius: 50%;
       background-color: #084d91;
       svg {
@@ -28,15 +30,18 @@
       &.DueDate {
         background-color: #e91e63;
       }
-      &.Unread {
-        background-color: #fb8c00;
-      }
     }
     .titleText {
       padding-left: 0.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      h2 {
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
       h2,
       h5 {
         margin: 0;

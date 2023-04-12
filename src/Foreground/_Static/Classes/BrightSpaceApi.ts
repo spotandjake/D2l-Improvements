@@ -215,6 +215,14 @@ class BrightSpace {
     }
     return classes;
   }
+  public async setClassContentRead(contentId: number): Promise<void> {
+    await this._fetch(
+      `/d2l/api/le/unstable/${this.getClassID()}/content/topics/${contentId}/view`,
+      {
+        method: 'POST',
+      }
+    );
+  }
   public async getClassNews(): Promise<NewsItem[]> {
     // Read News
     const newsResponse = await this._fetch(
