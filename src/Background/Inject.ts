@@ -69,6 +69,21 @@ if (localStorage.getItem('Extension-Disabled') != 'true') {
     const rebuildNode = async (node: Element): Promise<Element> => {
       let newNode;
       switch (node.nodeName) {
+        case 'LINK':
+          newNode = node.cloneNode(true) as HTMLLinkElement;
+          if ((<HTMLLinkElement>node).href) {
+            const source = (<HTMLLinkElement>node).href;
+            if (source.startsWith('https://durham.elearningontario.ca/_ext')) {
+              let newSource = source.slice(
+                'https://durham.elearningontario.ca/_ext'.length
+              );
+              newSource = (await handler.getFrontEndUrl(newSource)) as string;
+              newNode.href = newSource;
+            } else {
+              newNode.href = source;
+            }
+          }
+          break;
         case 'SCRIPT':
           newNode = document.createElement('script');
           if ((<HTMLScriptElement>node).async)
@@ -105,12 +120,17 @@ if (localStorage.getItem('Extension-Disabled') != 'true') {
       }
       return <Element>newNode;
     };
+    const head = [];
+    const body = [];
     for (const node of [...htmlDoc.head.children]) {
-      document.head.appendChild(await rebuildNode(node));
+      head.push(await rebuildNode(node));
     }
     for (const node of [...htmlDoc.body.children]) {
-      document.body.appendChild(await rebuildNode(node));
+      body.push(await rebuildNode(node));
     }
+    // Append Children
+    document.head.append(...head);
+    document.body.append(...body);
   })();
 } else {
   // Add Enable Extension Button
