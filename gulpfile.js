@@ -27,6 +27,7 @@ gulp.task('build', async (done) => {
     pathList.shift();
     files.push(pathList.join('/'));
   }
+  files.push('Background/Inject.js');
   // Copy Manifest
   const manifest = JSON.parse(
     await fs.promises.readFile('./src/manifest.json', 'utf8')
@@ -70,6 +71,22 @@ gulp.task('build', async (done) => {
   });
   await b.write({
     file: './dist/Background/Content.js',
+    name: 'Content',
+    format: 'iife',
+    compact: true,
+    indent: '  ',
+    preferConst: true,
+  });
+  const c = await rollup.rollup({
+    input: './src/Background/Inject.ts',
+    plugins: [
+      rollupTypescript({
+        cacheDir: './dist/cache/',
+      }),
+    ],
+  });
+  await c.write({
+    file: './dist/Background/Inject.js',
     name: 'Content',
     format: 'iife',
     compact: true,
