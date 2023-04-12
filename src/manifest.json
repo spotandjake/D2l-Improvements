@@ -1,22 +1,13 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "D2l Overhaul",
   "version": "0.2.0",
   "description": "Modify D2L Brightspace",
-  "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "https://durham.elearningontario.ca/*"
-  ],
+  "permissions": [],
   "content_scripts": [
     {
       "js": ["./Background/Content.js"],
-      "matches": [
-        "*://durham.elearningontario.ca/d2l/*"
-      ]
+      "matches": ["*://durham.elearningontario.ca/d2l/*"]
     }
-  ],
-  "background": {
-    "scripts": ["./Background/Background.js"]
-  }
+  ]
 }

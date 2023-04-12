@@ -27,35 +27,25 @@ gulp.task('build', async (done) => {
     pathList.shift();
     files.push(pathList.join('/'));
   }
+  files.push('Background/Inject.js');
   // Copy Manifest
   const manifest = JSON.parse(
     await fs.promises.readFile('./src/manifest.json', 'utf8')
   );
-  if (manifest['web_accessible_resources'])
-    manifest['web_accessible_resources'].push(...files);
-  else manifest['web_accessible_resources'] = files;
+  if (manifest['web_accessible_resources'] == undefined)
+    manifest['web_accessible_resources'] = [];
+  manifest['web_accessible_resources'].push({
+    resources: files,
+    matches: ['https://durham.elearningontario.ca/*'],
+    use_dynamic_url: true,
+  });
+
   await fs.promises.writeFile(
     './dist/manifest.json',
     JSON.stringify(manifest, null, 2)
   );
   // generate our Background Script
   const a = await rollup.rollup({
-    input: './src/Background/Background.ts',
-    plugins: [
-      rollupTypescript({
-        cacheDir: './dist/cache/',
-      }),
-    ],
-  });
-  await a.write({
-    file: './dist/Background/Background.js',
-    name: 'Background',
-    format: 'iife',
-    compact: true,
-    indent: '  ',
-    preferConst: true,
-  });
-  const b = await rollup.rollup({
     input: './src/Background/Content.ts',
     plugins: [
       rollupTypescript({
@@ -63,8 +53,24 @@ gulp.task('build', async (done) => {
       }),
     ],
   });
-  await b.write({
+  await a.write({
     file: './dist/Background/Content.js',
+    name: 'Content',
+    format: 'iife',
+    compact: true,
+    indent: '  ',
+    preferConst: true,
+  });
+  const c = await rollup.rollup({
+    input: './src/Background/Inject.ts',
+    plugins: [
+      rollupTypescript({
+        cacheDir: './dist/cache/',
+      }),
+    ],
+  });
+  await c.write({
+    file: './dist/Background/Inject.js',
     name: 'Content',
     format: 'iife',
     compact: true,
