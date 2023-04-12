@@ -46,22 +46,6 @@ gulp.task('build', async (done) => {
   );
   // generate our Background Script
   const a = await rollup.rollup({
-    input: './src/Background/Background.ts',
-    plugins: [
-      rollupTypescript({
-        cacheDir: './dist/cache/',
-      }),
-    ],
-  });
-  await a.write({
-    file: './dist/Background/Background.js',
-    name: 'Background',
-    format: 'iife',
-    compact: true,
-    indent: '  ',
-    preferConst: true,
-  });
-  const b = await rollup.rollup({
     input: './src/Background/Content.ts',
     plugins: [
       rollupTypescript({
@@ -69,7 +53,7 @@ gulp.task('build', async (done) => {
       }),
     ],
   });
-  await b.write({
+  await a.write({
     file: './dist/Background/Content.js',
     name: 'Content',
     format: 'iife',

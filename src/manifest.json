@@ -3,7 +3,7 @@
   "name": "D2l Overhaul",
   "version": "0.2.0",
   "description": "Modify D2L Brightspace",
-  "permissions": ["webRequest"],
+  "permissions": [],
   "content_scripts": [
     {
       "js": ["./Background/Content.js"],

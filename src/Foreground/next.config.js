@@ -5,4 +5,7 @@ module.exports = {
   optimizeFonts: true,
   output: 'export',
   distDir: '../../dist/Foreground',
+  httpAgentOptions: {
+    keepAlive: false,
+  },
 };
