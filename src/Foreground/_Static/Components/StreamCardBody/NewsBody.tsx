@@ -1,16 +1,16 @@
 import styles from '../../css/Components/StreamCardBody/NewsBody.module.scss';
 
-import { type RichText } from '../../Classes/BrightSpaceApi';
+import { type NewsItem } from '../../Classes/BrightSpaceApi';
 // Loader Function
 interface Props {
-  Content: RichText;
+  Item: NewsItem;
 }
-const NewsBody = ({ Content }: Props) => {
+const NewsBody = ({ Item }: Props) => {
   // TODO: Parse the html to react, apply better coloring that works with our dark colors
   return (
     <div
       className={styles.markDown}
-      dangerouslySetInnerHTML={{ __html: Content.html || Content.text }}
+      dangerouslySetInnerHTML={{ __html: Item.body.html || Item.body.text }}
     ></div>
   );
 };

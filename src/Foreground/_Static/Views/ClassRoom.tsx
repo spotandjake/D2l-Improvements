@@ -51,7 +51,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
       for (const newsItem of streamNews) {
         stream.push({
           date: new Date(newsItem.startDate).getTime(),
-          title: newsItem.title,
+          title: newsItem.name,
           body: newsItem.body.text || newsItem.body.html,
           isRead: true,
           elm: (
@@ -59,12 +59,10 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
               brightSpace={brightSpace}
               fetchStreamData={fetchStreamData}
               key={newsItem.itemID}
-              Id={newsItem.itemID}
-              Title={newsItem.title}
               Progress={CompletionType.Complete}
               Category={StreamType.News}
               StartDate={newsItem.startDate}
-              Content={newsItem.body}
+              Item={newsItem}
             />
           ),
         });
@@ -74,7 +72,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
       // TODO: We want to fetch smaller lists and make use of the next feature.
       //@ts-ignore
       const readModules: ObjectListPage<UserProgressData> =
-        await brightSpace._fetch(
+        await brightSpace._fetchJSON(
           `/d2l/api/le/unstable/${brightSpace.getClassID()}/content/userprogress/?pageSize=99999`
         );
       const parseContent = async (
@@ -88,7 +86,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
                 // Module
                 //@ts-ignore
                 const moduleContent: (Module | Topic)[] =
-                  await brightSpace._fetch(
+                  await brightSpace._fetchJSON(
                     `/d2l/api/le/${
                       (
                         await brightSpace.getVersions()
@@ -114,7 +112,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
         return _contentItems;
       };
       //@ts-ignore
-      const rootContent: ContentObject[] = await brightSpace._fetch(
+      const rootContent: ContentObject[] = await brightSpace._fetchJSON(
         `/d2l/api/le/${
           (
             await brightSpace.getVersions()
@@ -133,8 +131,6 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
               brightSpace={brightSpace}
               fetchStreamData={fetchStreamData}
               key={contentItem.Id}
-              Id={contentItem.Id}
-              Title={contentItem.Title}
               Progress={
                 [CompletionType.Unread, CompletionType.Complete][
                   contentItem.Read ? 1 : 0
@@ -142,13 +138,35 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
               }
               Category={StreamType.Content}
               StartDate={contentItem.LastModifiedDate}
-              Content={contentItem.Url}
+              Item={{ name: contentItem.Title, itemID: contentItem.Id, itemContent: contentItem.Url}}
             />
           ),
         });
       }
       // TODO: Fetch Discussions
-      // TODO: Fetch Assignments
+      // Fetch Assignments
+      const assignmentList = await brightSpace.getClassAssignments();
+      for (const assignmentItem of assignmentList) {
+        // TODO: Try and find a better way of getting the due date, / might involve looking through all the dates, finding one date with meaning and then assuming the other dates are greater than that date.
+        stream.push({
+          date: new Date(assignmentItem.dueDate).getTime(),
+          title: assignmentItem.name,
+          body: assignmentItem.customInstructions.text || assignmentItem.customInstructions.html,
+          isRead: true,
+          elm: (
+            <StreamCard
+              brightSpace={brightSpace}
+              fetchStreamData={fetchStreamData}
+              key={assignmentItem.itemID}
+              // TODO: Determine Progress
+              Progress={CompletionType.Complete}
+              Category={StreamType.Assignments}
+              StartDate={assignmentItem.dueDate}
+              Item={assignmentItem}
+            />
+          ),
+        });
+      }
       // TODO: Fetch Quizzes
       // Set Page Content
       setStreamContent(stream.sort((a, b) => b.date - a.date));
@@ -157,7 +175,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
     (async () => {
       // Fetch Stuff For Header
       //@ts-ignore
-      const { properties, entities } = await brightSpace._fetch(
+      const { properties, entities } = await brightSpace._fetchJSON(
         `https://bc59e98c-eabc-4d42-98e1-edfe93518966.organizations.api.brightspace.com/${brightSpace.getClassID()}`
       );
       const imageInfo = await window
@@ -165,7 +183,7 @@ const ClassRoom = ({ brightSpace, searchValue }: props) => {
         .then((res) => res.json())
         .catch(async () => {
           return await brightSpace
-            ._fetch(entities[2].href)
+            ._fetchJSON(entities[2].href)
             .catch(
               () =>
                 'https://blog.fluidui.com/content/images/2019/01/imageedit_1_9273372713.png'

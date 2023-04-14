@@ -3474,6 +3474,11 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-google-drive-picker@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-google-drive-picker/-/react-google-drive-picker-1.2.1.tgz#35bfe2e9f441016fe118a760fea76fc2ded04b7d"
+  integrity sha512-p+7AJo0FKcxzhYkYd+tnNEOOHQOeDKgo2L+UY5DBZnggXcCf/nz0RTqT4eoOCuq6DMtKI6XboKhj9tY75zWf+g==
+
 react-idle-timer@^4.6.4:
   version "4.6.4"
   resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-4.6.4.tgz#71ba954ba6f464df24d46a94e63c5ef19f7319dc"

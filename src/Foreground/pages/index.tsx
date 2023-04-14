@@ -19,7 +19,16 @@ const Application = () => {
       <Head>
         <title>{pageTitle}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link
+          rel="icon"
+          href="https://s.brightspace.com/lib/branding/1.0.0/brightspace/favicon.ico"
+          sizes="any"
+        />
+        <link
+          rel="icon"
+          href="https://s.brightspace.com/lib/branding/1.0.0/brightspace/favicon.svg"
+          type="image/svg+xml"
+        />
         <meta
           name="description"
           content="A Serverless React Based Chat Application Similar To Discord, Using Firebase."

@@ -4,48 +4,52 @@ import styles from '../css/Components/StreamCard.module.scss';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ClassRoundedIcon from '@material-ui/icons/ClassRounded';
+import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import Loader from '../Views/Loader';
 // Card Body Types
 import NewsBody from './StreamCardBody/NewsBody';
 import ContentBody from './StreamCardBody/ContentBody';
+import AssignmentBody from './StreamCardBody/AssignmentBody';
 // Types
 import { StreamType, CompletionType } from '../Classes/Types';
-import { type RichText } from '../Classes/BrightSpaceApi';
-import Brightspace from '../Classes/BrightSpaceApi';
+import Brightspace, { type NewsItem, type AssignmentItem} from '../Classes/BrightSpaceApi';
 // Loader Function
-type ContentType = RichText | string;
+// TODO: Replace itemContent with a content item
+type Body = NewsItem | AssignmentItem | { name: string, itemID: number, itemContent: string };
 interface StreamCardProps {
   brightSpace: Brightspace;
   fetchStreamData: () => void;
-  Id: number;
-  Title: string;
+  // TODO: use progress and StartDate off the types
   Progress: CompletionType;
-  Category: StreamType;
   StartDate: string;
-  Content: ContentType;
+  Category: StreamType;
+  Item: Body;
 }
-
-const GenerateBody = (Category: StreamType, content: ContentType) => {
+const GenerateBody = (brightSpace: Brightspace, Category: StreamType, Item: Body) => {
   switch (Category) {
+    // TODO: make this type safe
     case StreamType.News:
-      return <NewsBody Content={content as RichText} />;
+      //@ts-ignore
+      return <NewsBody Item={Item} />;
     case StreamType.Content:
-      return <ContentBody Content={content as string} />;
+      //@ts-ignore
+      return <ContentBody Content={Item.itemContent} />;
+    case StreamType.Assignments:
+      //@ts-ignore
+      return <AssignmentBody brightSpace={brightSpace} Item={Item} />;
     default:
       console.log(`Implement Viewing for Category: ${Category}`);
-      console.log(content);
+      console.log(Item);
       return <Loader />;
   }
 };
 const StreamCard = ({
   brightSpace,
   fetchStreamData,
-  Id,
-  Title,
   Progress,
   Category,
   StartDate,
-  Content,
+  Item
 }: StreamCardProps) => {
   const [currentContent, setCurrentContent] = useState(<Loader />);
   const [loaded, setLoaded] = useState(false);
@@ -53,22 +57,23 @@ const StreamCard = ({
     if (!loaded) {
       // Handle Read
       if (Progress == CompletionType.Unread && Category == StreamType.Content) {
-        brightSpace.setClassContentRead(Id);
+        brightSpace.setClassContentRead(Item.itemID);
         fetchStreamData();
       }
       // Render The Body
-      setCurrentContent(GenerateBody(Category, Content));
+      setCurrentContent(GenerateBody(brightSpace, Category, Item));
       setLoaded(true);
     }
   };
   const ContentIcon = {
     [StreamType.News]: AccountCircleIcon,
     [StreamType.Content]: ClassRoundedIcon,
+    [StreamType.Assignments]: AssignmentRoundedIcon,
   }[Category];
   return (
     <label
       className={[styles.container, styles[Category]].join(' ')}
-      htmlFor={`${Id}-ExpandState`}
+      htmlFor={`${Item.itemID}-ExpandState`}
       onClick={() => renderBody()}
     >
       {/* Content */}
@@ -81,14 +86,15 @@ const StreamCard = ({
           />
         </div>
         <div className={styles.titleText}>
-          <h2>{Title}</h2>
+          <h2>{Item.name}</h2>
           <h5>{new Date(StartDate).toDateString()}</h5>
         </div>
         {Category == StreamType.Content ? (
           <a
             className={styles.inlineButton}
             onClick={(evt) => evt.stopPropagation()}
-            href={Content as string}
+            //@ts-ignore
+            href={Item.itemContent}
             download
           >
             <span>Download</span>
@@ -98,7 +104,7 @@ const StreamCard = ({
         )}
       </div>
       {/* Label State */}
-      <input type="checkbox" id={`${Id}-ExpandState`} />
+      <input type="checkbox" id={`${Item.itemID}-ExpandState`} />
       {/* Expanded Content */}
       <div className={styles.expandContainer}>
         <hr />

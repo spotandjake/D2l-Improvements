@@ -8,4 +8,7 @@ module.exports = {
   httpAgentOptions: {
     keepAlive: false,
   },
+  images: {
+    unoptimized: true
+  }
 };

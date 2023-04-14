@@ -16,11 +16,16 @@ export interface RichText {
   html: string;
 }
 interface FileBlock {
-  fileID: number;
-  fileName: string;
-  fileSize: number;
+  FileID: number;
+  FileName: string;
+  FileSize: number;
 }
-interface ClassItem {
+interface Link {
+  LinkId: number;
+  LinkName: string;
+  Href: string;
+}
+export interface ClassItem {
   name: string;
   imageLink?: string;
   imageInfo: string;
@@ -29,11 +34,11 @@ interface ClassItem {
   href: string;
   isActive: boolean;
 }
-interface NewsItem {
+export interface NewsItem {
   itemID: number;
   isHidden: boolean;
   attachments: FileBlock[];
-  title: string;
+  name: string;
   body: RichText;
   createdBy: number | null;
   createdDate: string | null;
@@ -46,10 +51,66 @@ interface NewsItem {
   showOnlyInCourseOffering: boolean;
   isAuthorInfoShown: boolean;
 }
+export interface AssignmentItem {
+  itemID: number;
+  categoryId: number | null;
+  name: string;
+  customInstructions: RichText;
+  attachments: FileBlock[];
+  totalFiles: number;
+  unreadFiles: number;
+  flaggedFiles: number;
+  totalUsers: number;
+  totalUsersWithSubmission: number;
+  totalUsersWithFeedBack: number;
+  availability: null | {
+    startDate: string | null;
+    endDate: string | null;
+    startDateAvailabilityType: string | null; // Added with LE API v1.65
+    endDateAvailabilityType: string | null; // Added with LE API v1.65
+  };
+  groupTypeId: number | null;
+  dueDate: string | null;
+  displayInCalendar: boolean;
+  assessment: {
+    scoreDenominator: number | null;
+    // TODO: Add Rubric
+  };
+  notificationEmail: string | null;
+  isHidden: boolean;
+  linkAttachments: Link[];
+  activityId: string | null;
+  isAnonymous: boolean;
+  dropBoxType: string;
+  submissionType: string;
+  completionType: string;
+  gradeItemId: string;
+  allowOnlyUsersWithSpecialAccess: boolean | null;
+}
+// TODO: rewrite this from scratch, look into if there is a library to use to define fetch routes and their types and validate them
 // This is the new internal brightspace api
 const logError = <a>(message: string, item: a) => {
   console.log(`[Error]: ${message}`);
   return item;
+};
+interface FileEntry {
+  fileName: string;
+  fileType: string;
+  fileContent: string;
+}
+const boundary = 'xxBOUNDARYxx';
+const buildMultipartBody = (jsonData: object, files: FileEntry[]) => {
+  const newLine = '\r\n';
+  const doubleDashes = '--';
+  const endBoundary = `${doubleDashes}${boundary}${doubleDashes}${newLine}`;
+  const startAndMiddleBoundary = `${doubleDashes}${boundary}${newLine}`;
+  let content = `${startAndMiddleBoundary}Content-Type: application/json${newLine}${newLine}${JSON.stringify(
+    jsonData
+  )}${newLine}`;
+  files.forEach(({ fileName, fileType, fileContent }) => {
+    content += `${startAndMiddleBoundary}Content-Disposition: form-data; name=""; filename="${fileName}"${newLine}Content-Type: ${fileType}${newLine}${newLine}${fileContent}${newLine}${endBoundary}`;
+  });
+  return content;
 };
 // TODO: Switch all routes to be dynamic, this should not be ddsb only
 class BrightSpace {
@@ -71,7 +132,7 @@ class BrightSpace {
   public async getVersions(): Promise<VersionProductVersions> {
     if (this.versions == undefined) {
       // Fetch Version
-      const versions = await this._fetch('/d2l/api/versions/', {
+      const versions = await this._fetchJSON('/d2l/api/versions/', {
         headers: {
           authorization: undefined,
         },
@@ -129,16 +190,21 @@ class BrightSpace {
     }
     return this.token;
   }
-  // TODO: Make this private
-  public async _fetch(
+  private async _fetch(
     route: string,
     options: RequestInit = {},
     authorize = true
-  ): Promise<JSONValue> {
-    options.headers = {
-      'content-type': 'application/x-www-form-urlencoded, application/json',
-      ...options.headers,
-    };
+  ): Promise<Response> {
+    if (
+      options.headers == undefined ||
+      (options.headers['content-type'] == undefined &&
+        options.headers['Content-Type'] == undefined)
+    ) {
+      options.headers = {
+        'content-type': 'application/x-www-form-urlencoded, application/json',
+        ...options.headers,
+      };
+    }
     if (authorize) {
       options.headers = {
         authorization: `Bearer ${await this.getToken()}`,
@@ -147,13 +213,30 @@ class BrightSpace {
     }
     // TODO: Error Handling
     const response = await window.fetch(route, options);
-    return await response.json();
+    return response;
+  }
+  // TODO: Make this private
+  public async _fetchJSON(
+    route: string,
+    options: RequestInit = {},
+    authorize = true
+  ): Promise<JSONValue> {
+    const _response = await this._fetch(route, options, authorize);
+    return await _response.json();
+  }
+  private async _fetchText(
+    route: string,
+    options: RequestInit = {},
+    authorize = true
+  ): Promise<string> {
+    const _response = await this._fetch(route, options, authorize);
+    return await _response.text();
   }
   // External
   public async getClassList(): Promise<ClassItem[]> {
     // TODO: use logError
     const Today = new Date().valueOf();
-    const classList = await this._fetch(
+    const classList = await this._fetchJSON(
       `https://bc59e98c-eabc-4d42-98e1-edfe93518966.enrollments.api.brightspace.com/users/${this.getUserID()}?search=&pageSize=20&embedDepth=0&sort=current&parentOrganizations=&orgUnitTypeId=3&promotePins=true&autoPinCourses=false&roles=&excludeEnded=false&excludeIndirect=false`
     );
     if (typeof classList != 'object' || Array.isArray(classList)) return [];
@@ -170,9 +253,11 @@ class BrightSpace {
       const classLink = classEntry.href;
       // Get Resources
       // TODO: Verify types
-      const classResources = await this._fetch(classLink);
-      // @ts-ignore
-      const classInfo: any = await this._fetch(classResources.links[1].href);
+      const classResources = await this._fetchJSON(classLink);
+      const classInfo: any = await this._fetchJSON(
+        // @ts-ignore
+        classResources.links[1].href
+      );
       // Write Info
       classes.push({
         name: classInfo.properties.name,
@@ -197,7 +282,7 @@ class BrightSpace {
         .fetch(classEntry.imageInfo)
         .then((res) => res.json())
         .catch(async () => {
-          return await this._fetch(classEntry.imageInfo, {
+          return await this._fetchJSON(classEntry.imageInfo, {
             headers: {
               'content-type': undefined,
             },
@@ -216,7 +301,7 @@ class BrightSpace {
     return classes;
   }
   public async setClassContentRead(contentId: number): Promise<void> {
-    await this._fetch(
+    await this._fetchJSON(
       `/d2l/api/le/unstable/${this.getClassID()}/content/topics/${contentId}/view`,
       {
         method: 'POST',
@@ -225,7 +310,7 @@ class BrightSpace {
   }
   public async getClassNews(): Promise<NewsItem[]> {
     // Read News
-    const newsResponse = await this._fetch(
+    const newsResponse = await this._fetchJSON(
       `/d2l/api/le/${(await this.getVersions()).le}/${this.getClassID()}/news/`
     );
     // Map news To Safe Item
@@ -294,7 +379,7 @@ class BrightSpace {
         itemID: newsItem.Id as number,
         isHidden: newsItem.IsHidden as boolean,
         attachments: <FileBlock[]>(<unknown>newsItem.Attachments),
-        title: newsItem.Title as string,
+        name: newsItem.Title as string,
         body: {
           text: newsItem.Body.Text as string,
           html: newsItem.Body.Html as string,
@@ -313,6 +398,119 @@ class BrightSpace {
     }
     // Return
     return newsItems;
+  }
+  public async getClassAssignments(): Promise<AssignmentItem[]> {
+    // TODO: Make sure this is all typesafe
+    const assignments = await this._fetchJSON(
+      `/d2l/api/le/${
+        (
+          await this.getVersions()
+        ).le
+      }/${this.getClassID()}/dropbox/folders/`
+    );
+    if (!Array.isArray(assignments))
+      return logError('Invalid Assignments List', []);
+    // Map Assignments
+    const assignmentList: AssignmentItem[] = [];
+    for (const assignment of assignments) {
+      if (typeof assignment != 'object' || Array.isArray(assignment))
+        return logError('Invalid Assignment', []);
+      // Map Custom Instructions
+      if (typeof assignment.CustomInstructions != 'object')
+        return logError('Invalid Custom Instructions', []);
+      const customInstructions = {
+        //@ts-ignore
+        text: assignment.CustomInstructions.Text as string,
+        //@ts-ignore
+        html: assignment.CustomInstructions.Html as string,
+      };
+      // Map availability
+      let availability = null;
+      if (assignment.Availability != null) {
+        const _availability: any = assignment.Availability;
+        const startDate = _availability.StartDate as string;
+        const endDate = _availability.EndDate as string;
+        const startDateAvailabilityType =
+          _availability.StartDateAvailabilityType as string | null;
+        const endDateAvailabilityType =
+          _availability.EndDateAvailabilityType as string | null;
+        availability = {
+          startDate: startDate,
+          endDate: endDate,
+          startDateAvailabilityType: startDateAvailabilityType, // Added with LE API v1.65
+          endDateAvailabilityType: endDateAvailabilityType, // Added with LE API v1.65
+        };
+      }
+      // Map assessment
+      if (typeof assignment.Assessment != 'object')
+        return logError('Invalid Assessment', []);
+      const assessment = {
+        // @ts-ignore
+        scoreDenominator: assignment.Assessment.scoreDenominator as number,
+        // TODO: Add Rubric
+      };
+      assignmentList.push({
+        itemID: assignment.Id as number,
+        categoryId: assignment.CategoryId as number | null,
+        name: assignment.Name as string,
+        customInstructions: customInstructions,
+        //@ts-ignore
+        attachments: assignment.Attachments as FileBlock[],
+        totalFiles: assignment.TotalFiles as number,
+        unreadFiles: assignment.UnreadFiles as number,
+        flaggedFiles: assignment.FlaggedFiles as number,
+        totalUsers: assignment.TotalUsers as number,
+        totalUsersWithSubmission:
+          assignment.TotalUsersWithSubmissions as number,
+        totalUsersWithFeedBack: assignment.TotalUsersWithFeedback as number,
+        availability: availability,
+        groupTypeId: assignment.GroupTypeId as number | null,
+        dueDate: assignment.DueDate as string | null,
+        displayInCalendar: assignment.DisplayInCalendar as boolean,
+        assessment: assessment,
+        notificationEmail: assignment.NotificationEmail as string | null,
+        isHidden: assignment.IsHidden as boolean,
+        //@ts-ignore
+        linkAttachments: assignment.LinkAttachments as Link[],
+        activityId: assignment.ActivityId as string | null,
+        isAnonymous: assignment.IsAnonymous as boolean,
+        dropBoxType: assignment.DropboxType as string,
+        submissionType: assignment.SubmissionType as string,
+        completionType: assignment.CompletionType as string,
+        gradeItemId: assignment.GradeItemId as string,
+        allowOnlyUsersWithSpecialAccess:
+          assignment.AllowOnlyUsersWithSpecialAccess as boolean | null,
+      });
+    }
+    return assignmentList;
+  }
+  public async submitAssignment(
+    elementID: number,
+    files: FileEntry[],
+    comment: RichText
+  ): Promise<string> {
+    const result = await this._fetchText(
+      `/d2l/api/le/1.41/${this.getClassID()}/dropbox/folders/${elementID}/submissions/mysubmissions/`,
+      {
+        method: 'POST',
+        headers: {
+          'content-type': `multipart/mixed;boundary=${boundary}`,
+        },
+        body: buildMultipartBody(
+          { Text: comment.text, Html: comment.html },
+          files.length > 0
+            ? files
+            : [
+              {
+                fileName: 'Comment.txt',
+                fileType: 'text/html',
+                fileContent: comment.text,
+              },
+            ]
+        ),
+      }
+    );
+    return result;
   }
 }
 // Export
