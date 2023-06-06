@@ -46,13 +46,15 @@ const ContentBody = ({ brightSpace, Item }: Props) => {
   // Submit
   const submitFile = async () => {
     console.log(uploads);
-    console.log(Item);
-    console.log(commentValue);
-    // TODO: Render commentValue with markdown
-    // TODO: Get All File Contents
-    // TODO: Validate we have comments or files
+    // Get Our Uploads
+    // Map Files
+    const uploadBundle = uploads.map((upload) => ({
+      fileName: upload.name,
+      fileType: upload.mimeType,
+      fileContent: 'Test Submission',
+    }));
     // Send Request
-    await brightSpace.submitAssignment(Item.itemID, [], {
+    await brightSpace.submitAssignment(Item.itemID, uploadBundle, {
       text: commentValue,
       html:  `<p>${commentValue}</p>`,
     });
