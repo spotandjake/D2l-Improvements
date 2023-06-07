@@ -17,11 +17,26 @@ interface Props {
 //   };
 //   linkAttachments: Link[];
 // }
+async function blobToBase64Async(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onerror = (e) => reject(fileReader.error);
+    fileReader.onloadend = (e) => {
+      const dataUrl = fileReader.result as string;
+      // remove "data:mime/type;base64," prefix from data url
+      const base64 = dataUrl.substring(dataUrl.indexOf(',') + 1);
+      resolve(base64);
+      // resolve(dataUrl);
+    };
+    fileReader.readAsDataURL(blob);
+  });
+}
+
 const ContentBody = ({ brightSpace, Item }: Props) => {
   const [commentValue, setCommentValue] = useState('');
   const [uploads, setUploads] = useState([]);
   // Handle File Picker
-  const [openPicker] = useDrivePicker();  
+  const [openPicker,authResponse] = useDrivePicker();  
   const handleOpenPicker = () => {
     openPicker({
       clientId: '624818190747-mufqrqsbd9ggra85p5k7binndne89o6c.apps.googleusercontent.com',
@@ -46,15 +61,27 @@ const ContentBody = ({ brightSpace, Item }: Props) => {
   // Submit
   const submitFile = async () => {
     console.log(uploads);
-    // Get Our Uploads
     // Map Files
-    const uploadBundle = uploads.map((upload) => ({
-      fileName: upload.name,
-      fileType: upload.mimeType,
-      fileContent: 'Test Submission',
+    const uploadBundle = await Promise.all(uploads.map(async (upload) => {
+      // TODO: Support Google Files Through Export Based On MimeType
+      // Get File
+      const res = await fetch (`https://www.googleapis.com/drive/v3/files/${upload.id}?alt=media`, {
+        headers: {
+          'Authorization': `Bearer ${authResponse.access_token}`,
+          'Content-Type': upload.mimeType,
+        }
+      });
+      const fileBlob = await res.blob();
+      // Return
+      return {
+        fileName: upload.name,
+        fileType: upload.mimeType,
+        fileContent: await fileBlob.text(),
+      };
     }));
+    console.log(uploadBundle);
     // Send Request
-    await brightSpace.submitAssignment(Item.itemID, uploadBundle, {
+    await brightSpace.submitAssignment(Item.itemID, uploadBundle, true, {
       text: commentValue,
       html:  `<p>${commentValue}</p>`,
     });
