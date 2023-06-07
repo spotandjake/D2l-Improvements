@@ -33,7 +33,7 @@ const GenerateBody = (brightSpace: Brightspace, Category: StreamType, Item: Body
       return <NewsBody Item={Item} />;
     case StreamType.Content:
       //@ts-ignore
-      return <ContentBody Content={Item.itemContent} />;
+      return <ContentBody Content={Item.itemContent} brightSpace={brightSpace} />;
     case StreamType.Assignments:
       //@ts-ignore
       return <AssignmentBody brightSpace={brightSpace} Item={Item} />;

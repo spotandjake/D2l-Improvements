@@ -33,6 +33,7 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.13.0",
     "@typescript-eslint/typescript-estree": "^5.58.0",
+    "firebase": "^9.22.1",
     "fuse.js": "^6.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

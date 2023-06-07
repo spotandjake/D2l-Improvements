@@ -2,27 +2,46 @@ import styles from '../../css/Components/StreamCardBody/ContentBody.module.scss'
 import Loader from '../../Views/Loader';
 import { useState, useEffect } from 'react';
 
+import { type UploadResult, getStorage, ref, uploadBytes } from 'firebase/storage';
+import BrightSpace from '../../Classes/BrightSpaceApi';
+
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
-const sendToServer = async (url, server) => {
+
+const sendToServer = async (url: string, orgID: string) => {
+  const fileExt = url.split('.').pop();
   // Get from server
   const fileResponse = await fetch(url);
   const fileBlob = await fileResponse.blob();
+  // Generate Random Name
+  const fileName = Math.floor(Math.random() * Date.now()).toString(16);
+  // Send To Server
+  const storage = getStorage();
+  const storageRef = ref(storage, `/D2lServer/${orgID}/${fileName}.${fileExt}`);
+
+  // Raw string is the default if no format is provided
+  const snapshot: UploadResult | undefined = await uploadBytes(
+    storageRef,
+    fileBlob
+  ).catch(() => undefined);
+  if (snapshot == undefined) {
+    console.log('Error Uploading Content File');
+    return {
+      sucess: false,
+      url: ''
+    };
+  }
   // Send to server
-  const fd = new FormData();
-  fd.append('file', fileBlob, 'file.out');
-  const postResponse = await fetch(server, {
-    method: 'POST',
-    cache: 'no-cache',
-    body: fd,
-  });
-  const postData = await postResponse.json();
-  return postData;
+  return {
+    sucess: true,
+    url: `https://storage.googleapis.com/united-rope-234818.appspot.com/D2lServer/${orgID}/${fileName}.${fileExt}`,
+  };
 };
 // Loader Function
 interface Props {
+  brightSpace: BrightSpace;
   Content: string;
 }
-const ContentViewer = ({ Content }: Props) => {
+const ContentViewer = ({ Content, brightSpace }: Props) => {
   const [_content, setContent] = useState(<Loader />);
   useEffect(() => {
     switch (true) {
@@ -63,19 +82,18 @@ const ContentViewer = ({ Content }: Props) => {
         (async () => {
           const serverData = await sendToServer(
             Content,
-            'https://filecache.spotandjake.repl.co/save'
+            brightSpace.getClassID()
           );
-          if (serverData.status == 'Ok') {
+          if (serverData.sucess) {
             // Get File url
-            const fileExt = Content.split('.').pop();
-            const serverUrl = `https://filecache.spotandjake.repl.co/load/${serverData.id}.${fileExt}`;
             setContent(
               <DocViewer
-                documents={[{ uri: serverUrl }]}
+                documents={[{ uri: serverData.url }]}
                 pluginRenderers={DocViewerRenderers}
               />
             );
           } else console.log('err loading');
+          // TODO: If we fail set the content to a failure message, and maybe try again
         })();
         break;
       }
@@ -127,11 +145,11 @@ const ContentViewer = ({ Content }: Props) => {
   }, []);
   return _content;
 };
-const ContentBody = ({ Content }: Props) => {
+const ContentBody = ({ Content, brightSpace }: Props) => {
   // Render
   return (
     <div className={styles.container}>
-      <ContentViewer Content={Content} />
+      <ContentViewer Content={Content} brightSpace={brightSpace} />
     </div>
   );
 };

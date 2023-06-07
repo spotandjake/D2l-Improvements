@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BrightSpace from '../_Static/Classes/BrightSpaceApi';
+import { initializeApp } from 'firebase/app';
 // Import Views
 import ClassList from '../_Static/Views/ClassList';
 import ClassRoom from '../_Static/Views/ClassRoom';
@@ -13,6 +14,20 @@ const Application = () => {
   const [_showAside, setShowAside] = useState(false);
   const [_searchValue, setSearch] = useState('');
   const brightSpace = new BrightSpace();
+  // Init Firebase
+  const firebaseConfig = {
+    apiKey: 'AIzaSyBCpFkdcCLQ9r_rO-R-LquOPDlLK3WG20s',
+    authDomain: 'united-rope-234818.firebaseapp.com',
+    databaseURL: 'https://united-rope-234818.firebaseio.com',
+    projectId: 'united-rope-234818',
+    storageBucket: 'united-rope-234818.appspot.com',
+    messagingSenderId: '624818190747',
+    appId: '1:624818190747:web:7701d18601f7e7b0f5c93e',
+    measurementId: 'G-798ZG02TLW',
+  };
+
+  // Initialize Firebase
+  initializeApp(firebaseConfig);
   // Routing
   return (
     <Router>

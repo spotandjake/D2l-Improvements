@@ -487,7 +487,6 @@ class BrightSpace {
   public async submitAssignment(
     elementID: number,
     files: FileEntry[],
-    base64: boolean,
     comment: RichText
   ): Promise<string> {
     const result = await this._fetchText(

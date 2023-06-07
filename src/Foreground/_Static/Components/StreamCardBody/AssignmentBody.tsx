@@ -32,7 +32,7 @@ async function blobToBase64Async(blob: Blob): Promise<string> {
   });
 }
 
-const ContentBody = ({ brightSpace, Item }: Props) => {
+const AssignmentBody = ({ brightSpace, Item }: Props) => {
   const [commentValue, setCommentValue] = useState('');
   const [uploads, setUploads] = useState([]);
   // Handle File Picker
@@ -81,7 +81,7 @@ const ContentBody = ({ brightSpace, Item }: Props) => {
     }));
     console.log(uploadBundle);
     // Send Request
-    await brightSpace.submitAssignment(Item.itemID, uploadBundle, true, {
+    await brightSpace.submitAssignment(Item.itemID, uploadBundle, {
       text: commentValue,
       html:  `<p>${commentValue}</p>`,
     });
@@ -121,4 +121,4 @@ const ContentBody = ({ brightSpace, Item }: Props) => {
   );
 };
 
-export default ContentBody;
+export default AssignmentBody;
